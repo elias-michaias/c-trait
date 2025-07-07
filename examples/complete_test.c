@@ -1,4 +1,4 @@
-#include "trait.h"
+#include "../trait.h"
 
 // Define trait with methods
 #define Trait_Testable(X) \

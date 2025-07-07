@@ -1,4 +1,4 @@
-#include "trait.h"
+#include "../trait.h"
 
 // Define Entity trait with health field and status method
 #define Trait_Entity(X) \

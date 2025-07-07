@@ -1,0 +1,26 @@
+# Ignore build artifacts and binaries
+*.o
+*.out
+*.a
+*.so
+*.dylib
+*.exe
+*.obj
+*.dll
+*.log
+*.swp
+*.swo
+*.tmp
+*.dSYM/
+
+# Ignore compiled test binaries
+/examples/complete_test
+/examples/player_entity_test
+/examples/validation_test
+
+# Ignore editor/IDE files
+.vscode/
+.idea/
+*.code-workspace
+*~
+.DS_Store
