@@ -5,7 +5,7 @@
     method(X, void, test_method) \
     method(X, int, get_value, int)
 
-Declare_Trait_Type(Testable, Trait_Testable)
+declare_type_from_trait(Testable, Trait_Testable)
 
 // Test struct
 struct TestStruct {
@@ -14,18 +14,15 @@ struct TestStruct {
 };
 
 // Implementation with ALL methods (should compile successfully)
-Impl(TestStruct) {
+impl(TestStruct) {
     def(test_method, {
         printf("Testing...\n");
     });
-    def(get_value, int(int input) {
-        printf("Getting value with input: %d\n", input);
-        return input * 2;
-    });
+    // TestStruct.get_value is UNDEFINED which should cause a validation error
 }
 
 // This automatically validates that all methods are implemented and creates the trait bridge
-Struct_Impl_Trait(TestStruct, Testable)
+struct_impl_trait_type(TestStruct, Testable)
 
 int main() {
     struct TestStruct* test = TestStruct_new();

@@ -40,7 +40,7 @@
 // ==================== CORE MACROS ====================
 
 // Enhanced implementation block
-#define Impl(struct_name) \
+#define impl(struct_name) \
     static void struct_name##_init_methods(struct struct_name *self); \
     \
     static struct struct_name* struct_name##_new() { \
@@ -88,7 +88,7 @@
 // ==================== TRAIT DECLARATION ====================
 
 // Declare a trait type
-#define Declare_Trait_Type(trait_name, methods) \
+#define declare_type_from_trait(trait_name, methods) \
     typedef struct trait_name { \
         methods(TRAIT_FIELD) \
     } trait_name;
@@ -128,7 +128,7 @@
     __attribute__((weak)) void TRAIT_VALIDATION_##name##_IMPLEMENTED(void) {}
 
 // Register a struct as implementing a trait (automatically derives trait macro name)
-#define Struct_Impl_Trait(struct_name, trait_type_name) \
+#define struct_impl_trait_type(struct_name, trait_type_name) \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Wout-of-scope-function\"") \
     static void struct_name##_defines_method_##trait_type_name(void) { \
