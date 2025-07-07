@@ -88,7 +88,7 @@
 // ==================== TRAIT DECLARATION ====================
 
 // Declare a trait type
-#define declare_type_from_trait(trait_name, methods) \
+#define define_type_from_trait(trait_name, methods) \
     typedef struct trait_name { \
         methods(TRAIT_FIELD) \
     } trait_name;

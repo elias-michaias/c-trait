@@ -5,7 +5,7 @@
     method(X, void, test_method) \
     method(X, int, get_value, int)
 
-declare_type_from_trait(Testable, Trait_Testable)
+define_type_from_trait(Testable, Trait_Testable)
 
 // Test struct
 struct TestStruct {
