@@ -78,19 +78,31 @@
 #define trait(X, trait_macro) \
     trait_macro(X)
 
-// Helper macros for different field types
+// Helper macros for different field types in struct definitions
 #define TRAIT_FIELD_field(ret_type, name, ...) \
     ret_type name;
 
 #define TRAIT_FIELD_method(ret_type, name, ...) \
     ret_type (^name)(__VA_ARGS__);
 
+// Helper macros for different field types in trait object definitions (use pointers for reference-based access)
+#define TRAIT_OBJ_FIELD_field(ret_type, name, ...) \
+    ret_type* name;
+
+#define TRAIT_OBJ_FIELD_method(ret_type, name, ...) \
+    ret_type (^name)(__VA_ARGS__);
+
 // ==================== TRAIT DECLARATION ====================
 
-// Declare a trait type
+// Generate trait object fields - handles both regular fields and function pointers
+#define TRAIT_OBJ_FIELD(ret_type, name, kind, ...) \
+    TRAIT_OBJ_FIELD_##kind(ret_type, name, ##__VA_ARGS__)
+
+// Declare a trait type with back-reference to source struct
 #define define_type_from_trait(trait_name, methods) \
     typedef struct trait_name { \
-        methods(TRAIT_FIELD) \
+        void* _src; \
+        methods(TRAIT_OBJ_FIELD) \
     } trait_name;
 
 // ==================== TRAIT IMPLEMENTATION ====================
@@ -99,9 +111,9 @@
 #define COPY_METHOD(ret_type, name, kind, ...) \
     COPY_METHOD_##kind(ret_type, name, ##__VA_ARGS__)
 
-// Copy methods - all just copy the function pointer or field value
+// Copy methods - fields get pointer references, methods get copied
 #define COPY_METHOD_field(ret_type, name, ...) \
-    dst->name = src->name;
+    dst->name = &(src->name);
 
 #define COPY_METHOD_method(ret_type, name, ...) \
     dst->name = src->name;
@@ -138,10 +150,19 @@
     static trait_type_name* trait_type_name##_from_##struct_name(struct struct_name* obj) { \
         trait_type_name* result = malloc(sizeof(trait_type_name)); \
         if (!result) return NULL; \
+        result->_src = obj; \
         struct struct_name* src = obj; \
         trait_type_name* dst = result; \
         Trait_##trait_type_name(COPY_METHOD) \
         return result; \
+    } \
+    static struct struct_name* struct_name##_from_##trait_type_name(trait_type_name* trait_obj) { \
+        return (struct struct_name*)trait_obj->_src; \
+    } \
+    static void trait_type_name##_destroy(trait_type_name* trait_obj) { \
+        if (trait_obj) { \
+            free(trait_obj); \
+        } \
     }
 
 #endif // TRAIT_H
