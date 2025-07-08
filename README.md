@@ -83,7 +83,7 @@ int main() {
 
 ```sh
 cd examples
-clang -o complete_test complete_test.c ../trait.h -Wall -Wextra
+clang -o complete_test complete_test.c -Wall -Wextra
 ./complete_test
 ```
 

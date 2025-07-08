@@ -127,7 +127,10 @@
     typedef struct trait_name { \
         void* _src; \
         methods(TRAIT_OBJ_FIELD) \
-    } trait_name;
+    } trait_name; \
+    static void trait_name##_destroy(trait_name* trait_obj) { \
+        if (trait_obj) { free(trait_obj); } \
+    }
 
 // --- TRAIT IMPLEMENTATION MACROS ---
 
@@ -187,8 +190,5 @@
     static struct struct_name* struct_name##_from_##trait_type_name(trait_type_name* trait_obj) { \
         return (struct struct_name*)trait_obj->_src; \
     } \
-    static void trait_type_name##_destroy(trait_type_name* trait_obj) { \
-        if (trait_obj) { free(trait_obj); } \
-    }
 
 #endif // TRAIT_H
