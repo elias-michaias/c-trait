@@ -16,7 +16,7 @@ struct Player {
 
 #define STRUCT_IMPL Player
 // Player implementation
-impl(Player) {
+impl {
     def(get_status, const char* {
         static char status[128];
         snprintf(status, sizeof(status), "Player %s (Level %d, Health %d)", 
@@ -26,10 +26,8 @@ impl(Player) {
         return status;
     });
 }
-
 // Register Player as implementing Entity trait
-struct_impl_trait_type(Player, Entity)
-
+impl_traits(Entity)
 #undef STRUCT_IMPL
 
 int main() {

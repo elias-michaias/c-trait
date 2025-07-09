@@ -27,7 +27,6 @@ struct Bar {
 
 // Implement Foo
 #define STRUCT_IMPL Foo
-
 impl {
     def(a_method, {
         printf("Foo::a_method (value=%d)\n", self->value);
@@ -37,14 +36,11 @@ impl {
         return self->value + x;
     });
 }
-
-struct_impl_trait_type(A)
-struct_impl_trait_type(B)
+impl_traits(A, B)
 #undef STRUCT_IMPL
 
 // Implement Bar
 #define STRUCT_IMPL Bar
-
 impl {
     def(a_method, {
         printf("Bar::a_method (value=%d)\n", self->value);
@@ -54,9 +50,7 @@ impl {
         return self->value * x;
     });
 }
-
-struct_impl_trait_type(A)
-struct_impl_trait_type(B)
+impl_traits(A, B)
 #undef STRUCT_IMPL
 
 int main() {

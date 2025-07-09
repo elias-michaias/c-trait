@@ -14,15 +14,17 @@ struct TestStruct {
 };
 
 // Implementation with ALL methods (should compile successfully)
-impl(TestStruct) {
+#define STRUCT_IMPL TestStruct
+impl {
     def(test_method, {
         printf("Testing...\n");
     });
     // TestStruct.get_value is UNDEFINED which should cause a validation error
 }
-
 // This automatically validates that all methods are implemented and creates the trait bridge
-struct_impl_trait_type(TestStruct, Testable)
+impl_traits(Testable)
+#undef STRUCT_IMPL
+
 
 int main() {
     struct TestStruct* test = TestStruct_new();

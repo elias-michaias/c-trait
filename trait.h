@@ -70,21 +70,40 @@
 // --- STRUCT IMPLEMENTATION MACROS ---
 
 // Begins an implementation block for a struct.
-// Usage: impl(MyStruct) { ... }
-//   - Defines MyStruct_new(), MyStruct_destroy(), and an init function for methods.
-#define impl(struct_name) \
-    static void struct_name##_init_methods(struct struct_name *self); \
-    static struct struct_name* struct_name##_new() { \
-        struct struct_name *obj = malloc(sizeof(struct struct_name)); \
+// Usage: #define STRUCT_IMPL MyStruct ... impl { ... } ... #undef STRUCT_IMPL
+#define impl \
+    static void CONCAT3(STRUCT_IMPL, _init_methods, ) (struct STRUCT_IMPL *self); \
+    static struct STRUCT_IMPL* CONCAT3(STRUCT_IMPL, _new, ) () { \
+        struct STRUCT_IMPL *obj = malloc(sizeof(struct STRUCT_IMPL)); \
         if (!obj) return NULL; \
-        memset(obj, 0, sizeof(struct struct_name)); \
-        struct_name##_init_methods(obj); \
+        memset(obj, 0, sizeof(struct STRUCT_IMPL)); \
+        CONCAT3(STRUCT_IMPL, _init_methods, )(obj); \
         return obj; \
     } \
-    static void struct_name##_destroy(struct struct_name* obj) { \
+    static void CONCAT3(STRUCT_IMPL, _destroy, ) (struct STRUCT_IMPL* obj) { \
         if (obj) { free(obj); } \
     } \
-    static void struct_name##_init_methods(struct struct_name *self)
+    static void CONCAT3(STRUCT_IMPL, _init_methods, ) (struct STRUCT_IMPL *self)
+
+// Register multiple trait conformances for STRUCT_IMPL
+#define impl_traits(...) FOR_EACH_STRUCT_IMPL_TRAIT(STRUCT_IMPL, __VA_ARGS__)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_1(S, T1) struct_impl_trait_type(S, T1)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_2(S, T1, T2) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_3(S, T1, T2, T3) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_4(S, T1, T2, T3, T4) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_5(S, T1, T2, T3, T4, T5) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_6(S, T1, T2, T3, T4, T5, T6) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5) struct_impl_trait_type(S, T6)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_7(S, T1, T2, T3, T4, T5, T6, T7) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5) struct_impl_trait_type(S, T6) struct_impl_trait_type(S, T7)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_8(S, T1, T2, T3, T4, T5, T6, T7, T8) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5) struct_impl_trait_type(S, T6) struct_impl_trait_type(S, T7) struct_impl_trait_type(S, T8)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_9(S, T1, T2, T3, T4, T5, T6, T7, T8, T9) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5) struct_impl_trait_type(S, T6) struct_impl_trait_type(S, T7) struct_impl_trait_type(S, T8) struct_impl_trait_type(S, T9)
+#define FOR_EACH_STRUCT_IMPL_TRAIT_10(S, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) struct_impl_trait_type(S, T1) struct_impl_trait_type(S, T2) struct_impl_trait_type(S, T3) struct_impl_trait_type(S, T4) struct_impl_trait_type(S, T5) struct_impl_trait_type(S, T6) struct_impl_trait_type(S, T7) struct_impl_trait_type(S, T8) struct_impl_trait_type(S, T9) struct_impl_trait_type(S, T10)
+#define GET_FOR_EACH_STRUCT_IMPL_TRAIT_MACRO(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,NAME,...) NAME
+#define FOR_EACH_STRUCT_IMPL_TRAIT(S, ...) \
+  GET_FOR_EACH_STRUCT_IMPL_TRAIT_MACRO(__VA_ARGS__, \
+    FOR_EACH_STRUCT_IMPL_TRAIT_10, FOR_EACH_STRUCT_IMPL_TRAIT_9, FOR_EACH_STRUCT_IMPL_TRAIT_8, \
+    FOR_EACH_STRUCT_IMPL_TRAIT_7, FOR_EACH_STRUCT_IMPL_TRAIT_6, FOR_EACH_STRUCT_IMPL_TRAIT_5, \
+    FOR_EACH_STRUCT_IMPL_TRAIT_4, FOR_EACH_STRUCT_IMPL_TRAIT_3, FOR_EACH_STRUCT_IMPL_TRAIT_2, \
+    FOR_EACH_STRUCT_IMPL_TRAIT_1)(S, __VA_ARGS__)
 
 // Defines a method implementation for a struct.
 // Usage: def(method_name, { ... })
