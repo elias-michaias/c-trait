@@ -4,7 +4,7 @@ This project implements a robust, ergonomic trait (a.k.a. protocol/typeclass) sy
 
 ## How It Works
 
-- **Traits** are defined as sets of required methods using macros and the naming convention `Trait_...` (see `Trait_Testable` in `examples/complete_test.c`).
+- **Traits** are defined as sets of required fields and methods using macros and the naming convention `Trait_...`. 
 - **Structs** use traits by embedding the trait's method fields (function pointers/blocks) via a macro.
 - **Implementations** are provided using the `impl()` and `def()` macros, which generate per-instance closures/blocks for each method.
 - **Trait objects** (e.g., `Testable*`) can be created from any conforming struct, enabling dynamic dispatch.
@@ -18,6 +18,7 @@ This project implements a robust, ergonomic trait (a.k.a. protocol/typeclass) sy
 // all traits start with `Trait_`
 // define your traits as an X-macro of field() and method()
 #define Trait_Testable(X) \
+    field(X, int, is_special)
     method(X, void, test_method) \
     method(X, int, get_value, int)
 
