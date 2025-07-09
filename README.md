@@ -1,4 +1,4 @@
-# Trait Composition + Methods + Ad-Hoc Polymorphism in C
+# Traits + Methods + Ad-Hoc Polymorphism in C
 
 This project implements a robust, ergonomic trait (a.k.a. protocol/typeclass) system for C, inspired by Rust traits and Swift protocols, using a closure/block-based approach. It enables ad-hoc polymorphism, dynamic dispatch, and compile-time validation of trait conformance. It depends on [blocks](https://en.wikipedia.org/wiki/Blocks_(C_language_extension)), which come out of the box for `clang`. When it comes to `gcc` or `msvc`, your mileage may vary.
 
