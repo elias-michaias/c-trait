@@ -57,6 +57,16 @@
 #define MAP_TRAITS_AGAIN() MAP_TRAITS
 #define PARENS ()
 
+#define EXPAND(x) x
+#define CONCAT(a, b) EXPAND(CONCAT_IMPL(a, b))
+#define CONCAT_IMPL(a, b) a ## b
+#define CONCAT3(a, b, c) EXPAND(CONCAT3_IMPL(a, b, c))
+#define CONCAT3_IMPL(a, b, c) a ## b ## c
+#define CONCAT4(a, b, c, d) EXPAND(CONCAT4_IMPL(a, b, c, d))
+#define CONCAT4_IMPL(a, b, c, d) a ## b ## c ## d
+#define CONCAT5(a, b, c, d, e) EXPAND(CONCAT5_IMPL(a, b, c, d, e))
+#define CONCAT5_IMPL(a, b, c, d, e) a ## b ## c ## d ## e
+
 // --- STRUCT IMPLEMENTATION MACROS ---
 
 // Begins an implementation block for a struct.
@@ -82,7 +92,8 @@
 //   - block: block/closure body (self is in scope)
 #define def(method_name, block) \
     self->method_name = Block_copy(^block); \
-    extern void TRAIT_VALIDATION_##method_name##_IMPLEMENTED(void)
+    extern void CONCAT4(TRAIT_VALIDATION_, method_name, _IMPLEMENTED_for_, STRUCT_IMPL)(void)
+
 
 // --- TRAIT FIELD GENERATION MACROS ---
 
@@ -150,7 +161,7 @@
 #define REQUIRE_METHOD_TOKEN_field(ret_type, name, ...) \
     /* No validation needed for fields */
 #define REQUIRE_METHOD_TOKEN_method(ret_type, name, ...) \
-    TRAIT_VALIDATION_##name##_IMPLEMENTED();
+    CONCAT4(TRAIT_VALIDATION_, name, _IMPLEMENTED_for_, STRUCT_IMPL)();
 
 // Provides a weak validation function for each method.
 #define PROVIDE_METHOD_VALIDATION(ret_type, name, kind, ...) \

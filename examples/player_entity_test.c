@@ -14,20 +14,23 @@ struct Player {
     use(Trait_Entity)
 };
 
+#define STRUCT_IMPL Player
 // Player implementation
 impl(Player) {
-    def(get_status, {
+    def(get_status, const char* {
         static char status[128];
         snprintf(status, sizeof(status), "Player %s (Level %d, Health %d)", 
                  self->name, 
                  self->level, 
                  self->health);
-        return (const char*)status;
+        return status;
     });
 }
 
 // Register Player as implementing Entity trait
 struct_impl_trait_type(Player, Entity)
+
+#undef STRUCT_IMPL
 
 int main() {
     printf("=== Pointer-based Trait Objects Demo ===\n\n");
