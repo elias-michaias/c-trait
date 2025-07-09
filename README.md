@@ -8,7 +8,7 @@ This project implements a robust, ergonomic trait (a.k.a. protocol/typeclass) sy
 - **Structs** use traits by embedding the trait's method fields (function pointers/blocks) via a macro.
 - **Implementations** are provided using the `impl()` and `def()` macros, which generate per-instance closures/blocks for each method.
 - **Trait objects** (e.g., `Testable*`) can be created from any conforming struct, enabling dynamic dispatch.
-- **Compile-time validation**: The system generates validation functions for each method, so missing implementations cause a compile-time error when you call `struct_impl_trait_type()`.
+- **Compile-time validation**: The system generates validation functions for each method, so missing implementations cause a compile-time error when you call `impl_traits()`.
 - **No inheritance**: only ad-hoc polymorphism and subtyping via trait composition.
 - **No default implementations**: all logic is immediately visible in every struct's `impl()` block.
 
