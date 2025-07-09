@@ -18,7 +18,7 @@ This project implements a robust, ergonomic trait (a.k.a. protocol/typeclass) sy
 // all traits start with `Trait_`
 // define your traits as an X-macro of field() and method()
 #define Trait_Testable(X) \
-    field(X, int, is_special)
+    field(X, int, is_special) \
     method(X, void, test_method) \
     method(X, int, get_value, int)
 
