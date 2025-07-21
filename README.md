@@ -96,8 +96,8 @@ int main() {
 
 ```sh
 cd examples
-clang -o complete_test complete_test.c -Wall -Wextra
-./complete_test
+clang -o adhoc_poly_test adhoc_poly_test.c
+./adhoc_poly_test
 ```
 
 ## License
