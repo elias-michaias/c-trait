@@ -16,9 +16,8 @@ A single-header library that implements a robust, ergonomic trait (a.k.a. protoc
 
 ```c
 // all traits start with `Trait_`
-// define your traits as an X-macro of field() and method()
+// define your traits as an X-macro of and method()
 #define Trait_Testable(X) \
-    field(X, int, is_special) \
     method(X, void, test_method) \
     method(X, int, get_value, int)
 
@@ -28,7 +27,7 @@ define_type_from_trait(Testable, Trait_Testable)
 
 struct TestStruct {
     int id;
-    // expands the fields of a trait
+    // expands the methods of a trait
     use(Trait_Testable)
 };
 

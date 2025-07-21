@@ -2,7 +2,6 @@
 
 // Define Entity trait with health field and status method
 #define Trait_Entity(X) \
-    field(X, int, health) \
     method(X, const char*, get_status)
 
 define_type_from_trait(Entity, Trait_Entity)
@@ -11,6 +10,7 @@ define_type_from_trait(Entity, Trait_Entity)
 struct Player {
     char name[64];
     int level;
+    int health;
     use(Trait_Entity)
 };
 
@@ -47,16 +47,13 @@ int main() {
     Entity* entity = Entity_from_Player(player);
     
     printf("\nAccessing via Entity trait:\n");
-    printf("Health: %d\n", *(entity->health));
     printf("Status: %s\n", entity->get_status());
     
-    // Modify health through the Entity trait object
-    *(entity->health) = 75;
-    printf("\nAfter modifying health via Entity trait:\n");
-    printf("Entity health: %d\n", *(entity->health));
+    // Modify health through the Player struct directly
+    player->health = 75;
+    printf("\nAfter modifying health via Player struct:\n");
     printf("Original Player health: %d\n", player->health);
-    printf("Both should be the same: %s\n", 
-           (*(entity->health) == player->health) ? "YES" : "NO");
+    printf("Status: %s\n", entity->get_status());
     
     // Get back to original Player struct from Entity trait
     struct Player* recovered_player = Player_from_Entity(entity);
@@ -70,7 +67,6 @@ int main() {
     recovered_player->health = 50;
     
     printf("\nAfter modifying via recovered Player:\n");
-    printf("Entity health: %d\n", *(entity->health));
     printf("Player level: %d\n", player->level);
     printf("Status: %s\n", entity->get_status());
     

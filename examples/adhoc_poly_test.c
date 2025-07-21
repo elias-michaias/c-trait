@@ -53,6 +53,12 @@ impl {
 impl_traits(A, B)
 #undef STRUCT_IMPL
 
+void process_as(A** as, int count) {
+    for (int i = 0; i < count; i++) {
+        as[i]->a_method();
+    }
+}
+
 int main() {
     struct Foo* foo = Foo_new();
     foo->value = 10;
@@ -65,9 +71,14 @@ int main() {
     B* b1 = B_from_Foo(foo);
     B* b2 = B_from_Bar(bar);
 
+
     printf("Calling a_method via trait A* on Foo and Bar:\n");
     a1->a_method();
     a2->a_method();
+
+    A* as[] = { a1, a2 };
+    printf("\nProcessing an array of A without caring about their underlying types:\n");
+    process_as(as, 2);
 
     printf("\nCalling b_method via trait B* on Foo and Bar:\n");
     printf("Foo result: %d\n", b1->b_method(5));

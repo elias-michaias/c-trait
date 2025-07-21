@@ -116,11 +116,11 @@
 
 // --- TRAIT FIELD GENERATION MACROS ---
 
-// Internal: Expands to a struct field or method pointer.
+// Internal: Expands to a struct method pointer only.
 #define TRAIT_FIELD(ret_type, name, kind, ...) \
     TRAIT_FIELD_##kind(ret_type, name, ##__VA_ARGS__)
 
-// Expands all trait fields for use in a struct.
+// Expands all trait methods for use in a struct.
 // Usage: use(Trait_MyTrait)
 #define use(methods) \
     methods(TRAIT_FIELD)
@@ -130,20 +130,17 @@
 #define trait(X, trait_macro) \
     trait_macro(X)
 
-// Field expansion for struct fields.
-#define TRAIT_FIELD_field(ret_type, name, ...) \
-    ret_type name;
-// Field expansion for struct methods (block pointer).
+// Only allow method fields in structs.
+// #define TRAIT_FIELD_field(ret_type, name, ...) ret_type name; // REMOVED
 #define TRAIT_FIELD_method(ret_type, name, ...) \
     ret_type (^name)(__VA_ARGS__);
 
 // --- TRAIT OBJECT FIELD MACROS ---
 
-// Internal: Expands to a trait object field (pointer for fields, block for methods).
+// Internal: Expands to a trait object method field (block for methods only).
 #define TRAIT_OBJ_FIELD(ret_type, name, kind, ...) \
     TRAIT_OBJ_FIELD_##kind(ret_type, name, ##__VA_ARGS__)
-#define TRAIT_OBJ_FIELD_field(ret_type, name, ...) \
-    ret_type* name;
+// #define TRAIT_OBJ_FIELD_field(ret_type, name, ...) ret_type* name; // REMOVED
 #define TRAIT_OBJ_FIELD_method(ret_type, name, ...) \
     ret_type (^name)(__VA_ARGS__);
 
@@ -164,29 +161,23 @@
 
 // --- TRAIT IMPLEMENTATION MACROS ---
 
-// Internal: Copies a field or method from struct to trait object.
 #define COPY_METHOD(ret_type, name, kind, ...) \
     COPY_METHOD_##kind(ret_type, name, ##__VA_ARGS__)
-#define COPY_METHOD_field(ret_type, name, ...) \
-    dst->name = &(src->name);
+// #define COPY_METHOD_field(ret_type, name, ...) dst->name = &(src->name); // REMOVED
 #define COPY_METHOD_method(ret_type, name, ...) \
     dst->name = src->name;
 
 // --- TRAIT VALIDATION MACROS ---
 
-// Compile-time validation: requires a method implementation token.
 #define REQUIRE_METHOD_TOKEN(ret_type, name, kind, ...) \
     REQUIRE_METHOD_TOKEN_##kind(ret_type, name, ##__VA_ARGS__)
-#define REQUIRE_METHOD_TOKEN_field(ret_type, name, ...) \
-    /* No validation needed for fields */
+// #define REQUIRE_METHOD_TOKEN_field(ret_type, name, ...) // REMOVED
 #define REQUIRE_METHOD_TOKEN_method(ret_type, name, ...) \
     CONCAT4(TRAIT_VALIDATION_, name, _IMPLEMENTED_for_, STRUCT_IMPL)();
 
-// Provides a weak validation function for each method.
 #define PROVIDE_METHOD_VALIDATION(ret_type, name, kind, ...) \
     PROVIDE_METHOD_VALIDATION_##kind(ret_type, name, ##__VA_ARGS__)
-#define PROVIDE_METHOD_VALIDATION_field(ret_type, name, ...) \
-    /* No validation needed for fields */
+// #define PROVIDE_METHOD_VALIDATION_field(ret_type, name, ...) // REMOVED
 #define PROVIDE_METHOD_VALIDATION_method(ret_type, name, ...) \
     __attribute__((weak)) void TRAIT_VALIDATION_##name##_IMPLEMENTED(void) {}
 
