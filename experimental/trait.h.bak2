@@ -1,0 +1,3683 @@
+// =============================================================================
+// Hierarchical counter operations (triggered by self-include)
+//
+// Usage at call sites:
+//   #define ___TRAIT_YC_OP_SAVE 1
+//   #include "trait.h"
+//   #undef ___TRAIT_YC_OP_SAVE
+// =============================================================================
+#if defined(___TRAIT_YC_OP_SAVE)
+  // Save current Y counter to per-trait storage
+  #if ___TRAIT_TID_T2 == 0
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_00_Y2
+      #define ___TRAIT_YC_00_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_00_Y1
+      #define ___TRAIT_YC_00_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_01_Y2
+      #define ___TRAIT_YC_01_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_01_Y1
+      #define ___TRAIT_YC_01_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_02_Y2
+      #define ___TRAIT_YC_02_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_02_Y1
+      #define ___TRAIT_YC_02_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_03_Y2
+      #define ___TRAIT_YC_03_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_03_Y1
+      #define ___TRAIT_YC_03_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_04_Y2
+      #define ___TRAIT_YC_04_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_04_Y1
+      #define ___TRAIT_YC_04_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_05_Y2
+      #define ___TRAIT_YC_05_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_05_Y1
+      #define ___TRAIT_YC_05_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_06_Y2
+      #define ___TRAIT_YC_06_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_06_Y1
+      #define ___TRAIT_YC_06_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_07_Y2
+      #define ___TRAIT_YC_07_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_07_Y1
+      #define ___TRAIT_YC_07_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 1
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_10_Y2
+      #define ___TRAIT_YC_10_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_10_Y1
+      #define ___TRAIT_YC_10_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_11_Y2
+      #define ___TRAIT_YC_11_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_11_Y1
+      #define ___TRAIT_YC_11_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_12_Y2
+      #define ___TRAIT_YC_12_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_12_Y1
+      #define ___TRAIT_YC_12_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_13_Y2
+      #define ___TRAIT_YC_13_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_13_Y1
+      #define ___TRAIT_YC_13_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_14_Y2
+      #define ___TRAIT_YC_14_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_14_Y1
+      #define ___TRAIT_YC_14_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_15_Y2
+      #define ___TRAIT_YC_15_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_15_Y1
+      #define ___TRAIT_YC_15_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_16_Y2
+      #define ___TRAIT_YC_16_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_16_Y1
+      #define ___TRAIT_YC_16_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_17_Y2
+      #define ___TRAIT_YC_17_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_17_Y1
+      #define ___TRAIT_YC_17_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 2
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_20_Y2
+      #define ___TRAIT_YC_20_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_20_Y1
+      #define ___TRAIT_YC_20_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_21_Y2
+      #define ___TRAIT_YC_21_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_21_Y1
+      #define ___TRAIT_YC_21_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_22_Y2
+      #define ___TRAIT_YC_22_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_22_Y1
+      #define ___TRAIT_YC_22_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_23_Y2
+      #define ___TRAIT_YC_23_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_23_Y1
+      #define ___TRAIT_YC_23_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_24_Y2
+      #define ___TRAIT_YC_24_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_24_Y1
+      #define ___TRAIT_YC_24_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_25_Y2
+      #define ___TRAIT_YC_25_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_25_Y1
+      #define ___TRAIT_YC_25_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_26_Y2
+      #define ___TRAIT_YC_26_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_26_Y1
+      #define ___TRAIT_YC_26_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_27_Y2
+      #define ___TRAIT_YC_27_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_27_Y1
+      #define ___TRAIT_YC_27_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 3
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_30_Y2
+      #define ___TRAIT_YC_30_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_30_Y1
+      #define ___TRAIT_YC_30_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_31_Y2
+      #define ___TRAIT_YC_31_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_31_Y1
+      #define ___TRAIT_YC_31_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_32_Y2
+      #define ___TRAIT_YC_32_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_32_Y1
+      #define ___TRAIT_YC_32_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_33_Y2
+      #define ___TRAIT_YC_33_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_33_Y1
+      #define ___TRAIT_YC_33_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_34_Y2
+      #define ___TRAIT_YC_34_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_34_Y1
+      #define ___TRAIT_YC_34_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_35_Y2
+      #define ___TRAIT_YC_35_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_35_Y1
+      #define ___TRAIT_YC_35_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_36_Y2
+      #define ___TRAIT_YC_36_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_36_Y1
+      #define ___TRAIT_YC_36_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_37_Y2
+      #define ___TRAIT_YC_37_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_37_Y1
+      #define ___TRAIT_YC_37_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 4
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_40_Y2
+      #define ___TRAIT_YC_40_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_40_Y1
+      #define ___TRAIT_YC_40_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_41_Y2
+      #define ___TRAIT_YC_41_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_41_Y1
+      #define ___TRAIT_YC_41_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_42_Y2
+      #define ___TRAIT_YC_42_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_42_Y1
+      #define ___TRAIT_YC_42_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_43_Y2
+      #define ___TRAIT_YC_43_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_43_Y1
+      #define ___TRAIT_YC_43_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_44_Y2
+      #define ___TRAIT_YC_44_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_44_Y1
+      #define ___TRAIT_YC_44_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_45_Y2
+      #define ___TRAIT_YC_45_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_45_Y1
+      #define ___TRAIT_YC_45_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_46_Y2
+      #define ___TRAIT_YC_46_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_46_Y1
+      #define ___TRAIT_YC_46_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_47_Y2
+      #define ___TRAIT_YC_47_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_47_Y1
+      #define ___TRAIT_YC_47_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 5
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_50_Y2
+      #define ___TRAIT_YC_50_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_50_Y1
+      #define ___TRAIT_YC_50_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_51_Y2
+      #define ___TRAIT_YC_51_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_51_Y1
+      #define ___TRAIT_YC_51_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_52_Y2
+      #define ___TRAIT_YC_52_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_52_Y1
+      #define ___TRAIT_YC_52_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_53_Y2
+      #define ___TRAIT_YC_53_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_53_Y1
+      #define ___TRAIT_YC_53_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_54_Y2
+      #define ___TRAIT_YC_54_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_54_Y1
+      #define ___TRAIT_YC_54_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_55_Y2
+      #define ___TRAIT_YC_55_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_55_Y1
+      #define ___TRAIT_YC_55_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_56_Y2
+      #define ___TRAIT_YC_56_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_56_Y1
+      #define ___TRAIT_YC_56_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_57_Y2
+      #define ___TRAIT_YC_57_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_57_Y1
+      #define ___TRAIT_YC_57_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 6
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_60_Y2
+      #define ___TRAIT_YC_60_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_60_Y1
+      #define ___TRAIT_YC_60_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_61_Y2
+      #define ___TRAIT_YC_61_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_61_Y1
+      #define ___TRAIT_YC_61_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_62_Y2
+      #define ___TRAIT_YC_62_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_62_Y1
+      #define ___TRAIT_YC_62_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_63_Y2
+      #define ___TRAIT_YC_63_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_63_Y1
+      #define ___TRAIT_YC_63_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_64_Y2
+      #define ___TRAIT_YC_64_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_64_Y1
+      #define ___TRAIT_YC_64_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_65_Y2
+      #define ___TRAIT_YC_65_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_65_Y1
+      #define ___TRAIT_YC_65_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_66_Y2
+      #define ___TRAIT_YC_66_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_66_Y1
+      #define ___TRAIT_YC_66_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_67_Y2
+      #define ___TRAIT_YC_67_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_67_Y1
+      #define ___TRAIT_YC_67_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 7
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_70_Y2
+      #define ___TRAIT_YC_70_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_70_Y1
+      #define ___TRAIT_YC_70_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_71_Y2
+      #define ___TRAIT_YC_71_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_71_Y1
+      #define ___TRAIT_YC_71_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_72_Y2
+      #define ___TRAIT_YC_72_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_72_Y1
+      #define ___TRAIT_YC_72_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_73_Y2
+      #define ___TRAIT_YC_73_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_73_Y1
+      #define ___TRAIT_YC_73_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_74_Y2
+      #define ___TRAIT_YC_74_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_74_Y1
+      #define ___TRAIT_YC_74_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_75_Y2
+      #define ___TRAIT_YC_75_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_75_Y1
+      #define ___TRAIT_YC_75_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_76_Y2
+      #define ___TRAIT_YC_76_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_76_Y1
+      #define ___TRAIT_YC_76_Y1 ___TRAIT_YC_CUR_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_77_Y2
+      #define ___TRAIT_YC_77_Y2 ___TRAIT_YC_CUR_Y2
+      #undef ___TRAIT_YC_77_Y1
+      #define ___TRAIT_YC_77_Y1 ___TRAIT_YC_CUR_Y1
+    #endif
+  #endif
+  #undef ___TRAIT_YC_OP_SAVE
+#elif defined(___TRAIT_YC_OP_RESTORE)
+  // Restore current Y counter from per-trait storage
+  #if ___TRAIT_TID_T2 == 0
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_00_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_00_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_01_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_01_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_02_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_02_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_03_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_03_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_04_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_04_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_05_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_05_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_06_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_06_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_07_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_07_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 1
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_10_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_10_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_11_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_11_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_12_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_12_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_13_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_13_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_14_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_14_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_15_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_15_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_16_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_16_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_17_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_17_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 2
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_20_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_20_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_21_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_21_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_22_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_22_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_23_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_23_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_24_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_24_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_25_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_25_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_26_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_26_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_27_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_27_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 3
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_30_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_30_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_31_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_31_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_32_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_32_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_33_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_33_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_34_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_34_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_35_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_35_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_36_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_36_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_37_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_37_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 4
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_40_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_40_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_41_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_41_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_42_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_42_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_43_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_43_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_44_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_44_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_45_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_45_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_46_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_46_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_47_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_47_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 5
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_50_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_50_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_51_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_51_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_52_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_52_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_53_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_53_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_54_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_54_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_55_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_55_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_56_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_56_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_57_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_57_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 6
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_60_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_60_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_61_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_61_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_62_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_62_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_63_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_63_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_64_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_64_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_65_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_65_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_66_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_66_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_67_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_67_Y1
+    #endif
+  #elif ___TRAIT_TID_T2 == 7
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_70_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_70_Y1
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_71_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_71_Y1
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_72_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_72_Y1
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_73_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_73_Y1
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_74_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_74_Y1
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_75_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_75_Y1
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_76_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_76_Y1
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_YC_CUR_Y2
+      #define ___TRAIT_YC_CUR_Y2 ___TRAIT_YC_77_Y2
+      #undef ___TRAIT_YC_CUR_Y1
+      #define ___TRAIT_YC_CUR_Y1 ___TRAIT_YC_77_Y1
+    #endif
+  #endif
+  #undef ___TRAIT_YC_OP_RESTORE
+#elif defined(___TRAIT_YC_OP_INC)
+  // Universal Y counter increment (2-digit octal)
+  #if   ___TRAIT_YC_CUR_Y1 == 0
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 1
+  #elif ___TRAIT_YC_CUR_Y1 == 1
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 2
+  #elif ___TRAIT_YC_CUR_Y1 == 2
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 3
+  #elif ___TRAIT_YC_CUR_Y1 == 3
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 4
+  #elif ___TRAIT_YC_CUR_Y1 == 4
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 5
+  #elif ___TRAIT_YC_CUR_Y1 == 5
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 6
+  #elif ___TRAIT_YC_CUR_Y1 == 6
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 7
+  #elif ___TRAIT_YC_CUR_Y1 == 7
+  #undef  ___TRAIT_YC_CUR_Y1
+  #define ___TRAIT_YC_CUR_Y1 0
+  #if   ___TRAIT_YC_CUR_Y2 == 0
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 1
+  #elif ___TRAIT_YC_CUR_Y2 == 1
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 2
+  #elif ___TRAIT_YC_CUR_Y2 == 2
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 3
+  #elif ___TRAIT_YC_CUR_Y2 == 3
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 4
+  #elif ___TRAIT_YC_CUR_Y2 == 4
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 5
+  #elif ___TRAIT_YC_CUR_Y2 == 5
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 6
+  #elif ___TRAIT_YC_CUR_Y2 == 6
+  #undef  ___TRAIT_YC_CUR_Y2
+  #define ___TRAIT_YC_CUR_Y2 7
+  #elif ___TRAIT_YC_CUR_Y2 == 7
+  #error "c-trait: too many types per trait (max 64)"
+  #endif
+  #endif
+  #undef ___TRAIT_YC_OP_INC
+#elif defined(___TRAIT_TC_OP_INC)
+  // Trait counter increment (2-digit octal)
+  #if   ___TRAIT_TC_T1 == 0
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 1
+  #elif ___TRAIT_TC_T1 == 1
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 2
+  #elif ___TRAIT_TC_T1 == 2
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 3
+  #elif ___TRAIT_TC_T1 == 3
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 4
+  #elif ___TRAIT_TC_T1 == 4
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 5
+  #elif ___TRAIT_TC_T1 == 5
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 6
+  #elif ___TRAIT_TC_T1 == 6
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 7
+  #elif ___TRAIT_TC_T1 == 7
+  #undef  ___TRAIT_TC_T1
+  #define ___TRAIT_TC_T1 0
+  #if   ___TRAIT_TC_T2 == 0
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 1
+  #elif ___TRAIT_TC_T2 == 1
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 2
+  #elif ___TRAIT_TC_T2 == 2
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 3
+  #elif ___TRAIT_TC_T2 == 3
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 4
+  #elif ___TRAIT_TC_T2 == 4
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 5
+  #elif ___TRAIT_TC_T2 == 5
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 6
+  #elif ___TRAIT_TC_T2 == 6
+  #undef  ___TRAIT_TC_T2
+  #define ___TRAIT_TC_T2 7
+  #elif ___TRAIT_TC_T2 == 7
+  #error "c-trait: too many traits (max 64)"
+  #endif
+  #endif
+  #undef ___TRAIT_TC_OP_INC
+#elif defined(___TRAIT_NAME_OP_SAVE)
+  // Save trait name to per-trait storage
+  #if ___TRAIT_TC_T2 == 0
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_00
+      #define ___TRAIT_NAME_00 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_01
+      #define ___TRAIT_NAME_01 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_02
+      #define ___TRAIT_NAME_02 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_03
+      #define ___TRAIT_NAME_03 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_04
+      #define ___TRAIT_NAME_04 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_05
+      #define ___TRAIT_NAME_05 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_06
+      #define ___TRAIT_NAME_06 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_07
+      #define ___TRAIT_NAME_07 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 1
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_10
+      #define ___TRAIT_NAME_10 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_11
+      #define ___TRAIT_NAME_11 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_12
+      #define ___TRAIT_NAME_12 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_13
+      #define ___TRAIT_NAME_13 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_14
+      #define ___TRAIT_NAME_14 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_15
+      #define ___TRAIT_NAME_15 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_16
+      #define ___TRAIT_NAME_16 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_17
+      #define ___TRAIT_NAME_17 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 2
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_20
+      #define ___TRAIT_NAME_20 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_21
+      #define ___TRAIT_NAME_21 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_22
+      #define ___TRAIT_NAME_22 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_23
+      #define ___TRAIT_NAME_23 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_24
+      #define ___TRAIT_NAME_24 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_25
+      #define ___TRAIT_NAME_25 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_26
+      #define ___TRAIT_NAME_26 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_27
+      #define ___TRAIT_NAME_27 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 3
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_30
+      #define ___TRAIT_NAME_30 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_31
+      #define ___TRAIT_NAME_31 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_32
+      #define ___TRAIT_NAME_32 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_33
+      #define ___TRAIT_NAME_33 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_34
+      #define ___TRAIT_NAME_34 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_35
+      #define ___TRAIT_NAME_35 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_36
+      #define ___TRAIT_NAME_36 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_37
+      #define ___TRAIT_NAME_37 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 4
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_40
+      #define ___TRAIT_NAME_40 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_41
+      #define ___TRAIT_NAME_41 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_42
+      #define ___TRAIT_NAME_42 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_43
+      #define ___TRAIT_NAME_43 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_44
+      #define ___TRAIT_NAME_44 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_45
+      #define ___TRAIT_NAME_45 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_46
+      #define ___TRAIT_NAME_46 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_47
+      #define ___TRAIT_NAME_47 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 5
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_50
+      #define ___TRAIT_NAME_50 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_51
+      #define ___TRAIT_NAME_51 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_52
+      #define ___TRAIT_NAME_52 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_53
+      #define ___TRAIT_NAME_53 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_54
+      #define ___TRAIT_NAME_54 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_55
+      #define ___TRAIT_NAME_55 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_56
+      #define ___TRAIT_NAME_56 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_57
+      #define ___TRAIT_NAME_57 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 6
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_60
+      #define ___TRAIT_NAME_60 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_61
+      #define ___TRAIT_NAME_61 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_62
+      #define ___TRAIT_NAME_62 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_63
+      #define ___TRAIT_NAME_63 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_64
+      #define ___TRAIT_NAME_64 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_65
+      #define ___TRAIT_NAME_65 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_66
+      #define ___TRAIT_NAME_66 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_67
+      #define ___TRAIT_NAME_67 Trait
+    #endif
+  #elif ___TRAIT_TC_T2 == 7
+    #if ___TRAIT_TC_T1 == 0
+      #undef ___TRAIT_NAME_70
+      #define ___TRAIT_NAME_70 Trait
+    #elif ___TRAIT_TC_T1 == 1
+      #undef ___TRAIT_NAME_71
+      #define ___TRAIT_NAME_71 Trait
+    #elif ___TRAIT_TC_T1 == 2
+      #undef ___TRAIT_NAME_72
+      #define ___TRAIT_NAME_72 Trait
+    #elif ___TRAIT_TC_T1 == 3
+      #undef ___TRAIT_NAME_73
+      #define ___TRAIT_NAME_73 Trait
+    #elif ___TRAIT_TC_T1 == 4
+      #undef ___TRAIT_NAME_74
+      #define ___TRAIT_NAME_74 Trait
+    #elif ___TRAIT_TC_T1 == 5
+      #undef ___TRAIT_NAME_75
+      #define ___TRAIT_NAME_75 Trait
+    #elif ___TRAIT_TC_T1 == 6
+      #undef ___TRAIT_NAME_76
+      #define ___TRAIT_NAME_76 Trait
+    #elif ___TRAIT_TC_T1 == 7
+      #undef ___TRAIT_NAME_77
+      #define ___TRAIT_NAME_77 Trait
+    #endif
+  #endif
+  #undef ___TRAIT_NAME_OP_SAVE
+#elif defined(___TRAIT_MCOUNT_OP_SAVE)
+  // Save method count to per-trait storage
+  #if ___TRAIT_TID_T2 == 0
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_00
+      #define ___TRAIT_MCOUNT_00 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_01
+      #define ___TRAIT_MCOUNT_01 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_02
+      #define ___TRAIT_MCOUNT_02 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_03
+      #define ___TRAIT_MCOUNT_03 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_04
+      #define ___TRAIT_MCOUNT_04 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_05
+      #define ___TRAIT_MCOUNT_05 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_06
+      #define ___TRAIT_MCOUNT_06 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_07
+      #define ___TRAIT_MCOUNT_07 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 1
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_10
+      #define ___TRAIT_MCOUNT_10 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_11
+      #define ___TRAIT_MCOUNT_11 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_12
+      #define ___TRAIT_MCOUNT_12 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_13
+      #define ___TRAIT_MCOUNT_13 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_14
+      #define ___TRAIT_MCOUNT_14 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_15
+      #define ___TRAIT_MCOUNT_15 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_16
+      #define ___TRAIT_MCOUNT_16 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_17
+      #define ___TRAIT_MCOUNT_17 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 2
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_20
+      #define ___TRAIT_MCOUNT_20 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_21
+      #define ___TRAIT_MCOUNT_21 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_22
+      #define ___TRAIT_MCOUNT_22 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_23
+      #define ___TRAIT_MCOUNT_23 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_24
+      #define ___TRAIT_MCOUNT_24 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_25
+      #define ___TRAIT_MCOUNT_25 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_26
+      #define ___TRAIT_MCOUNT_26 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_27
+      #define ___TRAIT_MCOUNT_27 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 3
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_30
+      #define ___TRAIT_MCOUNT_30 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_31
+      #define ___TRAIT_MCOUNT_31 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_32
+      #define ___TRAIT_MCOUNT_32 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_33
+      #define ___TRAIT_MCOUNT_33 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_34
+      #define ___TRAIT_MCOUNT_34 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_35
+      #define ___TRAIT_MCOUNT_35 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_36
+      #define ___TRAIT_MCOUNT_36 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_37
+      #define ___TRAIT_MCOUNT_37 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 4
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_40
+      #define ___TRAIT_MCOUNT_40 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_41
+      #define ___TRAIT_MCOUNT_41 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_42
+      #define ___TRAIT_MCOUNT_42 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_43
+      #define ___TRAIT_MCOUNT_43 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_44
+      #define ___TRAIT_MCOUNT_44 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_45
+      #define ___TRAIT_MCOUNT_45 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_46
+      #define ___TRAIT_MCOUNT_46 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_47
+      #define ___TRAIT_MCOUNT_47 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 5
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_50
+      #define ___TRAIT_MCOUNT_50 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_51
+      #define ___TRAIT_MCOUNT_51 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_52
+      #define ___TRAIT_MCOUNT_52 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_53
+      #define ___TRAIT_MCOUNT_53 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_54
+      #define ___TRAIT_MCOUNT_54 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_55
+      #define ___TRAIT_MCOUNT_55 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_56
+      #define ___TRAIT_MCOUNT_56 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_57
+      #define ___TRAIT_MCOUNT_57 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 6
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_60
+      #define ___TRAIT_MCOUNT_60 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_61
+      #define ___TRAIT_MCOUNT_61 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_62
+      #define ___TRAIT_MCOUNT_62 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_63
+      #define ___TRAIT_MCOUNT_63 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_64
+      #define ___TRAIT_MCOUNT_64 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_65
+      #define ___TRAIT_MCOUNT_65 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_66
+      #define ___TRAIT_MCOUNT_66 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_67
+      #define ___TRAIT_MCOUNT_67 ___TRAIT_SD_PASS
+    #endif
+  #elif ___TRAIT_TID_T2 == 7
+    #if ___TRAIT_TID_T1 == 0
+      #undef ___TRAIT_MCOUNT_70
+      #define ___TRAIT_MCOUNT_70 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 1
+      #undef ___TRAIT_MCOUNT_71
+      #define ___TRAIT_MCOUNT_71 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 2
+      #undef ___TRAIT_MCOUNT_72
+      #define ___TRAIT_MCOUNT_72 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 3
+      #undef ___TRAIT_MCOUNT_73
+      #define ___TRAIT_MCOUNT_73 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 4
+      #undef ___TRAIT_MCOUNT_74
+      #define ___TRAIT_MCOUNT_74 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 5
+      #undef ___TRAIT_MCOUNT_75
+      #define ___TRAIT_MCOUNT_75 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 6
+      #undef ___TRAIT_MCOUNT_76
+      #define ___TRAIT_MCOUNT_76 ___TRAIT_SD_PASS
+    #elif ___TRAIT_TID_T1 == 7
+      #undef ___TRAIT_MCOUNT_77
+      #define ___TRAIT_MCOUNT_77 ___TRAIT_SD_PASS
+    #endif
+  #endif
+  #undef ___TRAIT_MCOUNT_OP_SAVE
+#endif // YC/TC operations
+
+// Auto-impl: second #include "trait.h" triggers impl()/cleanup
+#ifdef For
+#ifdef Impl
+#ifndef ___TRAIT_OPS_MODE
+#ifdef ___TRAIT_COUNT_ACTIVE
+// ═══════════════════════════════════════════════════════════════════════════════
+// METHOD COUNTING LOOP BODY
+//
+// Counts methods in a trait by iterating until sentinel. Saves count to
+// ___TRAIT_MCOUNT_<T2><T1> via the ops block.
+// ═══════════════════════════════════════════════════════════════════════════════
+#if !___TRAIT_SD_IS_STOP(___TRAIT_SD_PASS, Impl)
+#if   ___TRAIT_SD_PASS == 0
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 1
+#elif ___TRAIT_SD_PASS == 1
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 2
+#elif ___TRAIT_SD_PASS == 2
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 3
+#elif ___TRAIT_SD_PASS == 3
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 4
+#elif ___TRAIT_SD_PASS == 4
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 5
+#elif ___TRAIT_SD_PASS == 5
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 6
+#elif ___TRAIT_SD_PASS == 6
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 7
+#elif ___TRAIT_SD_PASS == 7
+#error "c-trait: too many methods per trait (max 8)"
+#endif
+#include "trait.h"
+#else
+// Past last method — save count via ops block
+#undef ___TRAIT_COUNT_ACTIVE
+#define ___TRAIT_OPS_MODE 1
+#define ___TRAIT_MCOUNT_OP_SAVE 1
+#include "trait.h"
+#undef ___TRAIT_MCOUNT_OP_SAVE
+#undef ___TRAIT_OPS_MODE
+#undef ___TRAIT_SD_PASS
+#endif
+
+#elif defined(___TRAIT_SD_ACTIVE)
+// ═══════════════════════════════════════════════════════════════════════════════
+// SD SELF-INCLUDE LOOP BODY (hierarchical version)
+//
+// Uses three-dimensional counter: T<T2><T1>_Y<Y2><Y1>_M<M1>
+// T = trait ID (set at trait definition time)
+// Y = type ID per trait (incremented once per impl, after all methods)
+// M = method index (= ___TRAIT_SD_PASS, 0-7)
+//
+// The flat SD counter (C1-C7) is still incremented for _Generic iteration.
+// Before the first method: restore Y counter for this trait
+// After the last method: increment Y counter and save
+// ═══════════════════════════════════════════════════════════════════════════════
+#if !___TRAIT_SD_IS_STOP(___TRAIT_SD_PASS, Impl)
+// At pass 0 (first method): restore Y counter for this trait
+#if ___TRAIT_SD_PASS == 0
+#define ___TRAIT_OPS_MODE 1
+#define ___TRAIT_YC_OP_RESTORE 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_RESTORE
+#undef ___TRAIT_OPS_MODE
+#endif
+// Emit SD slot: typedef concrete type, typedef selector type, wrapper function
+___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
+// Increment 7-digit octal SD counter (for _Generic iteration)
+#if   ___TRAIT_SD_C1 == 0
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 1
+#elif ___TRAIT_SD_C1 == 1
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 2
+#elif ___TRAIT_SD_C1 == 2
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 3
+#elif ___TRAIT_SD_C1 == 3
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 4
+#elif ___TRAIT_SD_C1 == 4
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 5
+#elif ___TRAIT_SD_C1 == 5
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 6
+#elif ___TRAIT_SD_C1 == 6
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 7
+#elif ___TRAIT_SD_C1 == 7
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 0
+#if   ___TRAIT_SD_C2 == 0
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 1
+#elif ___TRAIT_SD_C2 == 1
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 2
+#elif ___TRAIT_SD_C2 == 2
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 3
+#elif ___TRAIT_SD_C2 == 3
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 4
+#elif ___TRAIT_SD_C2 == 4
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 5
+#elif ___TRAIT_SD_C2 == 5
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 6
+#elif ___TRAIT_SD_C2 == 6
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 7
+#elif ___TRAIT_SD_C2 == 7
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 0
+#if   ___TRAIT_SD_C3 == 0
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 1
+#elif ___TRAIT_SD_C3 == 1
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 2
+#elif ___TRAIT_SD_C3 == 2
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 3
+#elif ___TRAIT_SD_C3 == 3
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 4
+#elif ___TRAIT_SD_C3 == 4
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 5
+#elif ___TRAIT_SD_C3 == 5
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 6
+#elif ___TRAIT_SD_C3 == 6
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 7
+#elif ___TRAIT_SD_C3 == 7
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 0
+#if   ___TRAIT_SD_C4 == 0
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 1
+#elif ___TRAIT_SD_C4 == 1
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 2
+#elif ___TRAIT_SD_C4 == 2
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 3
+#elif ___TRAIT_SD_C4 == 3
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 4
+#elif ___TRAIT_SD_C4 == 4
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 5
+#elif ___TRAIT_SD_C4 == 5
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 6
+#elif ___TRAIT_SD_C4 == 6
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 7
+#elif ___TRAIT_SD_C4 == 7
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 0
+#if   ___TRAIT_SD_C5 == 0
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 1
+#elif ___TRAIT_SD_C5 == 1
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 2
+#elif ___TRAIT_SD_C5 == 2
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 3
+#elif ___TRAIT_SD_C5 == 3
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 4
+#elif ___TRAIT_SD_C5 == 4
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 5
+#elif ___TRAIT_SD_C5 == 5
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 6
+#elif ___TRAIT_SD_C5 == 6
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 7
+#elif ___TRAIT_SD_C5 == 7
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 0
+#if   ___TRAIT_SD_C6 == 0
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 1
+#elif ___TRAIT_SD_C6 == 1
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 2
+#elif ___TRAIT_SD_C6 == 2
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 3
+#elif ___TRAIT_SD_C6 == 3
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 4
+#elif ___TRAIT_SD_C6 == 4
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 5
+#elif ___TRAIT_SD_C6 == 5
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 6
+#elif ___TRAIT_SD_C6 == 6
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 7
+#elif ___TRAIT_SD_C6 == 7
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 0
+#if   ___TRAIT_SD_C7 == 0
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 1
+#elif ___TRAIT_SD_C7 == 1
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 2
+#elif ___TRAIT_SD_C7 == 2
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 3
+#elif ___TRAIT_SD_C7 == 3
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 4
+#elif ___TRAIT_SD_C7 == 4
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 5
+#elif ___TRAIT_SD_C7 == 5
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 6
+#elif ___TRAIT_SD_C7 == 6
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 7
+#elif ___TRAIT_SD_C7 == 7
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 0
+#error "c-trait: too many SD slots (max 2097152)"
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+// Increment pass counter (max 8 methods per trait)
+#if   ___TRAIT_SD_PASS == 0
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 1
+#elif ___TRAIT_SD_PASS == 1
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 2
+#elif ___TRAIT_SD_PASS == 2
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 3
+#elif ___TRAIT_SD_PASS == 3
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 4
+#elif ___TRAIT_SD_PASS == 4
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 5
+#elif ___TRAIT_SD_PASS == 5
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 6
+#elif ___TRAIT_SD_PASS == 6
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 7
+#elif ___TRAIT_SD_PASS == 7
+#error "c-trait: too many methods per trait for SD (max 8)"
+#endif
+// Self-include for next iteration
+#include "trait.h"
+#else
+// Past last method: increment Y counter and save
+#define ___TRAIT_OPS_MODE 1
+#define ___TRAIT_YC_OP_INC 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_INC
+#define ___TRAIT_YC_OP_SAVE 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_SAVE
+#undef ___TRAIT_OPS_MODE
+#undef ___TRAIT_SD_PASS
+#endif
+// ═══════════════════════════════════════════════════════════════════════════════
+// END SD LOOP
+// ═══════════════════════════════════════════════════════════════════════════════
+#elif defined(___TRAIT_DYNSD_ACTIVE)
+// ═══════════════════════════════════════════════════════════════════════════════
+// DYNSD SELF-INCLUDE LOOP BODY (hierarchical version)
+//
+// Emits SD entries for DynTrait (the trait object type), so that
+// call(Animal.method, &dyn_obj) dispatches through the vtable.
+// DynSD uses fixed Y=01 (DynTrait is always the first type for each trait).
+// M = ___TRAIT_DYNSD_PASS (method index, 0-7).
+// ═══════════════════════════════════════════════════════════════════════════════
+#if !___TRAIT_DYNSD_PASS_IS_SET
+#undef ___TRAIT_YC_CUR_Y2
+#define ___TRAIT_YC_CUR_Y2 0
+#undef ___TRAIT_YC_CUR_Y1
+#define ___TRAIT_YC_CUR_Y1 1
+#define ___TRAIT_DYNSD_PASS_IS_SET 1
+#endif
+#if !___TRAIT_SD_IS_STOP(___TRAIT_DYNSD_PASS, Impl)
+// Emit DynSD slot: DynImpl as concrete type, selector type, vtable wrapper
+___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
+// Increment 7-digit octal SD counter (shared with SD loop, for _Generic iteration)
+#if   ___TRAIT_SD_C1 == 0
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 1
+#elif ___TRAIT_SD_C1 == 1
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 2
+#elif ___TRAIT_SD_C1 == 2
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 3
+#elif ___TRAIT_SD_C1 == 3
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 4
+#elif ___TRAIT_SD_C1 == 4
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 5
+#elif ___TRAIT_SD_C1 == 5
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 6
+#elif ___TRAIT_SD_C1 == 6
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 7
+#elif ___TRAIT_SD_C1 == 7
+#undef  ___TRAIT_SD_C1
+#define ___TRAIT_SD_C1 0
+#if   ___TRAIT_SD_C2 == 0
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 1
+#elif ___TRAIT_SD_C2 == 1
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 2
+#elif ___TRAIT_SD_C2 == 2
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 3
+#elif ___TRAIT_SD_C2 == 3
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 4
+#elif ___TRAIT_SD_C2 == 4
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 5
+#elif ___TRAIT_SD_C2 == 5
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 6
+#elif ___TRAIT_SD_C2 == 6
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 7
+#elif ___TRAIT_SD_C2 == 7
+#undef  ___TRAIT_SD_C2
+#define ___TRAIT_SD_C2 0
+#if   ___TRAIT_SD_C3 == 0
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 1
+#elif ___TRAIT_SD_C3 == 1
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 2
+#elif ___TRAIT_SD_C3 == 2
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 3
+#elif ___TRAIT_SD_C3 == 3
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 4
+#elif ___TRAIT_SD_C3 == 4
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 5
+#elif ___TRAIT_SD_C3 == 5
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 6
+#elif ___TRAIT_SD_C3 == 6
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 7
+#elif ___TRAIT_SD_C3 == 7
+#undef  ___TRAIT_SD_C3
+#define ___TRAIT_SD_C3 0
+#if   ___TRAIT_SD_C4 == 0
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 1
+#elif ___TRAIT_SD_C4 == 1
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 2
+#elif ___TRAIT_SD_C4 == 2
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 3
+#elif ___TRAIT_SD_C4 == 3
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 4
+#elif ___TRAIT_SD_C4 == 4
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 5
+#elif ___TRAIT_SD_C4 == 5
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 6
+#elif ___TRAIT_SD_C4 == 6
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 7
+#elif ___TRAIT_SD_C4 == 7
+#undef  ___TRAIT_SD_C4
+#define ___TRAIT_SD_C4 0
+#if   ___TRAIT_SD_C5 == 0
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 1
+#elif ___TRAIT_SD_C5 == 1
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 2
+#elif ___TRAIT_SD_C5 == 2
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 3
+#elif ___TRAIT_SD_C5 == 3
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 4
+#elif ___TRAIT_SD_C5 == 4
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 5
+#elif ___TRAIT_SD_C5 == 5
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 6
+#elif ___TRAIT_SD_C5 == 6
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 7
+#elif ___TRAIT_SD_C5 == 7
+#undef  ___TRAIT_SD_C5
+#define ___TRAIT_SD_C5 0
+#if   ___TRAIT_SD_C6 == 0
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 1
+#elif ___TRAIT_SD_C6 == 1
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 2
+#elif ___TRAIT_SD_C6 == 2
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 3
+#elif ___TRAIT_SD_C6 == 3
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 4
+#elif ___TRAIT_SD_C6 == 4
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 5
+#elif ___TRAIT_SD_C6 == 5
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 6
+#elif ___TRAIT_SD_C6 == 6
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 7
+#elif ___TRAIT_SD_C6 == 7
+#undef  ___TRAIT_SD_C6
+#define ___TRAIT_SD_C6 0
+#if   ___TRAIT_SD_C7 == 0
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 1
+#elif ___TRAIT_SD_C7 == 1
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 2
+#elif ___TRAIT_SD_C7 == 2
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 3
+#elif ___TRAIT_SD_C7 == 3
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 4
+#elif ___TRAIT_SD_C7 == 4
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 5
+#elif ___TRAIT_SD_C7 == 5
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 6
+#elif ___TRAIT_SD_C7 == 6
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 7
+#elif ___TRAIT_SD_C7 == 7
+#undef  ___TRAIT_SD_C7
+#define ___TRAIT_SD_C7 0
+#error "c-trait: too many SD slots (max 2097152)"
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+// Increment DynSD pass counter (max 8 methods per trait)
+#if   ___TRAIT_DYNSD_PASS == 0
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 1
+#elif ___TRAIT_DYNSD_PASS == 1
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 2
+#elif ___TRAIT_DYNSD_PASS == 2
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 3
+#elif ___TRAIT_DYNSD_PASS == 3
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 4
+#elif ___TRAIT_DYNSD_PASS == 4
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 5
+#elif ___TRAIT_DYNSD_PASS == 5
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 6
+#elif ___TRAIT_DYNSD_PASS == 6
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 7
+#elif ___TRAIT_DYNSD_PASS == 7
+#error "c-trait: too many methods per trait for DynSD (max 8)"
+#endif
+// Self-include for next iteration
+#include "trait.h"
+#endif // !___TRAIT_SD_IS_STOP
+#undef ___TRAIT_DYNSD_PASS_IS_SET
+// ═══════════════════════════════════════════════════════════════════════════════
+// END DYNSD LOOP
+// ═══════════════════════════════════════════════════════════════════════════════
+#else // !___TRAIT_SD_ACTIVE && !___TRAIT_DYNSD_ACTIVE — normal impl registration
+#define ___TRAIT_IS_DEFAULT_FOR_Default ___TRAIT_PROBE()
+#define ___TRAIT_EXPAND(x) x
+#define ___TRAIT_IS_FOR_DEFAULT()                                                \
+  ___TRAIT_CHECK(___TRAIT_EXPAND(___TRAIT_CAT(___TRAIT_IS_DEFAULT_FOR_, For)))
+#if ___TRAIT_IS_FOR_DEFAULT()
+#undef For
+#undef Impl
+#else
+
+#ifdef Forward
+// ═════════════════════════════════════════════════════════════════════════════
+// FORWARD DECLARATION PATH
+//
+// Usage:
+//   #define For Dog
+//   #define Impl Animal
+//   #define Forward
+//   #include "trait.h"          ← this path: FWDDECL + SD/DynSD loops
+//     def(int, get_snacks) { call(Animal.get_snacks, self); }
+//     def(void, feed, int amount) { ... }
+//   #include "trait.h"          ← normal path: defaults/impl/counter/enforce
+//
+// Emits extern declarations for each impl function, then runs SD/DynSD loops
+// so that call() resolves to the correct wrapper at compile time.  The actual
+// function bodies (def()) follow between the two includes.
+// ═════════════════════════════════════════════════════════════════════════════
+___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
+
+// ── SD loop: emit type info + wrapper functions for call() ──────────────────
+#define ___TRAIT_SD_ACTIVE 1
+#define ___TRAIT_SD_PASS 0
+#include "trait.h"
+#undef ___TRAIT_SD_ACTIVE
+#undef ___TRAIT_SD_PASS
+
+// Set flag so the second #include "trait.h" skips SD loop.
+#define ___TRAIT_FWDIMPL_DONE 1
+#undef Forward
+
+#else
+// ═════════════════════════════════════════════════════════════════════════════
+// NORMAL PATH (also serves as post-forward-declare path)
+//
+// When ___TRAIT_FWDIMPL_DONE is set (second #include after Forward),
+// defaults/impl/counter/enforce still run but SD/DynSD loops are skipped.
+// When ___TRAIT_IS_STATIC_CURRENT is set, defaults/impl/DynSD/enforce are skipped.
+// ═════════════════════════════════════════════════════════════════════════════
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+defaults();
+impl()
+#else
+static_defaults()
+#endif
+
+
+// ── SD loop (skip if already emitted in forward-declare pass) ────────────
+#ifndef ___TRAIT_FWDIMPL_DONE
+
+// ── Start SD (selector-based dispatch) self-include loop ─────────────────
+#define ___TRAIT_SD_ACTIVE 1
+#define ___TRAIT_SD_PASS 0
+#include "trait.h"
+#undef ___TRAIT_SD_ACTIVE
+#undef ___TRAIT_SD_PASS
+// ── End SD loop ──────────────────────────────────────────────────────────
+
+#else
+#undef ___TRAIT_FWDIMPL_DONE
+#endif
+
+// ── Enforce extends: verify base traits are implemented ─────────────────────
+// Skip for static traits (no vtable to reference for enforcement).
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+___TRAIT_PASTE(Impl, Signature)((Impl, ENFORCE))
+#endif
+
+#undef For
+#undef Impl
+#endif // Forward
+#endif
+#undef ___TRAIT_IS_DEFAULT_FOR_Default
+#undef ___TRAIT_EXPAND
+#undef ___TRAIT_IS_FOR_DEFAULT
+#endif // !___TRAIT_SD_ACTIVE && !___TRAIT_DYNSD_ACTIVE
+#endif // !___TRAIT_OPS_MODE
+#endif
+#endif
+
+// ── Reinclude: trait definition ─────────────────────────────────────────────
+// Usage:
+//   #define Trait Animal
+//   #include "trait.h"
+//
+// Equivalent to the single-line `trait(Animal);` macro call, but uses the
+// reinclude mechanism.  Because this section runs as preprocessor directives
+// (not macro expansion), it can emit #define/#undef — enabling future
+// automation of per-trait helpers that ordinary macros cannot produce.
+//
+// ___TRAIT_TRAIT_PASTE_(x) pastes the LITERAL token `Trait` (which is NOT a
+// macro parameter, so ## uses it as-is) with the expanded trait name.
+// This avoids the problem where `___TRAIT_PASTE(Trait, X)` would expand
+// the macro `Trait` before pasting.
+// ─────────────────────────────────────────────────────────────────────────────
+#ifdef Trait
+#ifndef For
+#ifndef ___TRAIT_OPS_MODE
+
+// ── Hierarchical counter setup for this trait ────────────────────────────────
+// 1. Increment trait counter (TC)
+// 2. Set current trait ID (TID = TC)
+// 3. Save trait name for outer _Generic generation
+// 4. Reset Y counter to 0 for this trait
+#define For void
+#define ___TRAIT_TC_OP_INC 1
+#include "trait.h"
+#undef ___TRAIT_TC_OP_INC
+#undef For
+
+#undef ___TRAIT_TID_T2
+#define ___TRAIT_TID_T2 ___TRAIT_TC_T2
+#undef ___TRAIT_TID_T1
+#define ___TRAIT_TID_T1 ___TRAIT_TC_T1
+
+#define For void
+#define ___TRAIT_NAME_OP_SAVE 1
+#include "trait.h"
+#undef ___TRAIT_NAME_OP_SAVE
+#undef For
+
+#undef ___TRAIT_YC_CUR_Y2
+#define ___TRAIT_YC_CUR_Y2 0
+#undef ___TRAIT_YC_CUR_Y1
+#define ___TRAIT_YC_CUR_Y1 0
+#define For void
+#define ___TRAIT_YC_OP_SAVE 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_SAVE
+#undef For
+
+// ── Count methods in this trait ───────────────────────────────────────────────
+// Runs a counting loop that saves the method count to
+// ___TRAIT_MCOUNT_<T2><T1> for use in outer _Generic generation.
+#define For void
+#define Impl Trait
+#define ___TRAIT_COUNT_ACTIVE 1
+#define ___TRAIT_SD_PASS 0
+#include "trait.h"
+#undef ___TRAIT_SD_PASS
+#undef ___TRAIT_COUNT_ACTIVE
+#undef Impl
+#undef For
+
+// ── Static trait detection ───────────────────────────────────────────────────
+// Traits are static by default (no vtable, no DynTrait, no dynamic dispatch).
+// #define Dynamic before #define Trait opts into full dynamic features:
+// vtable, DynTrait, DFL defaults, impl(), ENFORCE, DynSD.
+// The flag persists until the next trait definition clears it.
+#undef ___TRAIT_IS_STATIC_CURRENT
+#ifndef Dynamic
+#define ___TRAIT_IS_STATIC_CURRENT
+#else
+#undef Dynamic
+#endif
+
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+typedef struct {
+  ___TRAIT_TRAIT_PASTE(Trait)((Trait, FN))
+} glue(Trait, _vtable);
+typedef struct {
+  void *self;
+  const glue(Trait, _vtable) *vt;
+} glue(Dyn, Trait);
+#else
+// Static: minimal DynTrait (for default function signatures, no vtable)
+typedef struct { void *self; } glue(Dyn, Trait);
+#endif
+___TRAIT_TRAIT_PASTE(Trait)((Trait, STAG))
+typedef struct {
+  ___TRAIT_TRAIT_PASTE(Trait)((Trait, SSEL))
+} glue(Trait, ___sel_t);
+___TRAIT_UNUSED static ___TRAIT_CONSTEXPR const glue(Trait, ___sel_t)
+    Trait = {0};
+
+// ── DynSD: emit vtable-dispatch wrappers at trait declaration ────────────
+// Registered once per trait (not per-impl) so that _Generic pair types
+// remain unique — all DynSD entries for the same trait produce identical
+// pair types (sel_type, DynTrait), and _Generic forbids duplicates.
+// In the hierarchical system, DynSD uses Y=01 (first type for this trait).
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+// Restore Y counter for this trait (should be 0 from reset above)
+#define For void
+#define ___TRAIT_YC_OP_RESTORE 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_RESTORE
+#undef For
+// Increment Y counter for DynTrait type (Y becomes 1)
+#define For void
+#define ___TRAIT_YC_OP_INC 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_INC
+#undef For
+#define For void
+#define Impl Trait
+#define ___TRAIT_DYNSD_ACTIVE 1
+#define ___TRAIT_DYNSD_PASS 0
+#include "trait.h"
+#undef ___TRAIT_DYNSD_ACTIVE
+#undef ___TRAIT_DYNSD_PASS
+#undef Impl
+#undef For
+// Save Y counter (now 1, for DynTrait)
+#define For void
+#define ___TRAIT_YC_OP_SAVE 1
+#include "trait.h"
+#undef ___TRAIT_YC_OP_SAVE
+#undef For
+#endif
+
+#undef Trait
+
+#endif
+#endif
+#endif
+
+#ifndef TRAIT_ALT_H
+#define TRAIT_ALT_H
+
+// GNU C extensions used: ##__VA_ARGS__ (replaced by __VA_OPT__ in C23),
+// __typeof__ (replaced by typeof in C23).  No __attribute__((weak)) —
+// default method overrides use the PROBE trick + user-declared
+// #define Override_<Type>_<Trait>_<Method> 1 instead.
+
+// -----------------------------------------------------------------------------
+// Pasting / concatenation helpers
+// -----------------------------------------------------------------------------
+#define glue_(a, b) a##b
+#define glue(a, b) glue_(a, b)
+#define glue3(a, b, c) glue(glue(a, b), c)
+#define glue4(a, b, c, d) glue(glue3(a, b, c), d)
+#define glue5(a, b, c, d, e) glue(glue4(a, b, c, d), e)
+#define glue6(a, b, c, d, e, f) glue(glue5(a, b, c, d, e), f)
+#define glue7(a, b, c, d, e, f, g) glue(glue6(a, b, c, d, e, f), g)
+#define glue8(a, b, c, d, e, f, g, h) glue(glue7(a, b, c, d, e, f, g), h)
+#define glue9(a, b, c, d, e, f, g, h, i) glue(glue8(a, b, c, d, e, f, g, h), i)
+#define glue10(a, b, c, d, e, f, g, h, i, j) glue(glue9(a, b, c, d, e, f, g, h, i), j)
+
+#define ___TRAIT_NONE ___TRAIT_NONE
+
+// =============================================================================
+// Hierarchical counter infrastructure — initialization
+// =============================================================================
+
+// Trait counter (global, incremented at each trait definition)
+#define ___TRAIT_TC_T2 0
+#define ___TRAIT_TC_T1 0
+
+// Current trait ID (set at trait definition time)
+#define ___TRAIT_TID_T2 0
+#define ___TRAIT_TID_T1 0
+
+// Current Y counter (working Y counter for the current trait)
+#define ___TRAIT_YC_CUR_Y2 0
+#define ___TRAIT_YC_CUR_Y1 0
+
+// Per-trait Y counter storage (64 pre-defined macros, 2 octal digits each)
+// clang-format off
+#define ___TRAIT_YC_00_Y2 0
+#define ___TRAIT_YC_00_Y1 0
+#define ___TRAIT_YC_01_Y2 0
+#define ___TRAIT_YC_01_Y1 0
+#define ___TRAIT_YC_02_Y2 0
+#define ___TRAIT_YC_02_Y1 0
+#define ___TRAIT_YC_03_Y2 0
+#define ___TRAIT_YC_03_Y1 0
+#define ___TRAIT_YC_04_Y2 0
+#define ___TRAIT_YC_04_Y1 0
+#define ___TRAIT_YC_05_Y2 0
+#define ___TRAIT_YC_05_Y1 0
+#define ___TRAIT_YC_06_Y2 0
+#define ___TRAIT_YC_06_Y1 0
+#define ___TRAIT_YC_07_Y2 0
+#define ___TRAIT_YC_07_Y1 0
+#define ___TRAIT_YC_10_Y2 0
+#define ___TRAIT_YC_10_Y1 0
+#define ___TRAIT_YC_11_Y2 0
+#define ___TRAIT_YC_11_Y1 0
+#define ___TRAIT_YC_12_Y2 0
+#define ___TRAIT_YC_12_Y1 0
+#define ___TRAIT_YC_13_Y2 0
+#define ___TRAIT_YC_13_Y1 0
+#define ___TRAIT_YC_14_Y2 0
+#define ___TRAIT_YC_14_Y1 0
+#define ___TRAIT_YC_15_Y2 0
+#define ___TRAIT_YC_15_Y1 0
+#define ___TRAIT_YC_16_Y2 0
+#define ___TRAIT_YC_16_Y1 0
+#define ___TRAIT_YC_17_Y2 0
+#define ___TRAIT_YC_17_Y1 0
+#define ___TRAIT_YC_20_Y2 0
+#define ___TRAIT_YC_20_Y1 0
+#define ___TRAIT_YC_21_Y2 0
+#define ___TRAIT_YC_21_Y1 0
+#define ___TRAIT_YC_22_Y2 0
+#define ___TRAIT_YC_22_Y1 0
+#define ___TRAIT_YC_23_Y2 0
+#define ___TRAIT_YC_23_Y1 0
+#define ___TRAIT_YC_24_Y2 0
+#define ___TRAIT_YC_24_Y1 0
+#define ___TRAIT_YC_25_Y2 0
+#define ___TRAIT_YC_25_Y1 0
+#define ___TRAIT_YC_26_Y2 0
+#define ___TRAIT_YC_26_Y1 0
+#define ___TRAIT_YC_27_Y2 0
+#define ___TRAIT_YC_27_Y1 0
+#define ___TRAIT_YC_30_Y2 0
+#define ___TRAIT_YC_30_Y1 0
+#define ___TRAIT_YC_31_Y2 0
+#define ___TRAIT_YC_31_Y1 0
+#define ___TRAIT_YC_32_Y2 0
+#define ___TRAIT_YC_32_Y1 0
+#define ___TRAIT_YC_33_Y2 0
+#define ___TRAIT_YC_33_Y1 0
+#define ___TRAIT_YC_34_Y2 0
+#define ___TRAIT_YC_34_Y1 0
+#define ___TRAIT_YC_35_Y2 0
+#define ___TRAIT_YC_35_Y1 0
+#define ___TRAIT_YC_36_Y2 0
+#define ___TRAIT_YC_36_Y1 0
+#define ___TRAIT_YC_37_Y2 0
+#define ___TRAIT_YC_37_Y1 0
+#define ___TRAIT_YC_40_Y2 0
+#define ___TRAIT_YC_40_Y1 0
+#define ___TRAIT_YC_41_Y2 0
+#define ___TRAIT_YC_41_Y1 0
+#define ___TRAIT_YC_42_Y2 0
+#define ___TRAIT_YC_42_Y1 0
+#define ___TRAIT_YC_43_Y2 0
+#define ___TRAIT_YC_43_Y1 0
+#define ___TRAIT_YC_44_Y2 0
+#define ___TRAIT_YC_44_Y1 0
+#define ___TRAIT_YC_45_Y2 0
+#define ___TRAIT_YC_45_Y1 0
+#define ___TRAIT_YC_46_Y2 0
+#define ___TRAIT_YC_46_Y1 0
+#define ___TRAIT_YC_47_Y2 0
+#define ___TRAIT_YC_47_Y1 0
+#define ___TRAIT_YC_50_Y2 0
+#define ___TRAIT_YC_50_Y1 0
+#define ___TRAIT_YC_51_Y2 0
+#define ___TRAIT_YC_51_Y1 0
+#define ___TRAIT_YC_52_Y2 0
+#define ___TRAIT_YC_52_Y1 0
+#define ___TRAIT_YC_53_Y2 0
+#define ___TRAIT_YC_53_Y1 0
+#define ___TRAIT_YC_54_Y2 0
+#define ___TRAIT_YC_54_Y1 0
+#define ___TRAIT_YC_55_Y2 0
+#define ___TRAIT_YC_55_Y1 0
+#define ___TRAIT_YC_56_Y2 0
+#define ___TRAIT_YC_56_Y1 0
+#define ___TRAIT_YC_57_Y2 0
+#define ___TRAIT_YC_57_Y1 0
+#define ___TRAIT_YC_60_Y2 0
+#define ___TRAIT_YC_60_Y1 0
+#define ___TRAIT_YC_61_Y2 0
+#define ___TRAIT_YC_61_Y1 0
+#define ___TRAIT_YC_62_Y2 0
+#define ___TRAIT_YC_62_Y1 0
+#define ___TRAIT_YC_63_Y2 0
+#define ___TRAIT_YC_63_Y1 0
+#define ___TRAIT_YC_64_Y2 0
+#define ___TRAIT_YC_64_Y1 0
+#define ___TRAIT_YC_65_Y2 0
+#define ___TRAIT_YC_65_Y1 0
+#define ___TRAIT_YC_66_Y2 0
+#define ___TRAIT_YC_66_Y1 0
+#define ___TRAIT_YC_67_Y2 0
+#define ___TRAIT_YC_67_Y1 0
+#define ___TRAIT_YC_70_Y2 0
+#define ___TRAIT_YC_70_Y1 0
+#define ___TRAIT_YC_71_Y2 0
+#define ___TRAIT_YC_71_Y1 0
+#define ___TRAIT_YC_72_Y2 0
+#define ___TRAIT_YC_72_Y1 0
+#define ___TRAIT_YC_73_Y2 0
+#define ___TRAIT_YC_73_Y1 0
+#define ___TRAIT_YC_74_Y2 0
+#define ___TRAIT_YC_74_Y1 0
+#define ___TRAIT_YC_75_Y2 0
+#define ___TRAIT_YC_75_Y1 0
+#define ___TRAIT_YC_76_Y2 0
+#define ___TRAIT_YC_76_Y1 0
+#define ___TRAIT_YC_77_Y2 0
+#define ___TRAIT_YC_77_Y1 0
+// clang-format on
+
+// Per-trait name storage
+// clang-format off
+#define ___TRAIT_NAME_00 ___TRAIT_NONE
+#define ___TRAIT_NAME_01 ___TRAIT_NONE
+#define ___TRAIT_NAME_02 ___TRAIT_NONE
+#define ___TRAIT_NAME_03 ___TRAIT_NONE
+#define ___TRAIT_NAME_04 ___TRAIT_NONE
+#define ___TRAIT_NAME_05 ___TRAIT_NONE
+#define ___TRAIT_NAME_06 ___TRAIT_NONE
+#define ___TRAIT_NAME_07 ___TRAIT_NONE
+#define ___TRAIT_NAME_10 ___TRAIT_NONE
+#define ___TRAIT_NAME_11 ___TRAIT_NONE
+#define ___TRAIT_NAME_12 ___TRAIT_NONE
+#define ___TRAIT_NAME_13 ___TRAIT_NONE
+#define ___TRAIT_NAME_14 ___TRAIT_NONE
+#define ___TRAIT_NAME_15 ___TRAIT_NONE
+#define ___TRAIT_NAME_16 ___TRAIT_NONE
+#define ___TRAIT_NAME_17 ___TRAIT_NONE
+#define ___TRAIT_NAME_20 ___TRAIT_NONE
+#define ___TRAIT_NAME_21 ___TRAIT_NONE
+#define ___TRAIT_NAME_22 ___TRAIT_NONE
+#define ___TRAIT_NAME_23 ___TRAIT_NONE
+#define ___TRAIT_NAME_24 ___TRAIT_NONE
+#define ___TRAIT_NAME_25 ___TRAIT_NONE
+#define ___TRAIT_NAME_26 ___TRAIT_NONE
+#define ___TRAIT_NAME_27 ___TRAIT_NONE
+#define ___TRAIT_NAME_30 ___TRAIT_NONE
+#define ___TRAIT_NAME_31 ___TRAIT_NONE
+#define ___TRAIT_NAME_32 ___TRAIT_NONE
+#define ___TRAIT_NAME_33 ___TRAIT_NONE
+#define ___TRAIT_NAME_34 ___TRAIT_NONE
+#define ___TRAIT_NAME_35 ___TRAIT_NONE
+#define ___TRAIT_NAME_36 ___TRAIT_NONE
+#define ___TRAIT_NAME_37 ___TRAIT_NONE
+#define ___TRAIT_NAME_40 ___TRAIT_NONE
+#define ___TRAIT_NAME_41 ___TRAIT_NONE
+#define ___TRAIT_NAME_42 ___TRAIT_NONE
+#define ___TRAIT_NAME_43 ___TRAIT_NONE
+#define ___TRAIT_NAME_44 ___TRAIT_NONE
+#define ___TRAIT_NAME_45 ___TRAIT_NONE
+#define ___TRAIT_NAME_46 ___TRAIT_NONE
+#define ___TRAIT_NAME_47 ___TRAIT_NONE
+#define ___TRAIT_NAME_50 ___TRAIT_NONE
+#define ___TRAIT_NAME_51 ___TRAIT_NONE
+#define ___TRAIT_NAME_52 ___TRAIT_NONE
+#define ___TRAIT_NAME_53 ___TRAIT_NONE
+#define ___TRAIT_NAME_54 ___TRAIT_NONE
+#define ___TRAIT_NAME_55 ___TRAIT_NONE
+#define ___TRAIT_NAME_56 ___TRAIT_NONE
+#define ___TRAIT_NAME_57 ___TRAIT_NONE
+#define ___TRAIT_NAME_60 ___TRAIT_NONE
+#define ___TRAIT_NAME_61 ___TRAIT_NONE
+#define ___TRAIT_NAME_62 ___TRAIT_NONE
+#define ___TRAIT_NAME_63 ___TRAIT_NONE
+#define ___TRAIT_NAME_64 ___TRAIT_NONE
+#define ___TRAIT_NAME_65 ___TRAIT_NONE
+#define ___TRAIT_NAME_66 ___TRAIT_NONE
+#define ___TRAIT_NAME_67 ___TRAIT_NONE
+#define ___TRAIT_NAME_70 ___TRAIT_NONE
+#define ___TRAIT_NAME_71 ___TRAIT_NONE
+#define ___TRAIT_NAME_72 ___TRAIT_NONE
+#define ___TRAIT_NAME_73 ___TRAIT_NONE
+#define ___TRAIT_NAME_74 ___TRAIT_NONE
+#define ___TRAIT_NAME_75 ___TRAIT_NONE
+#define ___TRAIT_NAME_76 ___TRAIT_NONE
+#define ___TRAIT_NAME_77 ___TRAIT_NONE
+// clang-format on
+
+// Per-trait method count
+// clang-format off
+#define ___TRAIT_MCOUNT_00 0
+#define ___TRAIT_MCOUNT_01 0
+#define ___TRAIT_MCOUNT_02 0
+#define ___TRAIT_MCOUNT_03 0
+#define ___TRAIT_MCOUNT_04 0
+#define ___TRAIT_MCOUNT_05 0
+#define ___TRAIT_MCOUNT_06 0
+#define ___TRAIT_MCOUNT_07 0
+#define ___TRAIT_MCOUNT_10 0
+#define ___TRAIT_MCOUNT_11 0
+#define ___TRAIT_MCOUNT_12 0
+#define ___TRAIT_MCOUNT_13 0
+#define ___TRAIT_MCOUNT_14 0
+#define ___TRAIT_MCOUNT_15 0
+#define ___TRAIT_MCOUNT_16 0
+#define ___TRAIT_MCOUNT_17 0
+#define ___TRAIT_MCOUNT_20 0
+#define ___TRAIT_MCOUNT_21 0
+#define ___TRAIT_MCOUNT_22 0
+#define ___TRAIT_MCOUNT_23 0
+#define ___TRAIT_MCOUNT_24 0
+#define ___TRAIT_MCOUNT_25 0
+#define ___TRAIT_MCOUNT_26 0
+#define ___TRAIT_MCOUNT_27 0
+#define ___TRAIT_MCOUNT_30 0
+#define ___TRAIT_MCOUNT_31 0
+#define ___TRAIT_MCOUNT_32 0
+#define ___TRAIT_MCOUNT_33 0
+#define ___TRAIT_MCOUNT_34 0
+#define ___TRAIT_MCOUNT_35 0
+#define ___TRAIT_MCOUNT_36 0
+#define ___TRAIT_MCOUNT_37 0
+#define ___TRAIT_MCOUNT_40 0
+#define ___TRAIT_MCOUNT_41 0
+#define ___TRAIT_MCOUNT_42 0
+#define ___TRAIT_MCOUNT_43 0
+#define ___TRAIT_MCOUNT_44 0
+#define ___TRAIT_MCOUNT_45 0
+#define ___TRAIT_MCOUNT_46 0
+#define ___TRAIT_MCOUNT_47 0
+#define ___TRAIT_MCOUNT_50 0
+#define ___TRAIT_MCOUNT_51 0
+#define ___TRAIT_MCOUNT_52 0
+#define ___TRAIT_MCOUNT_53 0
+#define ___TRAIT_MCOUNT_54 0
+#define ___TRAIT_MCOUNT_55 0
+#define ___TRAIT_MCOUNT_56 0
+#define ___TRAIT_MCOUNT_57 0
+#define ___TRAIT_MCOUNT_60 0
+#define ___TRAIT_MCOUNT_61 0
+#define ___TRAIT_MCOUNT_62 0
+#define ___TRAIT_MCOUNT_63 0
+#define ___TRAIT_MCOUNT_64 0
+#define ___TRAIT_MCOUNT_65 0
+#define ___TRAIT_MCOUNT_66 0
+#define ___TRAIT_MCOUNT_67 0
+#define ___TRAIT_MCOUNT_70 0
+#define ___TRAIT_MCOUNT_71 0
+#define ___TRAIT_MCOUNT_72 0
+#define ___TRAIT_MCOUNT_73 0
+#define ___TRAIT_MCOUNT_74 0
+#define ___TRAIT_MCOUNT_75 0
+#define ___TRAIT_MCOUNT_76 0
+#define ___TRAIT_MCOUNT_77 0
+// clang-format on
+
+// Helper: get current trait's Y counter value via glue
+#define ___TRAIT_YC_GET_Y2 glue5(___TRAIT_YC_, ___TRAIT_TID_T2, ___TRAIT_TID_T1, _Y2)
+#define ___TRAIT_YC_GET_Y1 glue5(___TRAIT_YC_, ___TRAIT_TID_T2, ___TRAIT_TID_T1, _Y1)
+
+// Independent paste pair for Dyn prefix — avoids blue-paint conflict with glue.
+#define ___TRAIT_DYN_(a, b) a##b
+#define ___TRAIT_DYN(T) ___TRAIT_DYN_(Dyn, T)
+
+#define ___TRAIT_PASTE_HELPER(a, b) a##b
+#define ___TRAIT_PASTE(a, b) ___TRAIT_PASTE_HELPER(a, b)
+
+// -----------------------------------------------------------------------------
+// Override detection (PROBE trick — 100% standard C)
+//
+// When a user writes redef()/credef() for a default method, they also define:
+//   #define Override_<Type>_<Trait>_<Method> 1
+// before the #include "trait.h" that processes the impl block.
+// The trait name is included to avoid collisions when a type implements
+// two traits with the same method name.
+// The PROBE trick detects whether that macro is defined, without requiring
+// #ifdef (which can't use token pasting).
+//
+// ___TRAIT_IS_OVR(For, Trait, Name) expands to 1 if overridden, 0 if not.
+// ___TRAIT_IF_OVR(For, Trait, Name, Then, Else, ...) expands to Then if
+//   overridden, Else(__VA_ARGS__) if not.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_OVR_PROBE(x) x, 1
+#define ___TRAIT_GET_2ND(x, y, ...) y
+#define ___TRAIT_IS_PROBE(...) ___TRAIT_GET_2ND(__VA_ARGS__, 0)
+
+#define ___TRAIT_OVR_NAME_(CType, Trait, Name) glue6(Override_, CType, _, Trait, _, Name)
+#define ___TRAIT_OVR_NAME(CType, Trait, Name) ___TRAIT_OVR_NAME_(CType, Trait, Name)
+
+#define ___TRAIT_OVR_TEST(x) ___TRAIT_OVR_TEST_DISPATCH(x)
+#define ___TRAIT_OVR_TEST_DISPATCH(x) glue(___TRAIT_OVR_TEST_DISPATCH_, x)
+#define ___TRAIT_OVR_TEST_DISPATCH_1 ___TRAIT_OVR_PROBE(~)
+
+#define ___TRAIT_IS_OVR(CType, Trait, Name) \
+  ___TRAIT_IS_PROBE(___TRAIT_OVR_TEST(___TRAIT_OVR_NAME(CType, Trait, Name)))
+
+// The deferral (Else receives __VA_ARGS__) prevents prescan from
+// expanding the DFL macro body too early (braced initializers contain
+// commas that would break macro argument parsing).
+#define ___TRAIT_IF_OVR(CType, Trait, Name, Then, Else, ...) \
+  glue(___TRAIT_OVR_BRANCH_, ___TRAIT_IS_OVR(CType, Trait, Name))(Then, Else, __VA_ARGS__)
+#define ___TRAIT_OVR_BRANCH_0(Then, Else, ...) Else(__VA_ARGS__)
+#define ___TRAIT_OVR_BRANCH_1(Then, Else, ...) Then
+
+// Paste the expanded trait name with the literal suffix `Signature`.
+// Because `x` is expanded before substitution, `___TRAIT_TRAIT_PASTE(Animal)`
+// produces `AnimalSignature` — matching the user-defined macro name.
+// This avoids the problem where `___TRAIT_PASTE(Trait, x)` would expand
+// the macro `Trait` before pasting.
+#define ___TRAIT_TRAIT_PASTE_(x) x##Signature
+#define ___TRAIT_TRAIT_PASTE(x) ___TRAIT_TRAIT_PASTE_(x)
+
+// -----------------------------------------------------------------------------
+// Compiler portability
+// -----------------------------------------------------------------------------
+// C23 mode detection
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+#define ___TRAIT_C23 1
+#else
+#define ___TRAIT_C23 0
+#endif
+
+#if ___TRAIT_C23
+#define ___TRAIT_UNUSED [[maybe_unused]]
+#define ___TRAIT_TYPEOF typeof
+#define ___TRAIT_CONSTEXPR
+#elif defined(__GNUC__) || defined(__clang__)
+#define ___TRAIT_UNUSED __attribute__((__unused__))
+#define ___TRAIT_TYPEOF __typeof__
+#define ___TRAIT_CONSTEXPR
+#else
+#define ___TRAIT_UNUSED
+#define ___TRAIT_TYPEOF __typeof__
+#define ___TRAIT_CONSTEXPR
+#endif
+
+// -----------------------------------------------------------------------------
+// Small macro utilities
+// -----------------------------------------------------------------------------
+#define ___TRAIT_PROBE() ~, 1,
+#define ___TRAIT_SECOND(a, b, ...) b
+#define ___TRAIT_CHECK(...) ___TRAIT_SECOND(__VA_ARGS__, 0)
+
+#define ___TRAIT_CAT(a, b) glue(a, b)
+
+// Detect whether a token macro is defined to 1.
+#define ___TRAIT_IS_DEFINED(x) ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_DEF_CHECK_, x))
+#define ___TRAIT_DEF_CHECK_1 ___TRAIT_PROBE()
+
+// Count arguments in a variadic list up to 4.
+#define ___TRAIT_NARG_IMPL(_0, _1, _2, _3, _4, N, ...) N
+#define ___TRAIT_NARG(...) ___TRAIT_NARG_IMPL(dummy, ##__VA_ARGS__, 4, 3, 2, 1, 0)
+
+// -----------------------------------------------------------------------------
+// Self-spec tuples
+//   mutable:   (NameSignature, ACTION)
+//   immutable:  (___TRAIT_IMMUTABLE, (NameSignature, ACTION))
+// -----------------------------------------------------------------------------
+#define ___TRAIT_IMMUTABLE ___TRAIT_IMMUTABLE
+#define immutable(SelfSpec) (___TRAIT_IMMUTABLE, SelfSpec)
+
+#define ___TRAIT_SELF_FIRST(a, ...) a
+#define ___TRAIT_SELF_SECOND(a, b, ...) b
+#define ___TRAIT_IS_IMMUTABLE_TOKEN____TRAIT_IMMUTABLE ___TRAIT_PROBE()
+#define ___TRAIT_IS_IMMUTABLE(SelfSpec)                                          \
+  ___TRAIT_CHECK(                                                                \
+      ___TRAIT_CAT(___TRAIT_IS_IMMUTABLE_TOKEN_, ___TRAIT_SELF_FIRST SelfSpec))
+
+#define ___TRAIT_SELF_UNWRAP(SelfSpec)                                           \
+  glue(___TRAIT_SELF_UNWRAP_, ___TRAIT_IS_IMMUTABLE(SelfSpec))(SelfSpec)
+#define ___TRAIT_SELF_UNWRAP_0(SelfSpec) SelfSpec
+#define ___TRAIT_SELF_UNWRAP_1(SelfSpec) ___TRAIT_SELF_SECOND SelfSpec
+
+#define ___TRAIT_GET_TYPE_IMPL(Type, Action) Type
+#define ___TRAIT_GET_TYPE(SelfSpec) ___TRAIT_GET_TYPE_IMPL SelfSpec
+
+#define ___TRAIT_GET_ACTION_IMPL(Type, Action) Action
+#define ___TRAIT_GET_ACTION(SelfSpec) ___TRAIT_GET_ACTION_IMPL SelfSpec
+
+#define ___TRAIT_SPEC_TYPE(SelfSpec) ___TRAIT_GET_TYPE(___TRAIT_SELF_UNWRAP(SelfSpec))
+#define ___TRAIT_SPEC_ACTION(SelfSpec)                                           \
+  ___TRAIT_GET_ACTION(___TRAIT_SELF_UNWRAP(SelfSpec))
+
+// -----------------------------------------------------------------------------
+// Trait name detection for the Default sentinel in impl blocks
+// -----------------------------------------------------------------------------
+#define ___TRAIT_IS_DEFAULT_TOKEN_Default ___TRAIT_PROBE()
+#define ___TRAIT_IS_DEFAULT(For)                                                 \
+  ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_DEFAULT_TOKEN_, For))
+
+#define ___TRAIT_IS_VOID_token_void ___TRAIT_PROBE()
+#define ___TRAIT_IS_VOID(Ret) ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_VOID_token_, Ret))
+
+// -----------------------------------------------------------------------------
+// Vtable / trait object helper names
+// -----------------------------------------------------------------------------
+#define ___TRAIT_VTTYPE(I) glue(I, _vtable)
+#define ___TRAIT_VTNAME(F, I) glue4(F, _, I, _vtable)
+
+// -----------------------------------------------------------------------------
+// Method metadata names (reserved for future use)
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// Dispatch by action
+// -----------------------------------------------------------------------------
+#define trait_default(SelfSpec, Ret, Name, ...)                                \
+  glue4(___TRAIT_ACT_, ___TRAIT_SPEC_ACTION(SelfSpec), _DEFAULT_,                  \
+        ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name,  \
+                                       ##__VA_ARGS__)
+
+#define trait_require(SelfSpec, Ret, Name, ...)                                \
+  glue4(___TRAIT_ACT_, ___TRAIT_SPEC_ACTION(SelfSpec), _REQUIRE_,                  \
+        ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name,  \
+                                       ##__VA_ARGS__)
+
+#define default(SelfSpec, Ret, Name, ...)                                      \
+  trait_default(SelfSpec, Ret, Name, ##__VA_ARGS__)
+#define require(SelfSpec, Ret, Name, ...)                                      \
+  trait_require(SelfSpec, Ret, Name, ##__VA_ARGS__)
+
+// -----------------------------------------------------------------------------
+// Actions: FN (vtable fields)
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_FN_REQUIRE_0(Type, Ret, Name, ...)                          \
+  Ret (*Name)(void *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FN_REQUIRE_1(Type, Ret, Name, ...)                          \
+  Ret (*Name)(const void *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FN_DEFAULT_0(Type, Ret, Name, ...)                          \
+  Ret (*Name)(void *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FN_DEFAULT_1(Type, Ret, Name, ...)                          \
+  Ret (*Name)(const void *, ##__VA_ARGS__);
+
+// -----------------------------------------------------------------------------
+// Actions: STAG (per-method unique tag typedef for selector struct)
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_STAG_REQUIRE_0(Type, Ret, Name, ...)                        \
+  typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
+#define ___TRAIT_ACT_STAG_REQUIRE_1(Type, Ret, Name, ...)                        \
+  typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
+#define ___TRAIT_ACT_STAG_DEFAULT_0(Type, Ret, Name, ...)                        \
+  typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
+#define ___TRAIT_ACT_STAG_DEFAULT_1(Type, Ret, Name, ...)                        \
+  typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
+
+// -----------------------------------------------------------------------------
+// Actions: SSEL (selector struct field for each method)
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_SSEL_REQUIRE_0(Type, Ret, Name, ...)                        \
+  glue5(___sel_, Type, _, Name, _t) Name;
+#define ___TRAIT_ACT_SSEL_REQUIRE_1(Type, Ret, Name, ...)                        \
+  glue5(___sel_, Type, _, Name, _t) Name;
+#define ___TRAIT_ACT_SSEL_DEFAULT_0(Type, Ret, Name, ...)                        \
+  glue5(___sel_, Type, _, Name, _t) Name;
+#define ___TRAIT_ACT_SSEL_DEFAULT_1(Type, Ret, Name, ...)                        \
+  glue5(___sel_, Type, _, Name, _t) Name;
+
+// -----------------------------------------------------------------------------
+// Actions: MLIST (emit comma-separated method tuples for SD iteration)
+//
+// Each require/default emits: , (ConstFlag, Ret, Name, ExtraArgs...)
+// The leading comma ensures proper separation between tuples.
+// The ConstFlag (0=mutable, 1=immutable) is derived from the action suffix.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_MLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_MLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_MLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+
+// extends is purely declarative — no method tuples propagated to MLIST.
+#define ___TRAIT_EXTENDS_MLIST(Base, SelfSpec) /* no-op */
+
+// -----------------------------------------------------------------------------
+// Actions: BIND (vtable initializer)
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_BIND_REQUIRE_0(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(void *, ##__VA_ARGS__))(void (*)(void))glue5(For, _, Type,  \
+                                                                _, Name),
+#define ___TRAIT_ACT_BIND_REQUIRE_1(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(const void *, ##__VA_ARGS__))(void (*)(void))glue5(         \
+      For, _, Type, _, Name),
+#define ___TRAIT_ACT_BIND_DEFAULT_0(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(void *, ##__VA_ARGS__))(void (*)(void))glue5(For, _, Type,  \
+                                                                _, Name),
+#define ___TRAIT_ACT_BIND_DEFAULT_1(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(const void *, ##__VA_ARGS__))(void (*)(void))glue5(         \
+      For, _, Type, _, Name),
+
+// -----------------------------------------------------------------------------
+// Actions: DFL (generate default wrappers in an impl block)
+// -----------------------------------------------------------------------------
+
+#define ___TRAIT_DFL_0_00(Type, Ret, Name)                                       \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  }
+
+#define ___TRAIT_DFL_0_10(Type, Ret, Name)                                       \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
+                                        Name)(const void *self) {              \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  }
+
+#define ___TRAIT_DFL_1_00(Type, Ret, Name)                                       \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  }
+
+#define ___TRAIT_DFL_1_10(Type, Ret, Name)                                       \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(const void *self) {             \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  }
+
+#define ___TRAIT_DFL_0_01(Type, Ret, Name, T1)                                   \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+                                                               T1 a1) {        \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+  }
+
+#define ___TRAIT_DFL_0_11(Type, Ret, Name, T1)                                   \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
+                                        Name)(const void *self, T1 a1) {       \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+  }
+
+#define ___TRAIT_DFL_1_01(Type, Ret, Name, T1)                                   \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
+                                                                T1 a1) {       \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  }
+
+#define ___TRAIT_DFL_1_11(Type, Ret, Name, T1)                                   \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(const void *self, T1 a1) {      \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  }
+
+#define ___TRAIT_DFL_0_02(Type, Ret, Name, T1, T2)                               \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+                                                               T1 a1, T2 a2) { \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+  }
+
+#define ___TRAIT_DFL_0_12(Type, Ret, Name, T1, T2)                               \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2) {                                        \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+  }
+
+#define ___TRAIT_DFL_1_02(Type, Ret, Name, T1, T2)                               \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(void *self, T1 a1, T2 a2) {     \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  }
+
+#define ___TRAIT_DFL_1_12(Type, Ret, Name, T1, T2)                               \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2) {                                        \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  }
+
+#define ___TRAIT_DFL_0_03(Type, Ret, Name, T1, T2, T3)                            \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  }
+
+#define ___TRAIT_DFL_0_13(Type, Ret, Name, T1, T2, T3)                           \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  }
+
+#define ___TRAIT_DFL_1_03(Type, Ret, Name, T1, T2, T3)                           \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  }
+
+#define ___TRAIT_DFL_1_13(Type, Ret, Name, T1, T2, T3)                           \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  }
+
+#define ___TRAIT_DFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                       \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  }
+
+#define ___TRAIT_DFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                       \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  }
+
+#define ___TRAIT_DFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                       \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  }
+
+#define ___TRAIT_DFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                       \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  }
+
+#define ___TRAIT_ACT_DFL_REQUIRE_0(Type, Ret, Name, ...) /* required: no wrap */
+#define ___TRAIT_ACT_DFL_REQUIRE_1(Type, Ret, Name, ...) /* required: no wrap */
+
+#define ___TRAIT_ACT_DFL_DEFAULT_0(Type, Ret, Name, ...)                         \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_DFL_, 0, _, 0, ___TRAIT_NARG(__VA_ARGS__)),                     \
+    Type, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DFL_DEFAULT_1(Type, Ret, Name, ...)                         \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_DFL_, 0, _, 1, ___TRAIT_NARG(__VA_ARGS__)),                     \
+    Type, Ret, Name, ##__VA_ARGS__)
+
+// -----------------------------------------------------------------------------
+// Actions: SDFL (static default wrappers — no vtable, no DynTrait construction)
+//
+// Like DFL but the Dyn<Trait> wrapper only stores {.self = ptr} with no .vt.
+// Used for static traits where defaults require no dynamic dispatch.
+// The Default_Trait_method takes Dyn<Trait>* (a minimal {void *self} struct).
+// Limitation: default bodies cannot call other trait methods on self.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_SDFL_0_00(Type, Ret, Name)                                      \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  }
+
+#define ___TRAIT_SDFL_0_10(Type, Ret, Name)                                      \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
+                                        Name)(const void *self) {              \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  }
+
+#define ___TRAIT_SDFL_1_00(Type, Ret, Name)                                      \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  }
+
+#define ___TRAIT_SDFL_1_10(Type, Ret, Name)                                      \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(const void *self) {             \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  }
+
+#define ___TRAIT_SDFL_0_01(Type, Ret, Name, T1)                                  \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+                                                                T1 a1) {        \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+  }
+
+#define ___TRAIT_SDFL_0_11(Type, Ret, Name, T1)                                  \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
+                                        Name)(const void *self, T1 a1) {       \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+  }
+
+#define ___TRAIT_SDFL_1_01(Type, Ret, Name, T1)                                  \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
+                                                                 T1 a1) {       \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  }
+
+#define ___TRAIT_SDFL_1_11(Type, Ret, Name, T1)                                  \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(const void *self, T1 a1) {      \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  }
+
+#define ___TRAIT_SDFL_0_02(Type, Ret, Name, T1, T2)                              \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+                                                                T1 a1, T2 a2) { \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+  }
+
+#define ___TRAIT_SDFL_0_12(Type, Ret, Name, T1, T2)                              \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2) {                                        \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+  }
+
+#define ___TRAIT_SDFL_1_02(Type, Ret, Name, T1, T2)                              \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
+                                         Name)(void *self, T1 a1, T2 a2) {     \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  }
+
+#define ___TRAIT_SDFL_1_12(Type, Ret, Name, T1, T2)                              \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2) {                                        \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  }
+
+#define ___TRAIT_SDFL_0_03(Type, Ret, Name, T1, T2, T3)                          \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  }
+
+#define ___TRAIT_SDFL_0_13(Type, Ret, Name, T1, T2, T3)                          \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  }
+
+#define ___TRAIT_SDFL_1_03(Type, Ret, Name, T1, T2, T3)                          \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  }
+
+#define ___TRAIT_SDFL_1_13(Type, Ret, Name, T1, T2, T3)                          \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  }
+
+#define ___TRAIT_SDFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                      \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  }
+
+#define ___TRAIT_SDFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                      \
+  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
+      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  }
+
+#define ___TRAIT_SDFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                      \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    glue(Dyn, Type) _obj = {.self = self};                                      \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  }
+
+#define ___TRAIT_SDFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                      \
+  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
+      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
+    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  }
+
+#define ___TRAIT_ACT_SDFL_REQUIRE_0(Type, Ret, Name, ...) /* required: no wrap */
+#define ___TRAIT_ACT_SDFL_REQUIRE_1(Type, Ret, Name, ...) /* required: no wrap */
+
+#define ___TRAIT_ACT_SDFL_DEFAULT_0(Type, Ret, Name, ...)                        \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_SDFL_, 0, _, 0, ___TRAIT_NARG(__VA_ARGS__)),                    \
+    Type, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_SDFL_DEFAULT_1(Type, Ret, Name, ...)                        \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_SDFL_, 0, _, 1, ___TRAIT_NARG(__VA_ARGS__)),                    \
+    Type, Ret, Name, ##__VA_ARGS__))
+
+// -----------------------------------------------------------------------------
+// The `trait(...)` declaration expands the signature to emit:
+//   FN:   vtable fields
+//   FWD:  forwarding wrappers
+//   STAG: selector tags
+//   SSEL: selector struct fields
+// -----------------------------------------------------------------------------
+#define trait(NameSignature)                                                       \
+  typedef struct {                                                                 \
+    ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, FN))                     \
+  } NameSignature##_vtable;                                                        \
+  typedef struct {                                                                 \
+    void *self;                                                                    \
+    const NameSignature##_vtable *vt;                                              \
+  } Dyn##NameSignature;                                                            \
+  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, FWD))                     \
+  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, STAG))                    \
+  typedef struct {                                                                 \
+    ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, SSEL))                  \
+  } NameSignature##___sel_t;                                                       \
+  ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR const NameSignature##___sel_t                             \
+      NameSignature = {0}
+
+// -----------------------------------------------------------------------------
+// `extends(Base, Self)` declares a supertrait constraint: the derived trait
+// requires the base trait to also be implemented.  This is purely
+// declarative — no methods are copied into the derived namespace and no
+// vtables are merged.  Each trait is implemented independently (Rust model).
+//
+// Enforcement: the SD loop's MLIST action replays the base trait's methods,
+// so the SD entry for inherited methods calls For_BaseTrait_Method.  If the
+// implementing type hasn't implemented the base trait, that symbol is
+// undefined → linker error.
+// -----------------------------------------------------------------------------
+#define extends(Base, SelfSpec)                                                \
+  glue(___TRAIT_EXTENDS_, ___TRAIT_GET_ACTION(SelfSpec))(Base, SelfSpec)
+#define ___TRAIT_EXTENDS_FN(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_BIND(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_ENFORCE(Base, SelfSpec)                                 \
+  ___TRAIT_UNUSED static void *const                                              \
+      glue5(___trait_enforce, _, For, _, Base) =                                  \
+          (void *)&glue4(For, _, Base, _vtable);
+
+// -----------------------------------------------------------------------------
+// `def(...)` defines the implementation function body.
+// `redef(...)` defines an overriding implementation for a default method.
+// The self type is chosen automatically from trait metadata.
+// If `For == Default`, the body is for the trait's default implementation and
+// uses `Impl` as the receiver type; otherwise it uses `For`.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_IMPL_SELF_BASE_0 For
+#define ___TRAIT_IMPL_SELF_BASE_1 ___TRAIT_DYN(Impl)
+#define ___TRAIT_IMPL_SELF_BASE_SEL(n) glue(___TRAIT_IMPL_SELF_BASE_, n)
+#define ___TRAIT_IMPL_SELF_BASE ___TRAIT_IMPL_SELF_BASE_SEL(___TRAIT_IS_DEFAULT(For))
+
+// -----------------------------------------------------------------------------
+// `def(...)` defines the implementation function body (mutable self).
+// `constdef(...)` defines the implementation function body (const self).
+// For `For == Default`, self is `DynImpl *` / `const DynImpl *`.
+// For concrete types, self is `For *` / `const For *`.
+// The user chooses def/constdef based on the method's constness in the
+// trait declaration (`immutable(Self)` → constdef).
+//
+// To override a default method, use def/constdef (same as for required
+// methods) and also define:
+//   #define Override_<Type>_<Trait>_<Method> 1
+// before the #include "trait.h" that processes the impl block, so that
+// defaults() knows to skip the DFL wrapper for that method.
+// -----------------------------------------------------------------------------
+#define def(Ret, Name, ...)                                                    \
+  Ret glue5(For, _, Impl, _,                                                   \
+            Name)(___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
+
+#define constdef(Ret, Name, ...)                                               \
+  Ret glue5(For, _, Impl, _,                                                   \
+            Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
+
+// -----------------------------------------------------------------------------
+// `defaults()` emits wrappers for default methods when implementing a trait.
+// `static_defaults()` emits SDFL wrappers for static traits (no vtable).
+// `impl()` emits the vtable object plus trait conversion helpers.
+// -----------------------------------------------------------------------------
+#define defaults()                                                             \
+  ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl) ___TRAIT_VTNAME(For, Impl);   \
+  ___TRAIT_PASTE(Impl, Signature)((Impl, DFL))
+
+#define static_defaults()                                                      \
+  ___TRAIT_PASTE(Impl, Signature)((Impl, SDFL))
+
+#define impl()                                                                 \
+  ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl)                          \
+      ___TRAIT_VTNAME(For, Impl) = {___TRAIT_PASTE(Impl, Signature)((Impl, BIND))};    \
+  ___TRAIT_UNUSED static inline glue(Dyn, Impl)                                 \
+      glue3(For, _as_, Impl)(For * obj) {                                      \
+    return (glue(Dyn, Impl)){.self = obj, .vt = &___TRAIT_VTNAME(For, Impl)};    \
+  }                                                                            \
+  ___TRAIT_UNUSED static inline For *glue3(For, _from_, Impl)(                   \
+      glue(Dyn, Impl) obj) {                                                   \
+    return (For *)obj.self;                                                    \
+  }
+
+#define impl_vt() impl()
+
+// -----------------------------------------------------------------------------
+// Call-site ergonomics
+// -----------------------------------------------------------------------------
+#define to_trait(Type, Trait, ptr) Type##_as_##Trait(ptr)
+#define from_trait(Type, Trait, obj) Type##_from_##Trait(obj)
+
+// -----------------------------------------------------------------------------
+/* Literal construction */
+#define new_trait(Type, Trait, ...) Type##_as_##Trait(&(Type)__VA_ARGS__)
+
+// ── ENFORCE action: impl-site enforcement of extends ─────────────────────────
+// For each extends(Base), emits a static reference to For##_Base##_vtable.
+// If the type hasn't implemented the base trait, the symbol is undefined
+// → linker error at impl site.
+// require/default methods are no-ops for ENFORCE.
+#define ___TRAIT_ACT_ENFORCE_REQUIRE_0(Type, Ret, Name, ...) /* no-op */
+#define ___TRAIT_ACT_ENFORCE_REQUIRE_1(Type, Ret, Name, ...) /* no-op */
+#define ___TRAIT_ACT_ENFORCE_DEFAULT_0(Type, Ret, Name, ...) /* no-op */
+#define ___TRAIT_ACT_ENFORCE_DEFAULT_1(Type, Ret, Name, ...) /* no-op */
+
+// ── FWDDECL action: extern declarations for forward-declare mode ─────────────
+// When #define Forward is active, emits extern declarations for each
+// impl function so that SD entries (which call these functions) can be emitted
+// before the def() bodies.
+// _0 suffix = mutable (For *), _1 suffix = immutable/const (const For *).
+#define ___TRAIT_ACT_FWDDECL_REQUIRE_0(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      For *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FWDDECL_REQUIRE_1(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      const For *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FWDDECL_DEFAULT_0(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      For *, ##__VA_ARGS__);
+#define ___TRAIT_ACT_FWDDECL_DEFAULT_1(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      const For *, ##__VA_ARGS__);
+
+// =============================================================================
+// SD (selector-based dispatch) infrastructure
+//
+// Enables: call(Animal.get_snacks, &cat)
+//
+// Architecture: flat (type × method) counter where each slot stores both the
+// concrete type and the selector type.  call() walks this counter checking both
+// types simultaneously with &&.
+//
+// The SD counter is populated during impl registration via self-include loops:
+//   1. SD loop: emits entries for concrete types (static dispatch)
+//   2. DynSD loop: emits entries for DynTraitname (dynamic dispatch via vtable)
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// MSEL: position-selector macros
+//
+// ___TRAIT_MSEL_K(dummy, a0, a1, ..., aK, ...) → aK
+// The `dummy` argument absorbs the leading comma from MLIST expansion.
+// Supports up to 8 methods per trait.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_MSEL_0(d, a, ...) a
+#define ___TRAIT_MSEL_1(d, a, b, ...) b
+#define ___TRAIT_MSEL_2(d, a, b, c, ...) c
+#define ___TRAIT_MSEL_3(d, a, b, c, e, ...) e
+#define ___TRAIT_MSEL_4(d, a, b, c, e, f, ...) f
+#define ___TRAIT_MSEL_5(d, a, b, c, e, f, g, ...) g
+#define ___TRAIT_MSEL_6(d, a, b, c, e, f, g, h, ...) h
+#define ___TRAIT_MSEL_7(d, a, b, c, e, f, g, h, i, ...) i
+
+// Relay macro: forces expansion of args before argument splitting.
+// This is critical because MLIST expansion produces commas that must be
+// visible as argument separators when MSEL_K identifies its arguments.
+#define ___TRAIT_SD_APPLY(M, ...) M(__VA_ARGS__)
+
+// Select the Kth method tuple from a trait's MLIST expansion.
+// Returns a parenthesized tuple: (NameSignature, ConstFlag, Ret, Name, ExtraArgs...)
+// Sentinel tuples (_STOP) are appended to safely handle out-of-range K.
+#define ___TRAIT_SD_SELECT(K, TraitImpl)                                         \
+  ___TRAIT_SD_APPLY(glue(___TRAIT_MSEL_, K),                                       \
+      0 ___TRAIT_PASTE(TraitImpl, Signature)((TraitImpl, MLIST))                   \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP))
+
+// -----------------------------------------------------------------------------
+// Sentinel detection for the self-include loop.
+// ___TRAIT_SD_IS_STOP(K, TraitImpl) → 1 if method K is past the last method.
+// Works in #if context: fully expands to an integer constant 0 or 1.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_SD_TUPLE_FIRST_I(a, ...) a
+#define ___TRAIT_SD_TUPLE_FIRST(t) ___TRAIT_SD_TUPLE_FIRST_I t
+#define ___TRAIT_SD_STOP_CHECK__STOP ___TRAIT_PROBE()
+#define ___TRAIT_SD_IS_STOP(K, TraitImpl)                                        \
+  ___TRAIT_CHECK(glue(___TRAIT_SD_STOP_CHECK_,                                     \
+      ___TRAIT_SD_TUPLE_FIRST(___TRAIT_SD_SELECT(K, TraitImpl))))
+
+// -----------------------------------------------------------------------------
+// SD registration emission
+//
+// ___TRAIT_SD_EMIT(tuple) unpacks a method tuple and emits:
+//   1. typedef For → ___trait_sd_D6D5D4D3D2D1_ty  (concrete type)
+//   2. typedef selector → ___trait_sd_D6D5D4D3D2D1_sty  (selector type)
+//   3. static inline wrapper function ___trait_sd_fn_D6D5D4D3D2D1
+//
+// Uses For (concrete type) and Impl (trait name) which are still defined
+// during the SD self-include loop.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_SD_EMIT(tuple) ___TRAIT_SD_EMIT_I tuple
+#define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
+  typedef For glue8(___trait_sd_ty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);   \
+  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
+      ___trait_sd_sty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);               \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_asty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);             \
+  typedef void (*glue8(___trait_sd_pair_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
+  typedef void (*glue8(___trait_sd_apair_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+  glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
+        ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name, ##__VA_ARGS__)
+
+// -----------------------------------------------------------------------------
+// SDREG: SD wrapper function emitters
+//
+// SDREG wrapper emitter:
+//   - Function name uses hierarchical naming: ___trait_sd_fn_T<T2><T1>_Y<Y2><Y1>_M<M1>
+//   - Body calls For_Impl_Method (using current For and Impl macros)
+//   - Parameters: (Ret, Name, ExtraArgs...) — no Type parameter needed
+//     since For and Impl are available as macros
+// -----------------------------------------------------------------------------
+#define ___TRAIT_SDREG_FN                                                        \
+  glue7(___trait_sd_fn_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1)
+#define ___TRAIT_DYNSDREG_FN                                                        \
+  glue7(___trait_sd_fn_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1)
+#define ___TRAIT_SDREG_IMPL(NameSignature, Name) glue5(For, _, NameSignature, _, Name)
+
+// ── non-void return ─────────────────────────────────────────────────────────
+#define ___TRAIT_SDREG_0_00(NameSignature, Ret, Name)                                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self) {                \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                           \
+  }
+#define ___TRAIT_SDREG_0_10(NameSignature, Ret, Name)                                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self) {           \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                           \
+  }
+#define ___TRAIT_SDREG_0_01(NameSignature, Ret, Name, T1)                            \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1) {         \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                       \
+  }
+#define ___TRAIT_SDREG_0_11(NameSignature, Ret, Name, T1)                            \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1) {    \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                       \
+  }
+#define ___TRAIT_SDREG_0_02(NameSignature, Ret, Name, T1, T2)                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2) {  \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                   \
+  }
+#define ___TRAIT_SDREG_0_12(NameSignature, Ret, Name, T1, T2)                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
+                                                    T2 a2) {                    \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                   \
+  }
+#define ___TRAIT_SDREG_0_03(NameSignature, Ret, Name, T1, T2, T3)                    \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,    \
+                                                    T3 a3) {                    \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);               \
+  }
+#define ___TRAIT_SDREG_0_13(NameSignature, Ret, Name, T1, T2, T3)                    \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
+                                                    T2 a2, T3 a3) {            \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);               \
+  }
+#define ___TRAIT_SDREG_0_04(NameSignature, Ret, Name, T1, T2, T3, T4)                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,    \
+                                                    T3 a3, T4 a4) {            \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);           \
+  }
+#define ___TRAIT_SDREG_0_14(NameSignature, Ret, Name, T1, T2, T3, T4)                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
+                                                    T2 a2, T3 a3, T4 a4) {     \
+    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);           \
+  }
+
+// ── void return ─────────────────────────────────────────────────────────────
+#define ___TRAIT_SDREG_1_00(NameSignature, Ret, Name)                                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(For * self) {               \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                                  \
+  }
+#define ___TRAIT_SDREG_1_10(NameSignature, Ret, Name)                                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(const For *self) {          \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                                  \
+  }
+#define ___TRAIT_SDREG_1_01(NameSignature, Ret, Name, T1)                            \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(For * self, T1 a1) {        \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                              \
+  }
+#define ___TRAIT_SDREG_1_11(NameSignature, Ret, Name, T1)                            \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(const For *self, T1 a1) {   \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                              \
+  }
+#define ___TRAIT_SDREG_1_02(NameSignature, Ret, Name, T1, T2)                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2) { \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                          \
+  }
+#define ___TRAIT_SDREG_1_12(NameSignature, Ret, Name, T1, T2)                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(const For *self, T1 a1,     \
+                                                     T2 a2) {                   \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                          \
+  }
+#define ___TRAIT_SDREG_1_03(NameSignature, Ret, Name, T1, T2, T3)                    \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,   \
+                                                     T3 a3) {                   \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);                      \
+  }
+#define ___TRAIT_SDREG_1_13(NameSignature, Ret, Name, T1, T2, T3)                    \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(const For *self, T1 a1,     \
+                                                     T2 a2, T3 a3) {           \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);                      \
+  }
+#define ___TRAIT_SDREG_1_04(NameSignature, Ret, Name, T1, T2, T3, T4)                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,   \
+                                                     T3 a3, T4 a4) {           \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);                  \
+  }
+#define ___TRAIT_SDREG_1_14(NameSignature, Ret, Name, T1, T2, T3, T4)                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_SDREG_FN(const For *self, T1 a1,     \
+                                                     T2 a2, T3 a3, T4 a4) {    \
+    ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);                  \
+  }
+
+// =============================================================================
+// DynSD (dynamic dispatch via selector) infrastructure
+//
+// When call(Animal.get_snacks, &dyn_obj) is used with a DynTraitname pointer,
+// the SD chain matches DynTraitname as the concrete type and dispatches through
+// the vtable.  DYNSDREG wrapper functions are emitted during a second
+// self-include loop after the normal SD loop in impl registration.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// DYNSD registration emission
+//
+// Like ___TRAIT_SD_EMIT but uses DynImpl as the concrete type and generates
+// vtable-dispatching wrapper functions instead of direct-call wrappers.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_I tuple
+#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_ty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);  \
+  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
+      ___trait_sd_sty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);               \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_asty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);             \
+  typedef void (*glue8(___trait_sd_pair_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
+  typedef void (*glue8(___trait_sd_apair_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, Name, ##__VA_ARGS__)
+
+// -----------------------------------------------------------------------------
+// DYNSDREG: DynTraitname wrapper function emitters
+//
+// Like SDREG but:
+//   - Parameter is DynImpl* (or const DynImpl*) instead of For*
+//   - Body calls self->vt->Name(self->self, ...) instead of For_Impl_Name()
+// -----------------------------------------------------------------------------
+
+// ── non-void return ─────────────────────────────────────────────────────────
+#define ___TRAIT_DYNSDREG_0_00(Ret, Name)                                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      glue(Dyn, Impl) *self) {                                                 \
+    return self->vt->Name(self->self);                                         \
+  }
+#define ___TRAIT_DYNSDREG_0_10(Ret, Name)                                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      const glue(Dyn, Impl) *self) {                                           \
+    return self->vt->Name(self->self);                                         \
+  }
+#define ___TRAIT_DYNSDREG_0_01(Ret, Name, T1)                                    \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      glue(Dyn, Impl) *self, T1 a1) {                                          \
+    return self->vt->Name(self->self, a1);                                     \
+  }
+#define ___TRAIT_DYNSDREG_0_11(Ret, Name, T1)                                    \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      const glue(Dyn, Impl) *self, T1 a1) {                                    \
+    return self->vt->Name(self->self, a1);                                     \
+  }
+#define ___TRAIT_DYNSDREG_0_02(Ret, Name, T1, T2)                                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2) {                                   \
+    return self->vt->Name(self->self, a1, a2);                                 \
+  }
+#define ___TRAIT_DYNSDREG_0_12(Ret, Name, T1, T2)                                \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2) {                             \
+    return self->vt->Name(self->self, a1, a2);                                 \
+  }
+#define ___TRAIT_DYNSDREG_0_03(Ret, Name, T1, T2, T3)                            \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                            \
+    return self->vt->Name(self->self, a1, a2, a3);                             \
+  }
+#define ___TRAIT_DYNSDREG_0_13(Ret, Name, T1, T2, T3)                            \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                      \
+    return self->vt->Name(self->self, a1, a2, a3);                             \
+  }
+#define ___TRAIT_DYNSDREG_0_04(Ret, Name, T1, T2, T3, T4)                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {                     \
+    return self->vt->Name(self->self, a1, a2, a3, a4);                         \
+  }
+#define ___TRAIT_DYNSDREG_0_14(Ret, Name, T1, T2, T3, T4)                        \
+  ___TRAIT_UNUSED static inline Ret ___TRAIT_DYNSDREG_FN(                             \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {               \
+    return self->vt->Name(self->self, a1, a2, a3, a4);                         \
+  }
+
+// ── void return ─────────────────────────────────────────────────────────────
+#define ___TRAIT_DYNSDREG_1_00(Ret, Name)                                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      glue(Dyn, Impl) *self) {                                                  \
+    self->vt->Name(self->self);                                                \
+  }
+#define ___TRAIT_DYNSDREG_1_10(Ret, Name)                                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      const glue(Dyn, Impl) *self) {                                            \
+    self->vt->Name(self->self);                                                \
+  }
+#define ___TRAIT_DYNSDREG_1_01(Ret, Name, T1)                                    \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      glue(Dyn, Impl) *self, T1 a1) {                                           \
+    self->vt->Name(self->self, a1);                                            \
+  }
+#define ___TRAIT_DYNSDREG_1_11(Ret, Name, T1)                                    \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      const glue(Dyn, Impl) *self, T1 a1) {                                     \
+    self->vt->Name(self->self, a1);                                            \
+  }
+#define ___TRAIT_DYNSDREG_1_02(Ret, Name, T1, T2)                                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2) {                                    \
+    self->vt->Name(self->self, a1, a2);                                        \
+  }
+#define ___TRAIT_DYNSDREG_1_12(Ret, Name, T1, T2)                                \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2) {                              \
+    self->vt->Name(self->self, a1, a2);                                        \
+  }
+#define ___TRAIT_DYNSDREG_1_03(Ret, Name, T1, T2, T3)                            \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                             \
+    self->vt->Name(self->self, a1, a2, a3);                                    \
+  }
+#define ___TRAIT_DYNSDREG_1_13(Ret, Name, T1, T2, T3)                            \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                       \
+    self->vt->Name(self->self, a1, a2, a3);                                    \
+  }
+#define ___TRAIT_DYNSDREG_1_04(Ret, Name, T1, T2, T3, T4)                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {                      \
+    self->vt->Name(self->self, a1, a2, a3, a4);                                \
+  }
+#define ___TRAIT_DYNSDREG_1_14(Ret, Name, T1, T2, T3, T4)                        \
+  ___TRAIT_UNUSED static inline void ___TRAIT_DYNSDREG_FN(                            \
+      const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {                \
+    self->vt->Name(self->self, a1, a2, a3, a4);                                \
+  }
+
+// =============================================================================
+// SD counter: 6-digit octal, max 262144 selector dispatch slots.
+// Each impl × method consumes one slot.
+// Persistent across re-include passes (like the type counter).
+// =============================================================================
+#define ___TRAIT_SD_C1 0
+#define ___TRAIT_SD_C2 0
+#define ___TRAIT_SD_C3 0
+#define ___TRAIT_SD_C4 0
+#define ___TRAIT_SD_C5 0
+#define ___TRAIT_SD_C6 0
+#define ___TRAIT_SD_C7 0
+
+// =============================================================================
+// SD dispatch: _Generic-based (standard C11)
+//
+// Uses the "extendible _Generic" pattern: recursive macros generate _Generic
+// slots from 0 to the current counter value.  The fptr trick dispatches on
+// both selector type and concrete type simultaneously.
+//
+// The controlling expression:
+//   (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0
+// has type void (*)(SelectorType, ConcreteType), matching the pair typedefs
+// emitted during SD registration.
+// =============================================================================
+
+// Single slot in the _Generic: pair type → fn (indexed by flat SD counter)
+// clang-format off
+#define ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,d1) \
+  glue8(___trait_sd_pair_, d6,d5,d4,d3,d2,d1,_p): glue7(___trait_sd_fn_, d6,d5,d4,d3,d2,d1),
+
+// ── R1: innermost level (digit d1, 0–7 per group) ──────────────────────────
+#define ___TRAIT_SD_R1_0(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_1(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,0)
+#define ___TRAIT_SD_R1_2(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,1) \
+  ___TRAIT_SD_R1_1(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_3(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,2) \
+  ___TRAIT_SD_R1_2(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_4(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,3) \
+  ___TRAIT_SD_R1_3(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_5(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,4) \
+  ___TRAIT_SD_R1_4(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_6(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,5) \
+  ___TRAIT_SD_R1_5(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_7(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,6) \
+  ___TRAIT_SD_R1_6(d6,d5,d4,d3,d2)
+#define ___TRAIT_SD_R1_8(d6,d5,d4,d3,d2) \
+  ___TRAIT_SD_SLOT(d6,d5,d4,d3,d2,7) \
+  ___TRAIT_SD_R1_7(d6,d5,d4,d3,d2)
+
+// ── R2: digit d2 (0–7, each emits a full R1_8 group) ───────────────────────
+#define ___TRAIT_SD_R2_0(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_1(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,0)
+#define ___TRAIT_SD_R2_2(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,1) \
+  ___TRAIT_SD_R2_1(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_3(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,2) \
+  ___TRAIT_SD_R2_2(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_4(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,3) \
+  ___TRAIT_SD_R2_3(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_5(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,4) \
+  ___TRAIT_SD_R2_4(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_6(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,5) \
+  ___TRAIT_SD_R2_5(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_7(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,6) \
+  ___TRAIT_SD_R2_6(d6,d5,d4,d3)
+#define ___TRAIT_SD_R2_8(d6,d5,d4,d3) \
+  ___TRAIT_SD_R1_8(d6,d5,d4,d3,7) \
+  ___TRAIT_SD_R2_7(d6,d5,d4,d3)
+
+// ── R3: digit d3 (0–7, each emits a full R2_8 group) ───────────────────────
+#define ___TRAIT_SD_R3_0(d6,d5,d4)
+#define ___TRAIT_SD_R3_1(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,0)
+#define ___TRAIT_SD_R3_2(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,1) \
+  ___TRAIT_SD_R3_1(d6,d5,d4)
+#define ___TRAIT_SD_R3_3(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,2) \
+  ___TRAIT_SD_R3_2(d6,d5,d4)
+#define ___TRAIT_SD_R3_4(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,3) \
+  ___TRAIT_SD_R3_3(d6,d5,d4)
+#define ___TRAIT_SD_R3_5(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,4) \
+  ___TRAIT_SD_R3_4(d6,d5,d4)
+#define ___TRAIT_SD_R3_6(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,5) \
+  ___TRAIT_SD_R3_5(d6,d5,d4)
+#define ___TRAIT_SD_R3_7(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,6) \
+  ___TRAIT_SD_R3_6(d6,d5,d4)
+#define ___TRAIT_SD_R3_8(d6,d5,d4) \
+  ___TRAIT_SD_R2_8(d6,d5,d4,7) \
+  ___TRAIT_SD_R3_7(d6,d5,d4)
+
+// ── R4: digit d4 (0–7, each emits a full R3_8 group) ───────────────────────
+#define ___TRAIT_SD_R4_0(d6,d5)
+#define ___TRAIT_SD_R4_1(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,0)
+#define ___TRAIT_SD_R4_2(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,1) \
+  ___TRAIT_SD_R4_1(d6,d5)
+#define ___TRAIT_SD_R4_3(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,2) \
+  ___TRAIT_SD_R4_2(d6,d5)
+#define ___TRAIT_SD_R4_4(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,3) \
+  ___TRAIT_SD_R4_3(d6,d5)
+#define ___TRAIT_SD_R4_5(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,4) \
+  ___TRAIT_SD_R4_4(d6,d5)
+#define ___TRAIT_SD_R4_6(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,5) \
+  ___TRAIT_SD_R4_5(d6,d5)
+#define ___TRAIT_SD_R4_7(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,6) \
+  ___TRAIT_SD_R4_6(d6,d5)
+#define ___TRAIT_SD_R4_8(d6,d5) \
+  ___TRAIT_SD_R3_8(d6,d5,7) \
+  ___TRAIT_SD_R4_7(d6,d5)
+
+// ── R5: digit d5 (0–7, each emits a full R4_8 group) ───────────────────────
+#define ___TRAIT_SD_R5_0(d6)
+#define ___TRAIT_SD_R5_1(d6) \
+  ___TRAIT_SD_R4_8(d6,0)
+#define ___TRAIT_SD_R5_2(d6) \
+  ___TRAIT_SD_R4_8(d6,1) \
+  ___TRAIT_SD_R5_1(d6)
+#define ___TRAIT_SD_R5_3(d6) \
+  ___TRAIT_SD_R4_8(d6,2) \
+  ___TRAIT_SD_R5_2(d6)
+#define ___TRAIT_SD_R5_4(d6) \
+  ___TRAIT_SD_R4_8(d6,3) \
+  ___TRAIT_SD_R5_3(d6)
+#define ___TRAIT_SD_R5_5(d6) \
+  ___TRAIT_SD_R4_8(d6,4) \
+  ___TRAIT_SD_R5_4(d6)
+#define ___TRAIT_SD_R5_6(d6) \
+  ___TRAIT_SD_R4_8(d6,5) \
+  ___TRAIT_SD_R5_5(d6)
+#define ___TRAIT_SD_R5_7(d6) \
+  ___TRAIT_SD_R4_8(d6,6) \
+  ___TRAIT_SD_R5_6(d6)
+#define ___TRAIT_SD_R5_8(d6) \
+  ___TRAIT_SD_R4_8(d6,7) \
+  ___TRAIT_SD_R5_7(d6)
+
+// ── R6: digit d6 (most significant, 0–7) ────────────────────────────────────
+#define ___TRAIT_SD_R6_0
+#define ___TRAIT_SD_R6_1 \
+  ___TRAIT_SD_R5_8(0)
+#define ___TRAIT_SD_R6_2 \
+  ___TRAIT_SD_R5_8(1) \
+  ___TRAIT_SD_R6_1
+#define ___TRAIT_SD_R6_3 \
+  ___TRAIT_SD_R5_8(2) \
+  ___TRAIT_SD_R6_2
+#define ___TRAIT_SD_R6_4 \
+  ___TRAIT_SD_R5_8(3) \
+  ___TRAIT_SD_R6_3
+#define ___TRAIT_SD_R6_5 \
+  ___TRAIT_SD_R5_8(4) \
+  ___TRAIT_SD_R6_4
+#define ___TRAIT_SD_R6_6 \
+  ___TRAIT_SD_R5_8(5) \
+  ___TRAIT_SD_R6_5
+#define ___TRAIT_SD_R6_7 \
+  ___TRAIT_SD_R5_8(6) \
+  ___TRAIT_SD_R6_6
+#define ___TRAIT_SD_R6_8 \
+  ___TRAIT_SD_R5_8(7) \
+  ___TRAIT_SD_R6_7
+
+// ── Assemble all slots ──────────────────────────────────────────────────────
+#define ___TRAIT_SD_SLOTS                                                          \
+  glue(___TRAIT_SD_R1_, ___TRAIT_SD_C1)(___TRAIT_SD_C6, ___TRAIT_SD_C5,          \
+                                        ___TRAIT_SD_C4, ___TRAIT_SD_C3,          \
+                                        ___TRAIT_SD_C2)                           \
+  glue(___TRAIT_SD_R2_, ___TRAIT_SD_C2)(___TRAIT_SD_C6, ___TRAIT_SD_C5,          \
+                                        ___TRAIT_SD_C4, ___TRAIT_SD_C3)          \
+  glue(___TRAIT_SD_R3_, ___TRAIT_SD_C3)(___TRAIT_SD_C6, ___TRAIT_SD_C5,          \
+                                        ___TRAIT_SD_C4)                           \
+  glue(___TRAIT_SD_R4_, ___TRAIT_SD_C4)(___TRAIT_SD_C6, ___TRAIT_SD_C5)          \
+  glue(___TRAIT_SD_R5_, ___TRAIT_SD_C5)(___TRAIT_SD_C6)                          \
+  glue(___TRAIT_SD_R6_, ___TRAIT_SD_C6)
+
+// ── call(sel, obj, ...) ─────────────────────────────────────────────────────
+//
+// Unified dispatch via _Generic.  The controlling expression is a null
+// function-pointer whose type encodes both the selector and object types.
+// Each registered SD entry provides a matching pair type.
+// If no slot matches, the default arm yields a non-callable struct variable
+// with a descriptive name — the compiler error reads:
+//   "called object type 'struct ERROR_trait_not_implemented_for_this_type'
+//    is not a function or function pointer"
+// clang-format off
+struct ERROR_trait_not_implemented_for_this_type;
+extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemented_for_this_type;
+#define call(sel, obj, ...)                                                       \
+  _Generic(                                                                       \
+      (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0,                 \
+      ___TRAIT_SD_SLOTS                                                           \
+      default: ERROR_trait_not_implemented_for_this_type                          \
+  )(obj, ##__VA_ARGS__)
+
+// =============================================================================
+// C23 overrides
+//
+// In C23 mode, the GCC extension `, ##__VA_ARGS__` is a hard error.  Each
+// affected macro is redefined here using the standard `__VA_OPT__` equivalent.
+// The original C11 definitions above use `, ##__VA_ARGS__`.
+// =============================================================================
+#if ___TRAIT_C23
+
+// ── NARG ──────────────────────────────────────────────────────────────────────
+#undef  ___TRAIT_NARG
+#define ___TRAIT_NARG(...) ___TRAIT_NARG_IMPL(dummy __VA_OPT__(,) __VA_ARGS__, 4, 3, 2, 1, 0)
+
+// ── Dispatch ──────────────────────────────────────────────────────────────────
+#undef  trait_default
+#define trait_default(SelfSpec, Ret, Name, ...)                                \
+  glue4(___TRAIT_ACT_, ___TRAIT_SPEC_ACTION(SelfSpec), _DEFAULT_,                  \
+        ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name  \
+                                        __VA_OPT__(,) __VA_ARGS__)
+
+#undef  trait_require
+#define trait_require(SelfSpec, Ret, Name, ...)                                \
+  glue4(___TRAIT_ACT_, ___TRAIT_SPEC_ACTION(SelfSpec), _REQUIRE_,                  \
+        ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name  \
+                                        __VA_OPT__(,) __VA_ARGS__)
+
+#undef  default
+#define default(SelfSpec, Ret, Name, ...)                                      \
+  trait_default(SelfSpec, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  require
+#define require(SelfSpec, Ret, Name, ...)                                      \
+  trait_require(SelfSpec, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// ── FN actions (vtable fields) ────────────────────────────────────────────────
+#undef  ___TRAIT_ACT_FN_REQUIRE_0
+#define ___TRAIT_ACT_FN_REQUIRE_0(Type, Ret, Name, ...)                          \
+  Ret (*Name)(void * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FN_REQUIRE_1
+#define ___TRAIT_ACT_FN_REQUIRE_1(Type, Ret, Name, ...)                          \
+  Ret (*Name)(const void * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FN_DEFAULT_0
+#define ___TRAIT_ACT_FN_DEFAULT_0(Type, Ret, Name, ...)                          \
+  Ret (*Name)(void * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FN_DEFAULT_1
+#define ___TRAIT_ACT_FN_DEFAULT_1(Type, Ret, Name, ...)                          \
+  Ret (*Name)(const void * __VA_OPT__(,) __VA_ARGS__);
+
+// ── MLIST actions ─────────────────────────────────────────────────────────────
+#undef  ___TRAIT_ACT_MLIST_REQUIRE_0
+#define ___TRAIT_ACT_MLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_MLIST_REQUIRE_1
+#define ___TRAIT_ACT_MLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_MLIST_DEFAULT_0
+#define ___TRAIT_ACT_MLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_MLIST_DEFAULT_1
+#define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+
+// ── BIND actions (vtable initializer) ─────────────────────────────────────────
+#undef  ___TRAIT_ACT_BIND_REQUIRE_0
+#define ___TRAIT_ACT_BIND_REQUIRE_0(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(void * __VA_OPT__(,) __VA_ARGS__))(void (*)(void))glue5(For, _, Type, \
+                                                                _, Name),
+#undef  ___TRAIT_ACT_BIND_REQUIRE_1
+#define ___TRAIT_ACT_BIND_REQUIRE_1(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(const void * __VA_OPT__(,) __VA_ARGS__))(void (*)(void))glue5( \
+      For, _, Type, _, Name),
+#undef  ___TRAIT_ACT_BIND_DEFAULT_0
+#define ___TRAIT_ACT_BIND_DEFAULT_0(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(void * __VA_OPT__(,) __VA_ARGS__))(void (*)(void))glue5(For, _, Type, \
+                                                                _, Name),
+#undef  ___TRAIT_ACT_BIND_DEFAULT_1
+#define ___TRAIT_ACT_BIND_DEFAULT_1(Type, Ret, Name, ...)                        \
+  .Name = (Ret (*)(const void * __VA_OPT__(,) __VA_ARGS__))(void (*)(void))glue5( \
+      For, _, Type, _, Name),
+
+// ── DFL actions ───────────────────────────────────────────────────────────────
+#undef  ___TRAIT_ACT_DFL_DEFAULT_0
+#define ___TRAIT_ACT_DFL_DEFAULT_0(Type, Ret, Name, ...)                         \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_DFL_, 0, _, 0, ___TRAIT_NARG(__VA_ARGS__)),                     \
+    Type, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DFL_DEFAULT_1
+#define ___TRAIT_ACT_DFL_DEFAULT_1(Type, Ret, Name, ...)                         \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_DFL_, 0, _, 1, ___TRAIT_NARG(__VA_ARGS__)),                     \
+    Type, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// ── SDFL actions ──────────────────────────────────────────────────────────────
+#undef  ___TRAIT_ACT_SDFL_DEFAULT_0
+#define ___TRAIT_ACT_SDFL_DEFAULT_0(Type, Ret, Name, ...)                        \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_SDFL_, 0, _, 0, ___TRAIT_NARG(__VA_ARGS__)),                    \
+    Type, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_SDFL_DEFAULT_1
+#define ___TRAIT_ACT_SDFL_DEFAULT_1(Type, Ret, Name, ...)                        \
+  ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
+    glue5(___TRAIT_SDFL_, 0, _, 1, ___TRAIT_NARG(__VA_ARGS__)),                    \
+    Type, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// ── FWDDECL actions ───────────────────────────────────────────────────────────
+#undef  ___TRAIT_ACT_FWDDECL_REQUIRE_0
+#define ___TRAIT_ACT_FWDDECL_REQUIRE_0(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      For * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FWDDECL_REQUIRE_1
+#define ___TRAIT_ACT_FWDDECL_REQUIRE_1(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      const For * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FWDDECL_DEFAULT_0
+#define ___TRAIT_ACT_FWDDECL_DEFAULT_0(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      For * __VA_OPT__(,) __VA_ARGS__);
+#undef  ___TRAIT_ACT_FWDDECL_DEFAULT_1
+#define ___TRAIT_ACT_FWDDECL_DEFAULT_1(Type, Ret, Name, ...)                     \
+  extern Ret glue5(For, _, Type, _, Name)(                                        \
+      const For * __VA_OPT__(,) __VA_ARGS__);
+
+// ── SD_emit / DynSD_emit ─────────────────────────────────────────────────────
+#undef  ___TRAIT_SD_EMIT_I
+#define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
+  typedef For glue8(___trait_sd_ty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);   \
+  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
+      ___trait_sd_sty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);               \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_asty_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);             \
+  typedef void (*glue8(___trait_sd_pair_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
+  typedef void (*glue8(___trait_sd_apair_, Impl, _M, ___TRAIT_SD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+  glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
+        ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+#undef  ___TRAIT_DYNSD_EMIT_I
+#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_ty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);  \
+  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
+      ___trait_sd_sty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);               \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_asty_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1);             \
+  typedef void (*glue8(___trait_sd_pair_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
+  typedef void (*glue8(___trait_sd_apair_, Impl, _M, ___TRAIT_DYNSD_PASS, _Y, ___TRAIT_YC_CUR_Y2, ___TRAIT_YC_CUR_Y1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// ── def / constdef ────────────────────────────────────────────────────────────
+#undef  def
+#define def(Ret, Name, ...)                                                    \
+  Ret glue5(For, _, Impl, _,                                                   \
+            Name)(___TRAIT_IMPL_SELF_BASE * self                               \
+                  __VA_OPT__(,) __VA_ARGS__)
+
+#undef  constdef
+#define constdef(Ret, Name, ...)                                               \
+  Ret glue5(For, _, Impl, _,                                                   \
+            Name)(const ___TRAIT_IMPL_SELF_BASE * self                         \
+                  __VA_OPT__(,) __VA_ARGS__)
+
+// ── call ──────────────────────────────────────────────────────────────────────
+#undef  call
+#define call(sel, obj, ...)                                                       \
+  _Generic(                                                                       \
+      (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0,                 \
+      ___TRAIT_SD_SLOTS                                                          \
+      default: ERROR_trait_not_implemented_for_this_type                          \
+  )(obj __VA_OPT__(,) __VA_ARGS__)
+
+#endif // ___TRAIT_C23
+
+#endif // TRAIT_ALT_H

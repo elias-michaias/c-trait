@@ -1,0 +1,5 @@
+a.out
+*.o
+/tmp/
+benchmark_asm/
+benchmark_report.txt
