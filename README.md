@@ -40,6 +40,7 @@ Copies `trait.h` to `~/.local/include/trait.h`.
 #include "trait.h"
 
 #define Trait Greet
+#define Dynamic
 #define GreetSignature(Self) require(Self, void, greet)
 #include "trait.h"
 
@@ -54,7 +55,9 @@ typedef struct { const char *name; } Person;
 
 int main(void) {
   Person p = { .name = "World" };
-  call(Greet.greet, &p);  // Hello, World!
+  DynGreet d = to_trait(Greet, Person, &p);
+  call(Greet.greet, &p);  // Hello, World! (statically dispatched)
+  call(Greet.greet, &d);  // Hello, World! (dynamically dispatched)
 }
 ```
 
