@@ -1280,13 +1280,19 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 
 // -----------------------------------------------------------------------------
 // Call-site ergonomics
+//   Indirection through ___TRAIT_PASTE ensures Type is macro-expanded before ##
+//   (e.g. to_trait(vec(int), Drawable, &v) works when vec(T) is a type macro).
 // -----------------------------------------------------------------------------
-#define to_trait(Type, Trait, ptr) Type##_as_##Trait(ptr)
-#define from_trait(Type, Trait, obj) Type##_from_##Trait(obj)
+#define ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr) Type##_as_##Trait(ptr)
+#define to_trait(Type, Trait, ptr) ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr)
+
+#define ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj) Type##_from_##Trait(obj)
+#define from_trait(Type, Trait, obj) ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj)
 
 // -----------------------------------------------------------------------------
 /* Literal construction */
-#define new_trait(Type, Trait, ...) Type##_as_##Trait(&(Type)__VA_ARGS__)
+#define ___TRAIT_NEW_TRAIT_IMPL(Type, Trait, ...) Type##_as_##Trait(&(Type)__VA_ARGS__)
+#define new_trait(Type, Trait, ...) ___TRAIT_NEW_TRAIT_IMPL(Type, Trait, __VA_ARGS__)
 
 // ── ENFORCE action: impl-site enforcement of extends ─────────────────────────
 // For each extends(Base), emits a static reference to For##_Base##_vtable.
