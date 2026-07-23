@@ -22,7 +22,7 @@
 
 #define For Default
 #define Impl Arity0
-  def(void, double_it) {
+  void def(double_it) {
     int v = call(Arity0.get_val, self);
     // Use add with the same value to double it
     (void)v;
@@ -40,7 +40,7 @@
 
 #define For Default
 #define Impl Arity1
-  def(void, increment, int n) {
+  void def(increment, int n) {
     int _new = call(Arity1.add_pure, self, n);
     call(Arity1.set_val, self, _new);
   }
@@ -56,7 +56,7 @@
 
 #define For Default
 #define Impl Arity2
-  constdef(int, combine_default, int a, int b) {
+  int constdef(combine_default, int a, int b) {
     (void)self;
     return a + b;
   }
@@ -73,7 +73,7 @@
 
 #define For Default
 #define Impl Arity3
-  def(void, accum3, int a, int b, int c) {
+  void def(accum3, int a, int b, int c) {
     int total = call(Arity3.sum3, self, a, b, c);
     (void)total;
   }
@@ -90,7 +90,7 @@
 
 #define For Default
 #define Impl Arity4
-  constdef(int, weighted4, int a, int b, int c, int d) {
+  int constdef(weighted4, int a, int b, int c, int d) {
     return call(Arity4.sum4, self, a, b, c, d);
   }
 #include "../trait.h"
@@ -111,34 +111,34 @@ typedef struct { int x; int y; } Pair;
 // Arity0 for Accum
 #define For Accum
 #define Impl Arity0
-  constdef(int, get_val) { return self->val; }
-  constdef(int, peek_val) { return self->val; }
+  int constdef(get_val) { return self->val; }
+  int constdef(peek_val) { return self->val; }
   // uses default double_it
 #include "../trait.h"
 
 // Arity1 for Accum
 #define For Accum
 #define Impl Arity1
-  def(void, set_val, int v) { self->val = v; }
-  constdef(int, add_pure, int n) { return self->val + n; }
+  void def(set_val, int v) { self->val = v; }
+  int constdef(add_pure, int n) { return self->val + n; }
   // uses default increment
 #include "../trait.h"
 
 // Arity2 for Accum
 #define For Accum
 #define Impl Arity2
-  def(int, combine, int a, int b) { self->val = a * b; return self->val; }
+  int def(combine, int a, int b) { self->val = a * b; return self->val; }
   // uses default combine_default
 #include "../trait.h"
 
 // Arity3 for Accum
 #define For Accum
 #define Impl Arity3
-  def(int, mix3, int a, int b, int c) {
+  int def(mix3, int a, int b, int c) {
     self->val = a + b + c;
     return self->val;
   }
-  constdef(int, sum3, int a, int b, int c) {
+  int constdef(sum3, int a, int b, int c) {
     return self->val + a + b + c;
   }
   // uses default accum3
@@ -147,11 +147,11 @@ typedef struct { int x; int y; } Pair;
 // Arity4 for Accum
 #define For Accum
 #define Impl Arity4
-  def(int, mix4, int a, int b, int c, int d) {
+  int def(mix4, int a, int b, int c, int d) {
     self->val = a + b + c + d;
     return self->val;
   }
-  constdef(int, sum4, int a, int b, int c, int d) {
+  int constdef(sum4, int a, int b, int c, int d) {
     return self->val + a + b + c + d;
   }
   // uses default weighted4
@@ -165,30 +165,30 @@ typedef struct { int x; int y; } Pair;
 // Arity0 for Pair
 #define For Pair
 #define Impl Arity0
-  constdef(int, get_val) { return self->x + self->y; }
-  constdef(int, peek_val) { return self->x + self->y; }
+  int constdef(get_val) { return self->x + self->y; }
+  int constdef(peek_val) { return self->x + self->y; }
 #include "../trait.h"
 
 // Arity1 for Pair
 #define For Pair
 #define Impl Arity1
-  def(void, set_val, int v) { self->x = v; self->y = 0; }
-  constdef(int, add_pure, int n) { return self->x + self->y + n; }
+  void def(set_val, int v) { self->x = v; self->y = 0; }
+  int constdef(add_pure, int n) { return self->x + self->y + n; }
   // override default increment
-  def(void, increment, int n) { self->x += n; }
+  void def(increment, int n) { self->x += n; }
 #define Override_Pair_Arity1_increment 1
 #include "../trait.h"
 
 // Arity2 for Pair
 #define For Pair
 #define Impl Arity2
-  def(int, combine, int a, int b) {
+  int def(combine, int a, int b) {
     self->x = a;
     self->y = b;
     return a + b;
   }
   // override default combine_default
-  constdef(int, combine_default, int a, int b) {
+  int constdef(combine_default, int a, int b) {
     return self->x * a + self->y * b;
   }
 #define Override_Pair_Arity2_combine_default 1
@@ -197,12 +197,12 @@ typedef struct { int x; int y; } Pair;
 // Arity3 for Pair
 #define For Pair
 #define Impl Arity3
-  def(int, mix3, int a, int b, int c) {
+  int def(mix3, int a, int b, int c) {
     self->x = a + b;
     self->y = c;
     return self->x + self->y;
   }
-  constdef(int, sum3, int a, int b, int c) {
+  int constdef(sum3, int a, int b, int c) {
     return self->x + self->y + a + b + c;
   }
 #include "../trait.h"
@@ -210,16 +210,16 @@ typedef struct { int x; int y; } Pair;
 // Arity4 for Pair
 #define For Pair
 #define Impl Arity4
-  def(int, mix4, int a, int b, int c, int d) {
+  int def(mix4, int a, int b, int c, int d) {
     self->x = a + b;
     self->y = c + d;
     return self->x + self->y;
   }
-  constdef(int, sum4, int a, int b, int c, int d) {
+  int constdef(sum4, int a, int b, int c, int d) {
     return self->x + self->y + a + b + c + d;
   }
   // override default weighted4
-  constdef(int, weighted4, int a, int b, int c, int d) {
+  int constdef(weighted4, int a, int b, int c, int d) {
     return self->x * a + self->y * b + c + d;
   }
 #define Override_Pair_Arity4_weighted4 1

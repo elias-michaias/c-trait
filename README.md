@@ -47,7 +47,7 @@ typedef struct { const char *name; } Person;
 
 #define For Person
 #define Impl Greet
-  def(void, greet) {
+  void def(greet) {
     printf("Hello, %s!\n", self->name);
   }
 #include "trait.h"

@@ -27,15 +27,15 @@ typedef struct { const char *text; } StrBox;
 // ---- impl: Container_int for IntBox ------------------------------------------
 #define For IntBox
 #define Impl Container_int
-  def(int, get) { return *self->ptr; }
-  def(void, set, int val) { *self->ptr = val; }
+  int def(get) { return *self->ptr; }
+  void def(set, int val) { *self->ptr = val; }
 #include "../trait.h"
 
 // ---- impl: Container_str for StrBox ------------------------------------------
 #define For StrBox
 #define Impl Container_str
-  def(const char *, get) { return self->text; }
-  def(void, set, const char *val) { self->text = val; }
+  const char * def(get) { return self->text; }
+  void def(set, const char *val) { self->text = val; }
 #include "../trait.h"
 
 

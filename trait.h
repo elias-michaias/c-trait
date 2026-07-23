@@ -2,6 +2,7 @@
 #ifdef For
 #ifdef Impl
 #ifdef ___TRAIT_SD_ACTIVE
+#define Self For
 // ═══════════════════════════════════════════════════════════════════════════════
 // SD SELF-INCLUDE LOOP BODY
 //
@@ -464,8 +465,8 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 //   #define Impl Animal
 //   #define Forward
 //   #include "trait.h"          ← this path: FWDDECL + SD/DynSD loops
-//     def(int, get_snacks) { call(Animal.get_snacks, self); }
-//     def(void, feed, int amount) { ... }
+//     int def(get_snacks) { call(Animal.get_snacks, self); }
+//     void def(feed, int amount) { ... }
 //   #include "trait.h"          ← normal path: defaults/impl/counter/enforce
 //
 // Emits extern declarations for each impl function, then runs SD/DynSD loops
@@ -1243,13 +1244,13 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // before the #include "trait.h" that processes the impl block, so that
 // defaults() knows to skip the DFL wrapper for that method.
 // -----------------------------------------------------------------------------
-#define def(Ret, Name, ...)                                                    \
-  Ret glue5(For, _, Impl, _,                                                   \
-            Name)(___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
+#define def(Name, ...)                                                         \
+  glue5(For, _, Impl, _,                                                       \
+        Name)(___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
 
-#define constdef(Ret, Name, ...)                                               \
-  Ret glue5(For, _, Impl, _,                                                   \
-            Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
+#define constdef(Name, ...)                                                    \
+  glue5(For, _, Impl, _,                                                       \
+        Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 // `defaults()` emits wrappers for default methods when implementing a trait.
@@ -2010,16 +2011,16 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 
 // ── def / constdef ────────────────────────────────────────────────────────────
 #undef  def
-#define def(Ret, Name, ...)                                                    \
-  Ret glue5(For, _, Impl, _,                                                   \
-            Name)(___TRAIT_IMPL_SELF_BASE * self                               \
-                  __VA_OPT__(,) __VA_ARGS__)
+#define def(Name, ...)                                                         \
+  glue5(For, _, Impl, _,                                                       \
+        Name)(___TRAIT_IMPL_SELF_BASE * self                                   \
+              __VA_OPT__(,) __VA_ARGS__)
 
 #undef  constdef
-#define constdef(Ret, Name, ...)                                               \
-  Ret glue5(For, _, Impl, _,                                                   \
-            Name)(const ___TRAIT_IMPL_SELF_BASE * self                         \
-                  __VA_OPT__(,) __VA_ARGS__)
+#define constdef(Name, ...)                                                    \
+  glue5(For, _, Impl, _,                                                       \
+        Name)(const ___TRAIT_IMPL_SELF_BASE * self                             \
+              __VA_OPT__(,) __VA_ARGS__)
 
 // ── call ──────────────────────────────────────────────────────────────────────
 #undef  call

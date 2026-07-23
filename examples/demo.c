@@ -29,8 +29,8 @@
 #define For Default
 #define Dynamic
 #define Impl Animal
-  def(void, check)     { (void)self; printf("generic animal\n"); }
-  def(void, feed, int n) { (void)self; printf("fed %d\n", n); }
+  void def(check)     { (void)self; printf("generic animal\n"); }
+  void def(feed, int n) { (void)self; printf("fed %d\n", n); }
 #include "../trait.h"
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -42,19 +42,19 @@ typedef struct { Base base; const char *breed; } Dog;
 
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->base.snacks; }
-  def(void, feed, int n) { self->base.snacks += n; }
+  int def(get_snacks) { return self->base.snacks; }
+  void def(feed, int n) { self->base.snacks += n; }
 #define Override_Dog_Animal_feed 1
 #include "../trait.h"
 
 #define For Dog
 #define Impl Pet
-  def(void, play) { (void)self; printf("Dog plays fetch!\n"); }
+  void def(play) { (void)self; printf("Dog plays fetch!\n"); }
 #include "../trait.h"
 
 #define For Dog
 #define Impl Show
-  def(void, show) { printf("Dog(%s)\n", self->breed); }
+  void def(show) { printf("Dog(%s)\n", self->breed); }
 #include "../trait.h"
 
 // ── Use ──────────────────────────────────────────────────────────────────

@@ -14,15 +14,15 @@
 
 #define For Default
 #define Impl Animal
-  constdef(void, check) {
+  void constdef(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
-  def(void, eat_snack) {
+  void def(eat_snack) {
     if (call(Animal.get_snacks, self) > 0) call(Animal.feed, self, -1);
     else printf("(default) no snacks!\n");
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     (void)self;
     printf("(default) fed %d.\n", amount);
   }
@@ -47,8 +47,8 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 // ---- impl: Animal for Dog ----------------------------------------------------
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->animal.snacks; }
-  def(void, feed, int amount) { self->animal.snacks += amount; }
+  int def(get_snacks) { return self->animal.snacks; }
+  void def(feed, int amount) { self->animal.snacks += amount; }
 #define Override_Dog_Animal_feed 1
 #include "../trait.h"
 
@@ -56,7 +56,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 // Only `play` — Pet's own method. No inherited methods.
 #define For Dog
 #define Impl Pet
-  def(void, play) {
+  void def(play) {
     (void)self;
     printf("Dog plays fetch!\n");
   }
@@ -87,7 +87,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 #define For Default
 #define Impl Describable
-  constdef(int, priority) {
+  int constdef(priority) {
     (void)self;
     return 0;
   }
@@ -123,15 +123,15 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: Animal for Puppy --------------------------------------------------
 #define For Puppy
 #define Impl Animal
-  def(int, get_snacks) { return self->animal.snacks; }
-  def(void, feed, int amount) { self->animal.snacks += amount; }
+  int def(get_snacks) { return self->animal.snacks; }
+  void def(feed, int amount) { self->animal.snacks += amount; }
 #define Override_Puppy_Animal_feed 1
 #include "../trait.h"
 
 // ---- impl: Pet for Puppy -----------------------------------------------------
 #define For Puppy
 #define Impl Pet
-  def(void, play) {
+  void def(play) {
     (void)self;
     printf("Puppy plays with ball!\n");
   }
@@ -140,7 +140,7 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: SuperPet for Puppy ------------------------------------------------
 #define For Puppy
 #define Impl SuperPet
-  def(void, super_play) {
+  void def(super_play) {
     (void)self;
     printf("Puppy does a backflip!\n");
   }
@@ -150,7 +150,7 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: Greetable for Person ----------------------------------------------
 #define For Person
 #define Impl Greetable
-  constdef(void, greet) {
+  void constdef(greet) {
     printf("Hi, I'm %s.\n", self->name);
   }
 #include "../trait.h"
@@ -158,7 +158,7 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: Describable for Person --------------------------------------------
 #define For Person
 #define Impl Describable
-  constdef(void, describe) {
+  void constdef(describe) {
     printf("%s, age %d.\n", self->name, self->age);
   }
 #include "../trait.h"
@@ -167,7 +167,7 @@ typedef struct { const char *name; int age; } Person;
 // Only introduce — cross-trait calls via SD dispatch on concrete type.
 #define For Person
 #define Impl Introducible
-  constdef(void, introduce, const char *to) {
+  void constdef(introduce, const char *to) {
     printf("%s introduces self to %s: ", self->name, to);
     call(Greetable.greet, self);
     printf("About me: ");

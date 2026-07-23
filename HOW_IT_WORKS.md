@@ -192,8 +192,8 @@ When you write:
 ```c
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->snacks; }
-  def(void, feed, int n) { self->snacks += n; }
+  int def(get_snacks) { return self->snacks; }
+  void def(feed, int n) { self->snacks += n; }
 #include "trait.h"
 ```
 
@@ -323,7 +323,7 @@ When you write:
 #define For Dog
 #define Impl Animal
 #define Override_Dog_Animal_feed 1
-  def(void, feed, int n) { self->snacks += n; }
+  void def(feed, int n) { self->snacks += n; }
 #include "trait.h"
 ```
 

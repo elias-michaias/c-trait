@@ -29,7 +29,7 @@
 
 #define For Default
 #define Impl Describable
-  constdef(int, name_len) {
+  int constdef(name_len) {
     return (int)strlen(call(Describable.name, self));
   }
 #include "../trait.h"
@@ -47,10 +47,10 @@
 
 #define For Default
 #define Impl Arithmetic
-  constdef(int, doubled) {
+  int constdef(doubled) {
     return call(Arithmetic.value, self) * 2;
   }
-  def(void, reset) {
+  void def(reset) {
     call(Arithmetic.mul, self, 0);
   }
 #include "../trait.h"
@@ -65,7 +65,7 @@
 
 #define For Default
 #define Impl Transform
-  constdef(const char *, kind) {
+  const char * constdef(kind) {
     (void)self;
     return "unknown";
   }
@@ -95,7 +95,7 @@
 
 #define For Default
 #define Impl Resettable
-  def(void, zero_and_report) {
+  void def(zero_and_report) {
     call(Resettable.zero_out, self);
     printf("  zeroed out\n");
   }
@@ -112,7 +112,7 @@
 
 #define For Default
 #define Impl Measurable
-  constdef(int, is_big) {
+  int constdef(is_big) {
     return call(Measurable.measure, self) > 100;
   }
 #include "../trait.h"
@@ -151,7 +151,7 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Stringify for IntWrapper
 #define For IntWrapper
 #define Impl Stringify
-  constdef(const char *, stringify) {
+  const char * constdef(stringify) {
     (void)self;
     // returns a fixed string for test simplicity
     return "IntWrapper";
@@ -161,36 +161,36 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Describable for IntWrapper
 #define For IntWrapper
 #define Impl Describable
-  constdef(const char *, name) { (void)self; return "IntWrapper"; }
+  const char * constdef(name) { (void)self; return "IntWrapper"; }
 #include "../trait.h"
 
 // Arithmetic for IntWrapper
 #define For IntWrapper
 #define Impl Arithmetic
-  def(void, add, int n) { self->val += n; }
-  def(void, mul, int n) { self->val *= n; }
-  constdef(int, value)       { return self->val; }
+  void def(add, int n) { self->val += n; }
+  void def(mul, int n) { self->val *= n; }
+  int constdef(value)       { return self->val; }
   // uses default doubled and reset
 #include "../trait.h"
 
 // Resettable for IntWrapper
 #define For IntWrapper
 #define Impl Resettable
-  def(void, zero_out) { self->val = 0; }
+  void def(zero_out) { self->val = 0; }
   // uses default zero_and_report
 #include "../trait.h"
 
 // Container_int for IntWrapper
 #define For IntWrapper
 #define Impl Container_int
-  constdef(int, peek)          { return self->val; }
-  def(void, poke, int v)  { self->val = v; }
+  int constdef(peek)          { return self->val; }
+  void def(poke, int v)  { self->val = v; }
 #include "../trait.h"
 
 // Mapper for IntWrapper
 #define For IntWrapper
 #define Impl Mapper
-  constdef(int, map_val, int a, int b) {
+  int constdef(map_val, int a, int b) {
     return self->val + a + b;
   }
 #include "../trait.h"
@@ -203,7 +203,7 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Stringify for DoubleWrapper
 #define For DoubleWrapper
 #define Impl Stringify
-  constdef(const char *, stringify) {
+  const char * constdef(stringify) {
     (void)self;
     return "DoubleWrapper";
   }
@@ -212,24 +212,24 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Describable for DoubleWrapper
 #define For DoubleWrapper
 #define Impl Describable
-  constdef(const char *, name) { (void)self; return "DoubleWrapper"; }
+  const char * constdef(name) { (void)self; return "DoubleWrapper"; }
   // override default name_len to always return 13
   #define Override_DoubleWrapper_Describable_name_len 1
-  constdef(int, name_len) { (void)self; return 13; }
+  int constdef(name_len) { (void)self; return 13; }
 #include "../trait.h"
 
 
 // Container_double for DoubleWrapper
 #define For DoubleWrapper
 #define Impl Container_double
-  constdef(double, peek)           { return self->val; }
-  def(void, poke, double v)   { self->val = v; }
+  double constdef(peek)           { return self->val; }
+  void def(poke, double v)   { self->val = v; }
 #include "../trait.h"
 
 // Mapper for DoubleWrapper
 #define For DoubleWrapper
 #define Impl Mapper
-  constdef(int, map_val, int a, int b) {
+  int constdef(map_val, int a, int b) {
     return (int)self->val * a * b;
   }
 #include "../trait.h"
@@ -242,39 +242,39 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Stringify for Point
 #define For Point
 #define Impl Stringify
-  constdef(const char *, stringify) { return self->label; }
+  const char * constdef(stringify) { return self->label; }
 #include "../trait.h"
 
 // Describable for Point
 #define For Point
 #define Impl Describable
-  constdef(const char *, name) { return self->label; }
+  const char * constdef(name) { return self->label; }
   // uses default name_len
 #include "../trait.h"
 
 // Arithmetic for Point (operates on x)
 #define For Point
 #define Impl Arithmetic
-  def(void, add, int n) { self->x += n; }
-  def(void, mul, int n) { self->x *= n; }
-  constdef(int, value)       { return self->x; }
+  void def(add, int n) { self->x += n; }
+  void def(mul, int n) { self->x *= n; }
+  int constdef(value)       { return self->x; }
   // override reset to zero both x and y
-  def(void, reset)    { self->x = 0; self->y = 0; }
+  void def(reset)    { self->x = 0; self->y = 0; }
 #define Override_Point_Arithmetic_reset 1
 #include "../trait.h"
 
 // Transform for Point
 #define For Point
 #define Impl Transform
-  def(int, apply, int a, int b) { self->x += a; self->y += b; return self->x + self->y; }
-  constdef(const char *, kind) { (void)self; return "point_translate"; }
+  int def(apply, int a, int b) { self->x += a; self->y += b; return self->x + self->y; }
+  const char * constdef(kind) { (void)self; return "point_translate"; }
 #define Override_Point_Transform_kind 1
 #include "../trait.h"
 
 // Mapper for Point
 #define For Point
 #define Impl Mapper
-  constdef(int, map_val, int a, int b) {
+  int constdef(map_val, int a, int b) {
     return self->x * a + self->y * b;
   }
 #include "../trait.h"
@@ -282,20 +282,20 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Resettable for Point
 #define For Point
 #define Impl Resettable
-  def(void, zero_out) { self->x = 0; self->y = 0; }
+  void def(zero_out) { self->x = 0; self->y = 0; }
 #include "../trait.h"
 
 // Measurable for Point (extends Describable)
 #define For Point
 #define Impl Measurable
-  constdef(int, measure) { return self->x * self->x + self->y * self->y; }
+  int constdef(measure) { return self->x * self->x + self->y * self->y; }
   // uses default is_big
 #include "../trait.h"
 
 // Mapper for Rect
 #define For Rect
 #define Impl Mapper
-  constdef(int, map_val, int a, int b) {
+  int constdef(map_val, int a, int b) {
     return (int)(self->width * a + self->height * b);
   }
 #include "../trait.h"
@@ -308,29 +308,29 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Stringify for Rect
 #define For Rect
 #define Impl Stringify
-  constdef(const char *, stringify) { return self->label; }
+  const char * constdef(stringify) { return self->label; }
 #include "../trait.h"
 
 // Describable for Rect
 #define For Rect
 #define Impl Describable
-  constdef(const char *, name) { return self->label; }
+  const char * constdef(name) { return self->label; }
 #include "../trait.h"
 
 // Measurable for Rect (extends Describable)
 #define For Rect
 #define Impl Measurable
-  constdef(int, measure) { return (int)(self->width * self->height); }
+  int constdef(measure) { return (int)(self->width * self->height); }
   // override is_big: big if area > 50
-  constdef(int, is_big) { return (int)(self->width * self->height) > 50; }
+  int constdef(is_big) { return (int)(self->width * self->height) > 50; }
 #define Override_Rect_Measurable_is_big 1
 #include "../trait.h"
 
 // Container_double for Rect (peek/poke width)
 #define For Rect
 #define Impl Container_double
-  constdef(double, peek)           { return self->width; }
-  def(void, poke, double v)   { self->width = v; }
+  double constdef(peek)           { return self->width; }
+  void def(poke, double v)   { self->width = v; }
 #include "../trait.h"
 
 
@@ -341,14 +341,14 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Stringify for StrBuf
 #define For StrBuf
 #define Impl Stringify
-  constdef(const char *, stringify) { return self->buf; }
+  const char * constdef(stringify) { return self->buf; }
 #include "../trait.h"
 
 // Describable for StrBuf
 #define For StrBuf
 #define Impl Describable
-  constdef(const char *, name) { (void)self; return "StrBuf"; }
-  constdef(int, name_len) { (void)self; return 6; }
+  const char * constdef(name) { (void)self; return "StrBuf"; }
+  int constdef(name_len) { (void)self; return 6; }
 #define Override_StrBuf_Describable_name_len 1
 #include "../trait.h"
 
@@ -356,7 +356,7 @@ typedef struct { int a; int b; int c; int d; } Quad;
 #define For StrBuf
 #define Impl Cloneable
   static StrBuf _strbuf_clone_storage;
-  constdef(void *, clone) {
+  void * constdef(clone) {
     _strbuf_clone_storage = *self;
     return &_strbuf_clone_storage;
   }
@@ -370,7 +370,7 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Mapper for Quad
 #define For Quad
 #define Impl Mapper
-  constdef(int, map_val, int a, int b) {
+  int constdef(map_val, int a, int b) {
     return self->a * a + self->b * b;
   }
 #include "../trait.h"
@@ -378,20 +378,20 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Arithmetic for Quad (operates on 'a')
 #define For Quad
 #define Impl Arithmetic
-  def(void, add, int n) { self->a += n; }
-  def(void, mul, int n) { self->a *= n; }
-  constdef(int, value)       { return self->a; }
+  void def(add, int n) { self->a += n; }
+  void def(mul, int n) { self->a *= n; }
+  int constdef(value)       { return self->a; }
   // override doubled to sum all fields doubled
-  constdef(int, doubled)   { return (self->a + self->b + self->c + self->d) * 2; }
+  int constdef(doubled)   { return (self->a + self->b + self->c + self->d) * 2; }
 #define Override_Quad_Arithmetic_doubled 1
 #include "../trait.h"
 
 // Resettable for Quad
 #define For Quad
 #define Impl Resettable
-  def(void, zero_out) { self->a = 0; self->b = 0; self->c = 0; self->d = 0; }
+  void def(zero_out) { self->a = 0; self->b = 0; self->c = 0; self->d = 0; }
   // override zero_and_report
-  def(void, zero_and_report) {
+  void def(zero_and_report) {
     self->a = 0; self->b = 0; self->c = 0; self->d = 0;
     printf("  quad fully zeroed\n");
   }
@@ -401,12 +401,12 @@ typedef struct { int a; int b; int c; int d; } Quad;
 // Transform for Quad
 #define For Quad
 #define Impl Transform
-  def(int, apply, int x, int y) {
+  int def(apply, int x, int y) {
     self->a += x;
     self->b += y;
     return self->a + self->b + self->c + self->d;
   }
-  constdef(const char *, kind) { (void)self; return "quad_shift"; }
+  const char * constdef(kind) { (void)self; return "quad_shift"; }
 #define Override_Quad_Transform_kind 1
 #include "../trait.h"
 

@@ -14,11 +14,11 @@
 // ---- default implementations for Animal ------------------------------------
 #define For Default
 #define Impl Animal
-  constdef(void, check) {
+  void constdef(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     (void)self;
     printf("(default) fed %d.\n", amount);
   }
@@ -31,16 +31,16 @@ typedef struct { int snacks; const char *breed; } Dog;
 // ---- impl: Animal for Cat ---------------------------------------------------
 #define For Cat
 #define Impl Animal
-  def(int, get_snacks) { return self->snacks; }
-  def(void, feed, int amount) { self->snacks += amount; }
+  int def(get_snacks) { return self->snacks; }
+  void def(feed, int amount) { self->snacks += amount; }
 #define Override_Cat_Animal_feed 1
 #include "../trait.h"
 
 // ---- impl: Animal for Dog ---------------------------------------------------
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->snacks; }
-  def(void, feed, int amount) { self->snacks += amount; }
+  int def(get_snacks) { return self->snacks; }
+  void def(feed, int amount) { self->snacks += amount; }
 #define Override_Dog_Animal_feed 1
 #include "../trait.h"
 

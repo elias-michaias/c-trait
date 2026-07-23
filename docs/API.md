@@ -51,8 +51,8 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 ```c
 #define For TypeName
 #define Impl TraitName
-  def(RetType, method_name, Args...) { /* body */ }
-  constdef(RetType, method_name, Args...) { /* body (const self) */ }
+  RetType def(method_name, Args...) { /* body */ }
+  RetType constdef(method_name, Args...) { /* body (const self) */ }
 #include "trait.h"
 ```
 
@@ -89,11 +89,11 @@ Default implementations use `Default` as the sentinel type:
 ```c
 #define For Default
 #define Impl Animal
-  def(void, check) {
+  void def(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     (void)self;
     printf("(default) fed %d.\n", amount);
   }
@@ -109,8 +109,8 @@ To override a default method for a specific type, use `def()`/`constdef()` in th
 ```c
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->snacks; }
-  def(void, feed, int n) { self->snacks += n; }
+  int def(get_snacks) { return self->snacks; }
+  void def(feed, int n) { self->snacks += n; }
 #define Override_Dog_Animal_feed 1
 #include "trait.h"
 ```
@@ -176,16 +176,16 @@ Use preprocessor defines to specialize a trait per implementation:
 #define For IntContainer
 #define Impl Container
 #define Container_Item int
-  def(int, push, int a1) { /* ... */ }
-  def(int, pop) { /* ... */ }
+  int def(push, int a1) { /* ... */ }
+  int def(pop) { /* ... */ }
 #include "trait.h"
 #undef Container_Item
 
 #define For StrContainer
 #define Impl Container
 #define Container_Item const char *
-  def(int, push, const char *a1) { /* ... */ }
-  def(int, pop) { /* ... */ }
+  int def(push, const char *a1) { /* ... */ }
+  int def(pop) { /* ... */ }
 #include "trait.h"
 #undef Container_Item
 ```
@@ -199,10 +199,10 @@ Normally, `call()` is not available inside `def()` bodies because SD entries hav
 #define Impl Animal
 #define Forward
 #include "trait.h"
-  def(int, get_snacks) {
+  int def(get_snacks) {
     return self->snacks;
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     int before = call(Animal.get_snacks, self);  // works!
     self->snacks += amount;
   }

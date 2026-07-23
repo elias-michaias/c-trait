@@ -18,15 +18,15 @@
 // When `For == Default`, these are the default method bodies.
 #define For Default
 #define Impl Animal
-  constdef(void, check) {
+  void constdef(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
-  def(void, eat_snack) {
+  void def(eat_snack) {
     if (call(Animal.get_snacks, self) > 0) call(Animal.feed, self, -1);
     else printf("(default) no snacks!\n");
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     (void)self;
     printf("(default) fed %d.\n", amount);
   }
@@ -49,15 +49,15 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 // ---- impl: Animal for Dog ----------------------------------------------------
 #define For Dog
 #define Impl Animal
-  def(int, get_snacks) { return self->animal.snacks; }
+  int def(get_snacks) { return self->animal.snacks; }
   #define Override_Dog_Animal_feed 1
-  def(void, feed, int amount) { self->animal.snacks += amount; }
+  void def(feed, int amount) { self->animal.snacks += amount; }
 #include "../trait.h"
 
 // ---- impl: Show for Dog ------------------------------------------------------
 #define For Dog
 #define Impl Show
-  def(void, show) {
+  void def(show) {
     printf("Dog{breed=%s, snacks=%d}\n", self->breed, self->animal.snacks);
   }
 #include "../trait.h"

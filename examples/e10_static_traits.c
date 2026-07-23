@@ -55,7 +55,7 @@ typedef struct {
 // ---- impl: Measurable for int -----------------------------------------------
 #define For int
 #define Impl Measurable
-def(int, get_length) { return *self; }
+int def(get_length) { return *self; }
 #include "../trait.h"
 
 // ---- impl: Searchable for int -----------------------------------------------
@@ -63,19 +63,19 @@ def(int, get_length) { return *self; }
 // Only implements `search` — Measurable's get_length is separate.
 #define For int
 #define Impl Searchable
-def(int, search) { return *self * 10; }
+int def(search) { return *self * 10; }
 #include "../trait.h"
 
 // ---- impl: Container for IntContainer (Item = int) --------------------------
 #define For IntContainer
 #define Impl Container
 #define Container_Item int
-def(int, push, int a1) {
+int def(push, int a1) {
   if (self->count < 4)
     self->values[self->count++] = a1;
   return self->count;
 }
-def(int, pop) { return self->count > 0 ? self->values[--self->count] : 0; }
+int def(pop) { return self->count > 0 ? self->values[--self->count] : 0; }
 #include "../trait.h"
 #undef Container_Item
 
@@ -86,12 +86,12 @@ def(int, pop) { return self->count > 0 ? self->values[--self->count] : 0; }
 #define For StrContainer
 #define Impl Container
 #define Container_Item const char *
-def(int, push, const char *a1) {
+int def(push, const char *a1) {
   if (self->count < 4)
     self->values[self->count++] = a1;
   return self->count;
 }
-def(int, pop) {
+int def(pop) {
   return self->count > 0 ? (int)strlen(self->values[--self->count]) : 0;
 }
 #include "../trait.h"

@@ -26,10 +26,10 @@ typedef struct { int snacks; } Dog;
 #define Impl Animal
 #define Forward
 #include "../trait.h"
-  def(int, get_snacks) {
+  int def(get_snacks) {
     return self->snacks;
   }
-  def(void, feed, int amount) {
+  void def(feed, int amount) {
     // call() inside def(): dispatches to Dog_Animal_get_snacks via SD entry
     int before = call(Animal.get_snacks, self);
     self->snacks += amount;

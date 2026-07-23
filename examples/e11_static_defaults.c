@@ -24,7 +24,7 @@
 // ---- default implementation -------------------------------------------------
 #define For Default
 #define Impl Drawable
-def(int, is_visible) {
+int def(is_visible) {
   (void)self;
   return 1; // visible by default
 }
@@ -43,16 +43,16 @@ typedef struct {
 // ---- impl: Drawable for Widget (uses default is_visible) --------------------
 #define For Widget
 #define Impl Drawable
-def(void, draw) { printf("  Drawing widget: %s\n", self->label); }
+void def(draw) { printf("  Drawing widget: %s\n", self->label); }
 // is_visible uses default (returns 1)
 #include "../trait.h"
 
 // ---- impl: Drawable for HiddenWidget (overrides is_visible) -----------------
 #define For HiddenWidget
 #define Impl Drawable
-def(void, draw) { printf("  Drawing widget: %s\n", self->label); }
+void def(draw) { printf("  Drawing widget: %s\n", self->label); }
 #define Override_HiddenWidget_Drawable_is_visible 1
-def(int, is_visible) { return !self->hidden; }
+int def(is_visible) { return !self->hidden; }
 #include "../trait.h"
 
 // ---- main -------------------------------------------------------------------

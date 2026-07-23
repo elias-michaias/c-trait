@@ -14,7 +14,7 @@
 
 #define For Default
 #define Impl Reader
-  constdef(void, describe) {
+  void constdef(describe) {
     printf("(default) value = %d\n", call(Reader.read, self));
   }
 #include "../trait.h"
@@ -27,7 +27,7 @@ typedef struct { int *ptr; } IntBox;
 // ---- impl: Reader for IntBox -------------------------------------------------
 #define For IntBox
 #define Impl Reader
-  constdef(int, read) { return *self->ptr; }
+  int constdef(read) { return *self->ptr; }
 #include "../trait.h"
 
 
