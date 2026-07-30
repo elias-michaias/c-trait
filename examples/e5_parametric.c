@@ -46,12 +46,12 @@ int main(void) {
   StrBox sb = { .text = "hello" };
 
   printf("=== parametric traits: Container ===\n");
-  DynContainer_int ci = to_trait(IntBox, Container_int, &ib);
+  DynContainer_int ci = dyn(Container_int, &ib);
   printf("IntBox get: %d\n", call(Container_int.get, &ci));
   call(Container_int.set, &ci, 99);
   printf("IntBox get after set: %d\n", call(Container_int.get, &ci));
 
-  DynContainer_str cs = to_trait(StrBox, Container_str, &sb);
+  DynContainer_str cs = dyn(Container_str, &sb);
   printf("StrBox get: %s\n", call(Container_str.get, &cs));
   call(Container_str.set, &cs, "world");
   printf("StrBox get after set: %s\n", call(Container_str.get, &cs));

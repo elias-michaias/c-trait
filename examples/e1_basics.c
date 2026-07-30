@@ -66,7 +66,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 // ---- main --------------------------------------------------------------------
 int main(void) {
   Dog d = { .animal = { .snacks = 2 }, .breed = "Golden Retriever" };
-  DynAnimal da = to_trait(Dog, Animal, &d);
+  DynAnimal da = dyn(Animal, &d);
 
   printf("=== defaults: check/feed forwarded, get_snacks custom ===\n");
   call(Animal.check, &da);
@@ -77,7 +77,7 @@ int main(void) {
 
   printf("=== Show trait (required method, vcall) ===\n");
   {
-    DynShow s = to_trait(Dog, Show, &d);
+    DynShow s = dyn(Show, &d);
     call(Show.show, &s);
   }
 

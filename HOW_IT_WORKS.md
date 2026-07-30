@@ -303,7 +303,7 @@ The compiler sees the entire `_Generic` at compile time, picks the matching bran
 For DynTrait objects, the same `call()` macro works:
 
 ```c
-DynAnimal da = to_trait(Dog, Animal, &dog);
+DynAnimal da = dyn(Animal, &dog);
 call(Animal.get_snacks, &da);
 // Compiles to: da.vt->get_snacks(da.self)  (vtable indirection)
 ```

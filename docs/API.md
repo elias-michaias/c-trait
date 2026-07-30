@@ -67,7 +67,7 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 call(Animal.get_snacks, &dog);         // -> Dog_Animal_get_snacks(&dog)
 
 // Dynamic dispatch (trait object pointer)
-DynAnimal da = to_trait(Dog, Animal, &dog);
+DynAnimal da = dyn(Animal, &dog);
 call(Animal.get_snacks, &da);          // -> da.vt->get_snacks(da.self)
 
 // Call generated static functions directly (bypass dispatch)
@@ -78,7 +78,7 @@ Dog_Animal_get_snacks(&dog);
 
 | Macro | Purpose |
 |-------|---------|
-| `to_trait(Type, Trait, &obj)` | Create a trait object (fat pointer) for dynamic dispatch |
+| `dyn(Trait, &obj)` | Create a trait object (fat pointer) for dynamic dispatch |
 | `from_trait(Type, Trait, obj)` | Recover the original concrete pointer |
 | `new_trait(Type, Trait, { .field = val })` | Construct a trait object from a compound literal |
 

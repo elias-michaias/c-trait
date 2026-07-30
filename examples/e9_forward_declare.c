@@ -52,7 +52,7 @@ int main(void) {
   printf("get_snacks: %d\n", s);
 
   // Verify DynAnimal dispatch works too
-  DynAnimal da = to_trait(Dog, Animal, &d);
+  DynAnimal da = dyn(Animal, &d);
   call(Animal.feed, &da, 2);
   assert(d.snacks == 10);
 

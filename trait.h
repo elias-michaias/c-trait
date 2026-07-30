@@ -497,12 +497,163 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 #ifndef ___TRAIT_IS_STATIC_CURRENT
 defaults();
 impl()
+// ── TT (dyn) registration: emit pair type + wrapper for this impl ──
+___TRAIT_TT_EMIT()
+// ── Increment 6-digit octal TT counter ──────────────────────────────
+#if   ___TRAIT_TT_C1 == 0
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 1
+#elif ___TRAIT_TT_C1 == 1
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 2
+#elif ___TRAIT_TT_C1 == 2
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 3
+#elif ___TRAIT_TT_C1 == 3
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 4
+#elif ___TRAIT_TT_C1 == 4
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 5
+#elif ___TRAIT_TT_C1 == 5
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 6
+#elif ___TRAIT_TT_C1 == 6
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 7
+#elif ___TRAIT_TT_C1 == 7
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 0
+#if   ___TRAIT_TT_C2 == 0
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 1
+#elif ___TRAIT_TT_C2 == 1
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 2
+#elif ___TRAIT_TT_C2 == 2
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 3
+#elif ___TRAIT_TT_C2 == 3
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 4
+#elif ___TRAIT_TT_C2 == 4
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 5
+#elif ___TRAIT_TT_C2 == 5
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 6
+#elif ___TRAIT_TT_C2 == 6
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 7
+#elif ___TRAIT_TT_C2 == 7
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 0
+#if   ___TRAIT_TT_C3 == 0
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 1
+#elif ___TRAIT_TT_C3 == 1
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 2
+#elif ___TRAIT_TT_C3 == 2
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 3
+#elif ___TRAIT_TT_C3 == 3
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 4
+#elif ___TRAIT_TT_C3 == 4
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 5
+#elif ___TRAIT_TT_C3 == 5
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 6
+#elif ___TRAIT_TT_C3 == 6
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 7
+#elif ___TRAIT_TT_C3 == 7
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 0
+#if   ___TRAIT_TT_C4 == 0
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 1
+#elif ___TRAIT_TT_C4 == 1
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 2
+#elif ___TRAIT_TT_C4 == 2
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 3
+#elif ___TRAIT_TT_C4 == 3
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 4
+#elif ___TRAIT_TT_C4 == 4
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 5
+#elif ___TRAIT_TT_C4 == 5
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 6
+#elif ___TRAIT_TT_C4 == 6
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 7
+#elif ___TRAIT_TT_C4 == 7
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 0
+#if   ___TRAIT_TT_C5 == 0
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 1
+#elif ___TRAIT_TT_C5 == 1
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 2
+#elif ___TRAIT_TT_C5 == 2
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 3
+#elif ___TRAIT_TT_C5 == 3
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 4
+#elif ___TRAIT_TT_C5 == 4
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 5
+#elif ___TRAIT_TT_C5 == 5
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 6
+#elif ___TRAIT_TT_C5 == 6
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 7
+#elif ___TRAIT_TT_C5 == 7
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 0
+#if   ___TRAIT_TT_C6 == 0
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 1
+#elif ___TRAIT_TT_C6 == 1
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 2
+#elif ___TRAIT_TT_C6 == 2
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 3
+#elif ___TRAIT_TT_C6 == 3
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 4
+#elif ___TRAIT_TT_C6 == 4
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 5
+#elif ___TRAIT_TT_C6 == 5
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 6
+#elif ___TRAIT_TT_C6 == 6
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 7
+#elif ___TRAIT_TT_C6 == 7
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 0
+#error "c-trait: too many TT slots (max 262144)"
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
 #else
 static_defaults()
 #endif
-
-
-// ── SD loop (skip if already emitted in forward-declare pass) ────────────
 #ifndef ___TRAIT_FWDIMPL_DONE
 
 // ── Start SD (selector-based dispatch) self-include loop ─────────────────
@@ -1279,12 +1430,41 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define impl_vt() impl()
 
 // -----------------------------------------------------------------------------
-// Call-site ergonomics
-//   Indirection through ___TRAIT_PASTE ensures Type is macro-expanded before ##
-//   (e.g. to_trait(vec(int), Drawable, &v) works when vec(T) is a type macro).
+// TT (dyn) registration: emits a _Generic-association pair type + wrapper
+// for the current For/Impl so that dyn(Trait, ptr) can dispatch via _Generic
+// without needing an explicit Type argument.
+// Uses the global 6-digit octal TT counter (___TRAIT_TT_C1..C6).
 // -----------------------------------------------------------------------------
-#define ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr) Type##_as_##Trait(ptr)
-#define to_trait(Type, Trait, ptr) ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr)
+#define ___TRAIT_TT_EMIT()                                                         \
+  typedef void (*glue8(___trait_tt_pair_, ___TRAIT_TT_C6, ___TRAIT_TT_C5,         \
+                      ___TRAIT_TT_C4, ___TRAIT_TT_C3, ___TRAIT_TT_C2,             \
+                      ___TRAIT_TT_C1, _p))(glue(Impl, ___sel_t), For);            \
+  ___TRAIT_UNUSED static inline glue(Dyn, Impl)                                    \
+      glue7(___trait_tt_fn_, ___TRAIT_TT_C6, ___TRAIT_TT_C5, ___TRAIT_TT_C4,      \
+            ___TRAIT_TT_C3, ___TRAIT_TT_C2, ___TRAIT_TT_C1)(For * ptr) {          \
+    return glue3(For, _as_, Impl)(ptr);                                           \
+  }
+
+// -----------------------------------------------------------------------------
+// Call-site ergonomics
+//   dyn(Trait, ptr) dispatches via _Generic on (Trait___sel_t, typeof(*ptr)).
+//   No Type parameter needed — the concrete type is inferred from the pointer.
+//
+//   Each impl(Type, Trait) registers a pair type void (*)(Trait___sel_t, Type)
+//   via ___TRAIT_TT_EMIT.  The _Generic matches on this pair and invokes the
+//   registered wrapper, which calls Type##_as_##Trait(ptr).
+//
+//   Error on default: "called object type 'struct ERROR_type_not_impl_for_this_trait'
+//                      is not a function or function pointer"
+// -----------------------------------------------------------------------------
+struct ERROR_type_not_impl_for_this_trait;
+extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_trait;
+#define dyn(Trait, ptr)                                                            \
+  _Generic(                                                                        \
+      (void (*)(glue(Trait, ___sel_t), ___TRAIT_TYPEOF(*(ptr))))0,                \
+      ___TRAIT_TT_SLOTS                                                            \
+      default: ERROR_type_not_impl_for_this_trait                                  \
+  )(ptr)
 
 #define ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj) Type##_from_##Trait(obj)
 #define from_trait(Type, Trait, obj) ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj)
@@ -1662,6 +1842,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_SD_C7 0
 
 // =============================================================================
+// TT (dyn) counter: 6-digit octal, max 262144 type × trait pairs.
+// Each impl() of a distinct (Type, Trait) pair consumes one slot.
+// Persistent across re-include passes.
+// =============================================================================
+#define ___TRAIT_TT_C1 0
+#define ___TRAIT_TT_C2 0
+#define ___TRAIT_TT_C3 0
+#define ___TRAIT_TT_C4 0
+#define ___TRAIT_TT_C5 0
+#define ___TRAIT_TT_C6 0
+
+// =============================================================================
 // SD dispatch: _Generic-based (standard C11)
 //
 // Uses the "extendible _Generic" pattern: recursive macros generate _Generic
@@ -1847,6 +2039,186 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   glue(___TRAIT_SD_R4_, ___TRAIT_SD_C4)(___TRAIT_SD_C6, ___TRAIT_SD_C5)          \
   glue(___TRAIT_SD_R5_, ___TRAIT_SD_C5)(___TRAIT_SD_C6)                          \
   glue(___TRAIT_SD_R6_, ___TRAIT_SD_C6)
+
+// =============================================================================
+// TT slot assembly (for dyn _Generic dispatch)
+//
+// Same recursive expansion pattern as SD slots but using the TT counter and
+// producing pair-type-to-wrapper-function associations.
+// =============================================================================
+
+// Single slot in the _Generic
+#define ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,d1) \
+  glue8(___trait_tt_pair_, d6,d5,d4,d3,d2,d1,_p): glue7(___trait_tt_fn_, d6,d5,d4,d3,d2,d1),
+
+// ── R1: innermost level (digit d1, 0–7 per group) ──────────────────────────
+#define ___TRAIT_TT_R1_0(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_1(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,0)
+#define ___TRAIT_TT_R1_2(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,1) \
+  ___TRAIT_TT_R1_1(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_3(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,2) \
+  ___TRAIT_TT_R1_2(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_4(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,3) \
+  ___TRAIT_TT_R1_3(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_5(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,4) \
+  ___TRAIT_TT_R1_4(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_6(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,5) \
+  ___TRAIT_TT_R1_5(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_7(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,6) \
+  ___TRAIT_TT_R1_6(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_8(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,7) \
+  ___TRAIT_TT_R1_7(d6,d5,d4,d3,d2)
+
+// ── R2: digit d2 (0–7, each emits a full R1_8 group) ───────────────────────
+#define ___TRAIT_TT_R2_0(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_1(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,0)
+#define ___TRAIT_TT_R2_2(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,1) \
+  ___TRAIT_TT_R2_1(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_3(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,2) \
+  ___TRAIT_TT_R2_2(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_4(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,3) \
+  ___TRAIT_TT_R2_3(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_5(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,4) \
+  ___TRAIT_TT_R2_4(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_6(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,5) \
+  ___TRAIT_TT_R2_5(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_7(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,6) \
+  ___TRAIT_TT_R2_6(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_8(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,7) \
+  ___TRAIT_TT_R2_7(d6,d5,d4,d3)
+
+// ── R3: digit d3 (0–7, each emits a full R2_8 group) ───────────────────────
+#define ___TRAIT_TT_R3_0(d6,d5,d4)
+#define ___TRAIT_TT_R3_1(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,0)
+#define ___TRAIT_TT_R3_2(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,1) \
+  ___TRAIT_TT_R3_1(d6,d5,d4)
+#define ___TRAIT_TT_R3_3(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,2) \
+  ___TRAIT_TT_R3_2(d6,d5,d4)
+#define ___TRAIT_TT_R3_4(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,3) \
+  ___TRAIT_TT_R3_3(d6,d5,d4)
+#define ___TRAIT_TT_R3_5(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,4) \
+  ___TRAIT_TT_R3_4(d6,d5,d4)
+#define ___TRAIT_TT_R3_6(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,5) \
+  ___TRAIT_TT_R3_5(d6,d5,d4)
+#define ___TRAIT_TT_R3_7(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,6) \
+  ___TRAIT_TT_R3_6(d6,d5,d4)
+#define ___TRAIT_TT_R3_8(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,7) \
+  ___TRAIT_TT_R3_7(d6,d5,d4)
+
+// ── R4: digit d4 (0–7, each emits a full R3_8 group) ───────────────────────
+#define ___TRAIT_TT_R4_0(d6,d5)
+#define ___TRAIT_TT_R4_1(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,0)
+#define ___TRAIT_TT_R4_2(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,1) \
+  ___TRAIT_TT_R4_1(d6,d5)
+#define ___TRAIT_TT_R4_3(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,2) \
+  ___TRAIT_TT_R4_2(d6,d5)
+#define ___TRAIT_TT_R4_4(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,3) \
+  ___TRAIT_TT_R4_3(d6,d5)
+#define ___TRAIT_TT_R4_5(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,4) \
+  ___TRAIT_TT_R4_4(d6,d5)
+#define ___TRAIT_TT_R4_6(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,5) \
+  ___TRAIT_TT_R4_5(d6,d5)
+#define ___TRAIT_TT_R4_7(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,6) \
+  ___TRAIT_TT_R4_6(d6,d5)
+#define ___TRAIT_TT_R4_8(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,7) \
+  ___TRAIT_TT_R4_7(d6,d5)
+
+// ── R5: digit d5 (0–7, each emits a full R4_8 group) ───────────────────────
+#define ___TRAIT_TT_R5_0(d6)
+#define ___TRAIT_TT_R5_1(d6) \
+  ___TRAIT_TT_R4_8(d6,0)
+#define ___TRAIT_TT_R5_2(d6) \
+  ___TRAIT_TT_R4_8(d6,1) \
+  ___TRAIT_TT_R5_1(d6)
+#define ___TRAIT_TT_R5_3(d6) \
+  ___TRAIT_TT_R4_8(d6,2) \
+  ___TRAIT_TT_R5_2(d6)
+#define ___TRAIT_TT_R5_4(d6) \
+  ___TRAIT_TT_R4_8(d6,3) \
+  ___TRAIT_TT_R5_3(d6)
+#define ___TRAIT_TT_R5_5(d6) \
+  ___TRAIT_TT_R4_8(d6,4) \
+  ___TRAIT_TT_R5_4(d6)
+#define ___TRAIT_TT_R5_6(d6) \
+  ___TRAIT_TT_R4_8(d6,5) \
+  ___TRAIT_TT_R5_5(d6)
+#define ___TRAIT_TT_R5_7(d6) \
+  ___TRAIT_TT_R4_8(d6,6) \
+  ___TRAIT_TT_R5_6(d6)
+#define ___TRAIT_TT_R5_8(d6) \
+  ___TRAIT_TT_R4_8(d6,7) \
+  ___TRAIT_TT_R5_7(d6)
+
+// ── R6: digit d6 (most significant, 0–7) ────────────────────────────────────
+#define ___TRAIT_TT_R6_0
+#define ___TRAIT_TT_R6_1 \
+  ___TRAIT_TT_R5_8(0)
+#define ___TRAIT_TT_R6_2 \
+  ___TRAIT_TT_R5_8(1) \
+  ___TRAIT_TT_R6_1
+#define ___TRAIT_TT_R6_3 \
+  ___TRAIT_TT_R5_8(2) \
+  ___TRAIT_TT_R6_2
+#define ___TRAIT_TT_R6_4 \
+  ___TRAIT_TT_R5_8(3) \
+  ___TRAIT_TT_R6_3
+#define ___TRAIT_TT_R6_5 \
+  ___TRAIT_TT_R5_8(4) \
+  ___TRAIT_TT_R6_4
+#define ___TRAIT_TT_R6_6 \
+  ___TRAIT_TT_R5_8(5) \
+  ___TRAIT_TT_R6_5
+#define ___TRAIT_TT_R6_7 \
+  ___TRAIT_TT_R5_8(6) \
+  ___TRAIT_TT_R6_6
+#define ___TRAIT_TT_R6_8 \
+  ___TRAIT_TT_R5_8(7) \
+  ___TRAIT_TT_R6_7
+
+// ── Assemble all TT slots ──────────────────────────────────────────────────
+#define ___TRAIT_TT_SLOTS                                                          \
+  glue(___TRAIT_TT_R1_, ___TRAIT_TT_C1)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3,          \
+                                        ___TRAIT_TT_C2)                           \
+  glue(___TRAIT_TT_R2_, ___TRAIT_TT_C2)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3)          \
+  glue(___TRAIT_TT_R3_, ___TRAIT_TT_C3)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4)                           \
+  glue(___TRAIT_TT_R4_, ___TRAIT_TT_C4)(___TRAIT_TT_C6, ___TRAIT_TT_C5)          \
+  glue(___TRAIT_TT_R5_, ___TRAIT_TT_C5)(___TRAIT_TT_C6)                          \
+  glue(___TRAIT_TT_R6_, ___TRAIT_TT_C6)
 
 // ── call(sel, obj, ...) ─────────────────────────────────────────────────────
 //

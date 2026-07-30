@@ -188,7 +188,7 @@ int main(void) {
 
   // --- Basic Animal (standalone) ---
   printf("=== Animal (standalone) ===\n");
-  DynAnimal da = to_trait(Dog, Animal, &d);
+  DynAnimal da = dyn(Animal, &d);
   TEST(call(Animal.get_snacks, &da) == 2, "get_snacks == 2");
   call(Animal.feed, &da, 2);
   TEST(call(Animal.get_snacks, &da) == 4, "get_snacks == 4 after feed(2)");
@@ -197,20 +197,20 @@ int main(void) {
 
   // --- Pet (new method, no inheritance) ---
   printf("\n=== Pet (own method only) ===\n");
-  DynPet dp = to_trait(Dog, Pet, &d);
+  DynPet dp = dyn(Pet, &d);
   call(Pet.play, &dp);            // "Dog plays fetch!"
   TEST(1, "Pet.play works");
 
   // --- Chain: Animal → Pet → SuperPet ---
   printf("\n=== Chain: Animal → Pet → SuperPet ===\n");
-  DynAnimal pa = to_trait(Puppy, Animal, &pw);
+  DynAnimal pa = dyn(Animal, &pw);
   TEST(call(Animal.get_snacks, &pa) == 3, "Puppy get_snacks == 3");
 
-  DynPet pp = to_trait(Puppy, Pet, &pw);
+  DynPet pp = dyn(Pet, &pw);
   call(Pet.play, &pp);            // "Puppy plays with ball!"
   TEST(1, "Pet.play works");
 
-  DynSuperPet sp = to_trait(Puppy, SuperPet, &pw);
+  DynSuperPet sp = dyn(SuperPet, &pw);
   call(SuperPet.super_play, &sp); // "Puppy does a backflip!"
   TEST(1, "SuperPet.super_play works");
 
@@ -220,16 +220,16 @@ int main(void) {
 
   // --- Multi-base: Greetable + Describable → Introducible ---
   printf("\n=== Multi-base: Greetable + Describable → Introducible ===\n");
-  DynGreetable dg = to_trait(Person, Greetable, &p);
+  DynGreetable dg = dyn(Greetable, &p);
   call(Greetable.greet, &dg);     // "Hi, I'm Alice."
   TEST(1, "Greetable.greet works");
 
-  DynDescribable dd = to_trait(Person, Describable, &p);
+  DynDescribable dd = dyn(Describable, &p);
   call(Describable.describe, &dd); // "Alice, age 30."
   TEST(1, "Describable.describe works");
   TEST(call(Describable.priority, &dd) == 0, "Describable.priority == 0");
 
-  DynIntroducible di = to_trait(Person, Introducible, &p);
+  DynIntroducible di = dyn(Introducible, &p);
   call(Introducible.introduce, &di, "Bob"); // introduces + cross-trait calls
   TEST(1, "Introducible.introduce works");
 

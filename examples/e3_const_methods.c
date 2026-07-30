@@ -34,7 +34,7 @@ typedef struct { int *ptr; } IntBox;
 // ---- main --------------------------------------------------------------------
 int main(void) {
   IntBox ib = { .ptr = &(int){42} };
-  DynReader r = to_trait(IntBox, Reader, &ib);
+  DynReader r = dyn(Reader, &ib);
 
   printf("=== const methods: Reader ===\n");
   printf("read: %d\n", call(Reader.read, &r));

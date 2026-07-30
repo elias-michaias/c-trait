@@ -55,7 +55,7 @@ typedef struct { const char *name; } Person;
 
 int main(void) {
   Person p = { .name = "World" };
-  DynGreet d = to_trait(Greet, Person, &p);
+  DynGreet d = dyn(Person, &p);
   call(Greet.greet, &p);  // Hello, World! (statically dispatched)
   call(Greet.greet, &d);  // Hello, World! (dynamically dispatched)
 }
@@ -70,7 +70,7 @@ Add `#define Dynamic` before the trait declaration for vtable-based runtime poly
 
 // ...
 Person p = { .name = "World" };
-DynGreet g = to_trait(Greet, Person, &p);
+DynGreet g = dyn(Person, &p);
 call(Greet.greet, &g);  // goes through vtable
 ```
 
@@ -99,7 +99,7 @@ Traits are **static by default** — no vtable, no overhead. Add `#define Dynami
 | | Static (default) | Dynamic (`#define Dynamic`) |
 |---|---|---|
 | Vtable | No | Yes |
-| `to_trait` / `from_trait` | Not available | Available |
+| `dyn` / `from_trait` | Not available | Available |
 | Default methods | Supported | Supported |
 | `extends()` enforcement | Linker check | Linker check |
 
@@ -112,7 +112,7 @@ Dog dog = { .snacks = 5 };
 call(Animal.get_snacks, &dog);
 
 // Dynamic — through vtable
-DynAnimal da = to_trait(Dog, Animal, &dog);
+DynAnimal da = dyn(Animal, &dog);
 call(Animal.get_snacks, &da);
 
 // Same syntax, compiler picks the right path

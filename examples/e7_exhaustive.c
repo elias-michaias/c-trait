@@ -2,7 +2,7 @@
 // e7_exhaustive.c — Exhaustive tests for c-trait
 // Covers: multiple traits, multiple types, varying arg counts/types,
 // require/default/def, immutable, extends, parametric traits,
-// vcall/to_trait/from_trait/new_trait, assertions.
+// vcall/dyn/from_trait/new_trait, assertions.
 #include "../trait.h"
 #include <assert.h>
 #include <stdio.h>
@@ -445,11 +445,11 @@ int main(void) {
   SECTION("Stringify (0-arg, immutable, require-only)");
   // ==========================================================================
   {
-    DynStringify s1 = to_trait(IntWrapper, Stringify, &iw);
-    DynStringify s2 = to_trait(DoubleWrapper, Stringify, &dw);
-    DynStringify s3 = to_trait(Point, Stringify, &pt);
-    DynStringify s4 = to_trait(Rect, Stringify, &r);
-    DynStringify s5 = to_trait(StrBuf, Stringify, &sb);
+    DynStringify s1 = dyn(Stringify, &iw);
+    DynStringify s2 = dyn(Stringify, &dw);
+    DynStringify s3 = dyn(Stringify, &pt);
+    DynStringify s4 = dyn(Stringify, &r);
+    DynStringify s5 = dyn(Stringify, &sb);
 
     CHECK(strcmp(call(Stringify.stringify, &s1), "IntWrapper") == 0);
     CHECK(strcmp(call(Stringify.stringify, &s2), "DoubleWrapper") == 0);
@@ -462,11 +462,11 @@ int main(void) {
   SECTION("Describable (0-arg, immutable, require + default + def)");
   // ==========================================================================
   {
-    DynDescribable d1 = to_trait(IntWrapper, Describable, &iw);
-    DynDescribable d2 = to_trait(DoubleWrapper, Describable, &dw);
-    DynDescribable d3 = to_trait(Point, Describable, &pt);
-    DynDescribable d4 = to_trait(Rect, Describable, &r);
-    DynDescribable d5 = to_trait(StrBuf, Describable, &sb);
+    DynDescribable d1 = dyn(Describable, &iw);
+    DynDescribable d2 = dyn(Describable, &dw);
+    DynDescribable d3 = dyn(Describable, &pt);
+    DynDescribable d4 = dyn(Describable, &r);
+    DynDescribable d5 = dyn(Describable, &sb);
 
     // name (required)
     CHECK(strcmp(call(Describable.name, &d1), "IntWrapper") == 0);
@@ -489,7 +489,7 @@ int main(void) {
   {
     // IntWrapper: uses default doubled & reset
     IntWrapper iw2 = { .val = 5 };
-    DynArithmetic a1 = to_trait(IntWrapper, Arithmetic, &iw2);
+    DynArithmetic a1 = dyn(Arithmetic, &iw2);
 
     CHECK(call(Arithmetic.value, &a1) == 5);
     call(Arithmetic.add, &a1, 3);
@@ -502,7 +502,7 @@ int main(void) {
 
     // Point: overrides reset
     Point pt2 = { .label = "p", .x = 3, .y = 4 };
-    DynArithmetic a2 = to_trait(Point, Arithmetic, &pt2);
+    DynArithmetic a2 = dyn(Arithmetic, &pt2);
 
     CHECK(call(Arithmetic.value, &a2) == 3);
     call(Arithmetic.add, &a2, 7);
@@ -513,7 +513,7 @@ int main(void) {
 
     // Quad: overrides doubled
     Quad q2 = { .a = 2, .b = 3, .c = 4, .d = 5 };
-    DynArithmetic a3 = to_trait(Quad, Arithmetic, &q2);
+    DynArithmetic a3 = dyn(Arithmetic, &q2);
 
     CHECK(call(Arithmetic.value, &a3) == 2);
     CHECK(call(Arithmetic.doubled, &a3) == 28);   // def: (2+3+4+5)*2
@@ -528,7 +528,7 @@ int main(void) {
   {
     // Point: overrides kind
     Point pt3 = { .label = "t", .x = 0, .y = 0 };
-    DynTransform t1 = to_trait(Point, Transform, &pt3);
+    DynTransform t1 = dyn(Transform, &pt3);
 
     int sum = call(Transform.apply, &t1, 5, 10);
     CHECK(sum == 15);                      // x=5, y=10, sum=15
@@ -538,7 +538,7 @@ int main(void) {
 
     // Quad: overrides kind
     Quad q3 = { .a = 0, .b = 0, .c = 1, .d = 1 };
-    DynTransform t2 = to_trait(Quad, Transform, &q3);
+    DynTransform t2 = dyn(Transform, &q3);
 
     sum = call(Transform.apply, &t2, 10, 20);
     CHECK(sum == 32);                      // a=10, b=20, c=1, d=1
@@ -553,27 +553,27 @@ int main(void) {
   {
     // IntWrapper: self->val + a + b
     IntWrapper iw3 = { .val = 10 };
-    DynMapper m1 = to_trait(IntWrapper, Mapper, &iw3);
+    DynMapper m1 = dyn(Mapper, &iw3);
     CHECK(call(Mapper.map_val, &m1, 3, 7) == 20);   // 10+3+7
 
     // DoubleWrapper: (int)self->val * a * b
     DoubleWrapper dw2 = { .val = 3.0 };
-    DynMapper m2 = to_trait(DoubleWrapper, Mapper, &dw2);
+    DynMapper m2 = dyn(Mapper, &dw2);
     CHECK(call(Mapper.map_val, &m2, 4, 5) == 60);   // 3*4*5
 
     // Point: x*a + y*b
     Point pt5 = { .label = "m", .x = 2, .y = 3 };
-    DynMapper m3 = to_trait(Point, Mapper, &pt5);
+    DynMapper m3 = dyn(Mapper, &pt5);
     CHECK(call(Mapper.map_val, &m3, 10, 100) == 320); // 2*10+3*100
 
     // Rect: (int)(width*a + height*b)
     Rect r2 = { .label = "mr", .width = 2.0, .height = 3.0 };
-    DynMapper m4 = to_trait(Rect, Mapper, &r2);
+    DynMapper m4 = dyn(Mapper, &r2);
     CHECK(call(Mapper.map_val, &m4, 5, 10) == 40);   // 2*5+3*10
 
     // Quad: a*x + b*y
     Quad q4 = { .a = 3, .b = 7, .c = 0, .d = 0 };
-    DynMapper m5 = to_trait(Quad, Mapper, &q4);
+    DynMapper m5 = dyn(Mapper, &q4);
     CHECK(call(Mapper.map_val, &m5, 2, 4) == 34);    // 3*2+7*4
   }
 
@@ -582,7 +582,7 @@ int main(void) {
   // ==========================================================================
   {
     StrBuf sb2 = { .buf = "clone_me", .len = 8 };
-    DynCloneable cl = to_trait(StrBuf, Cloneable, &sb2);
+    DynCloneable cl = dyn(Cloneable, &sb2);
     StrBuf *cloned = (StrBuf *)call(Cloneable.clone, &cl);
     CHECK(cloned != &sb2);
     CHECK(strcmp(cloned->buf, "clone_me") == 0);
@@ -595,21 +595,21 @@ int main(void) {
   {
     // IntWrapper: uses default zero_and_report
     IntWrapper iw4 = { .val = 99 };
-    DynResettable r1 = to_trait(IntWrapper, Resettable, &iw4);
+    DynResettable r1 = dyn(Resettable, &iw4);
     printf("  IntWrapper zero_and_report: ");
     call(Resettable.zero_and_report, &r1);
     CHECK(iw4.val == 0);
 
     // Point: uses default zero_and_report
     Point pt6 = { .label = "r", .x = 5, .y = 5 };
-    DynResettable r2 = to_trait(Point, Resettable, &pt6);
+    DynResettable r2 = dyn(Resettable, &pt6);
     call(Resettable.zero_out, &r2);
     CHECK(pt6.x == 0);
     CHECK(pt6.y == 0);
 
     // Quad: overrides zero_and_report
     Quad q5 = { .a = 1, .b = 2, .c = 3, .d = 4 };
-    DynResettable r3 = to_trait(Quad, Resettable, &q5);
+    DynResettable r3 = dyn(Resettable, &q5);
     printf("  Quad zero_and_report: ");
     call(Resettable.zero_and_report, &r3);
     CHECK(q5.a == 0);
@@ -624,28 +624,28 @@ int main(void) {
   {
     // Point: default is_big (threshold 100)
     Point pt7 = { .label = "small_pt", .x = 3, .y = 4 };
-    DynMeasurable m1 = to_trait(Point, Measurable, &pt7);
+    DynMeasurable m1 = dyn(Measurable, &pt7);
     CHECK(call(Measurable.measure, &m1) == 25);   // 3*3 + 4*4
     CHECK(call(Measurable.is_big, &m1) == 0);
 
     // Describable methods via DynDescribable (separate trait object)
-    DynDescribable dd_pt = to_trait(Point, Describable, &pt7);
+    DynDescribable dd_pt = dyn(Describable, &pt7);
     CHECK(strcmp(call(Describable.name, &dd_pt), "small_pt") == 0);
     CHECK(call(Describable.name_len, &dd_pt) == 8);  // default strlen("small_pt")
 
     // Rect: overrides is_big (threshold 50)
     Rect r3 = { .label = "big_rect", .width = 10.0, .height = 6.0 };
-    DynMeasurable m2 = to_trait(Rect, Measurable, &r3);
+    DynMeasurable m2 = dyn(Measurable, &r3);
     CHECK(call(Measurable.measure, &m2) == 60);
     CHECK(call(Measurable.is_big, &m2) == 1);
 
     // Describable via DynDescribable
-    DynDescribable dd_r3 = to_trait(Rect, Describable, &r3);
+    DynDescribable dd_r3 = dyn(Describable, &r3);
     CHECK(strcmp(call(Describable.name, &dd_r3), "big_rect") == 0);
 
     // small rect
     Rect r4 = { .label = "tiny", .width = 2.0, .height = 3.0 };
-    DynMeasurable m3 = to_trait(Rect, Measurable, &r4);
+    DynMeasurable m3 = dyn(Measurable, &r4);
     CHECK(call(Measurable.measure, &m3) == 6);
     CHECK(call(Measurable.is_big, &m3) == 0);
   }
@@ -655,21 +655,21 @@ int main(void) {
   // ==========================================================================
   {
     IntWrapper iw5 = { .val = 42 };
-    DynContainer_int ci = to_trait(IntWrapper, Container_int, &iw5);
+    DynContainer_int ci = dyn(Container_int, &iw5);
     CHECK(call(Container_int.peek, &ci) == 42);
     call(Container_int.poke, &ci, 100);
     CHECK(call(Container_int.peek, &ci) == 100);
     CHECK(iw5.val == 100);
 
     DoubleWrapper dw3 = { .val = 2.718 };
-    DynContainer_double cd1 = to_trait(DoubleWrapper, Container_double, &dw3);
+    DynContainer_double cd1 = dyn(Container_double, &dw3);
     CHECK(call(Container_double.peek, &cd1) > 2.717 && call(Container_double.peek, &cd1) < 2.719);
     call(Container_double.poke, &cd1, 1.414);
     CHECK(call(Container_double.peek, &cd1) > 1.413 && call(Container_double.peek, &cd1) < 1.415);
 
     // Rect also implements Container_double (peek/poke width)
     Rect r5 = { .label = "w", .width = 5.0, .height = 3.0 };
-    DynContainer_double cd2 = to_trait(Rect, Container_double, &r5);
+    DynContainer_double cd2 = dyn(Container_double, &r5);
     CHECK(call(Container_double.peek, &cd2) > 4.999 && call(Container_double.peek, &cd2) < 5.001);
     call(Container_double.poke, &cd2, 99.0);
     CHECK(r5.width > 98.999 && r5.width < 99.001);
@@ -680,14 +680,14 @@ int main(void) {
   // ==========================================================================
   {
     Point pt8 = { .label = "recover", .x = 11, .y = 22 };
-    DynStringify s = to_trait(Point, Stringify, &pt8);
+    DynStringify s = dyn(Stringify, &pt8);
     Point *recovered = from_trait(Point, Stringify, s);
     CHECK(recovered == &pt8);
     CHECK(recovered->x == 11);
     CHECK(recovered->y == 22);
 
     Rect r6 = { .label = "fr", .width = 1.0, .height = 2.0 };
-    DynMeasurable m = to_trait(Rect, Measurable, &r6);
+    DynMeasurable m = dyn(Measurable, &r6);
     Rect *rrec = from_trait(Rect, Measurable, m);
     CHECK(rrec == &r6);
     CHECK(rrec->width > 0.999 && rrec->width < 1.001);
@@ -747,12 +747,12 @@ int main(void) {
     IntWrapper iw7 = { .val = 42 };
 
     // All 6 traits on the same instance
-    DynStringify    s  = to_trait(IntWrapper, Stringify, &iw7);
-    DynDescribable  d  = to_trait(IntWrapper, Describable, &iw7);
-    DynArithmetic   a  = to_trait(IntWrapper, Arithmetic, &iw7);
-    DynResettable   rs = to_trait(IntWrapper, Resettable, &iw7);
-    DynContainer_int ci = to_trait(IntWrapper, Container_int, &iw7);
-    DynMapper       mp = to_trait(IntWrapper, Mapper, &iw7);
+    DynStringify    s  = dyn(Stringify, &iw7);
+    DynDescribable  d  = dyn(Describable, &iw7);
+    DynArithmetic   a  = dyn(Arithmetic, &iw7);
+    DynResettable   rs = dyn(Resettable, &iw7);
+    DynContainer_int ci = dyn(Container_int, &iw7);
+    DynMapper       mp = dyn(Mapper, &iw7);
 
     CHECK(strcmp(call(Stringify.stringify, &s), "IntWrapper") == 0);
     CHECK(strcmp(call(Describable.name, &d), "IntWrapper") == 0);
@@ -782,11 +782,11 @@ int main(void) {
     StrBuf        sb3 = { .buf = "multi_str", .len = 9 };
 
     DynStringify arr[5];
-    arr[0] = to_trait(IntWrapper, Stringify, &iw8);
-    arr[1] = to_trait(DoubleWrapper, Stringify, &dw4);
-    arr[2] = to_trait(Point, Stringify, &pt11);
-    arr[3] = to_trait(Rect, Stringify, &r7);
-    arr[4] = to_trait(StrBuf, Stringify, &sb3);
+    arr[0] = dyn(Stringify, &iw8);
+    arr[1] = dyn(Stringify, &dw4);
+    arr[2] = dyn(Stringify, &pt11);
+    arr[3] = dyn(Stringify, &r7);
+    arr[4] = dyn(Stringify, &sb3);
 
     const char *expected[] = { "IntWrapper", "DoubleWrapper", "multi", "multi_rect", "multi_str" };
     for (int i = 0; i < 5; i++) {
@@ -801,18 +801,18 @@ int main(void) {
     Point pt12 = { .label = "mut", .x = 0, .y = 0 };
 
     // Mutate via Arithmetic trait
-    DynArithmetic a = to_trait(Point, Arithmetic, &pt12);
+    DynArithmetic a = dyn(Arithmetic, &pt12);
     call(Arithmetic.add, &a, 100);
     CHECK(pt12.x == 100);
 
     // Mutate via Transform trait
-    DynTransform t = to_trait(Point, Transform, &pt12);
+    DynTransform t = dyn(Transform, &pt12);
     call(Transform.apply, &t, -50, 25);
     CHECK(pt12.x == 50);
     CHECK(pt12.y == 25);
 
     // Reset via Resettable
-    DynResettable r = to_trait(Point, Resettable, &pt12);
+    DynResettable r = dyn(Resettable, &pt12);
     call(Resettable.zero_out, &r);
     CHECK(pt12.x == 0);
     CHECK(pt12.y == 0);

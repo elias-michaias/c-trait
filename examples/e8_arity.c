@@ -254,7 +254,7 @@ int main(void) {
   // ==========================================================================
   {
     Accum a = { .val = 42 };
-    DynArity0 t = to_trait(Accum, Arity0, &a);
+    DynArity0 t = dyn(Arity0, &a);
 
     CHECK(call(Arity0.get_val, &t) == 42);
     CHECK(call(Arity0.peek_val, &t) == 42);
@@ -264,7 +264,7 @@ int main(void) {
     CHECK(Accum_Arity0_peek_val(&a) == 42);
 
     Pair p = { .x = 3, .y = 7 };
-    DynArity0 t2 = to_trait(Pair, Arity0, &p);
+    DynArity0 t2 = dyn(Arity0, &p);
     CHECK(call(Arity0.get_val, &t2) == 10);
     CHECK(call(Arity0.peek_val, &t2) == 10);
   }
@@ -275,7 +275,7 @@ int main(void) {
   {
     // Accum: uses default increment
     Accum a = { .val = 10 };
-    DynArity1 t = to_trait(Accum, Arity1, &a);
+    DynArity1 t = dyn(Arity1, &a);
 
     CHECK(call(Arity1.add_pure, &t, 5) == 15);
     CHECK(a.val == 10);  // add_pure is immutable, no mutation
@@ -289,7 +289,7 @@ int main(void) {
 
     // Pair: def increment to just add to x
     Pair p = { .x = 10, .y = 5 };
-    DynArity1 t2 = to_trait(Pair, Arity1, &p);
+    DynArity1 t2 = dyn(Arity1, &p);
 
     CHECK(call(Arity1.add_pure, &t2, 3) == 18);  // 10+5+3
     call(Arity1.increment, &t2, 4);              // def: x += 4
@@ -307,7 +307,7 @@ int main(void) {
   // ==========================================================================
   {
     Accum a = { .val = 0 };
-    DynArity2 t = to_trait(Accum, Arity2, &a);
+    DynArity2 t = dyn(Arity2, &a);
 
     int r = call(Arity2.combine, &t, 6, 7);
     CHECK(r == 42);
@@ -318,7 +318,7 @@ int main(void) {
 
     // Pair: def combine_default
     Pair p = { .x = 3, .y = 4 };
-    DynArity2 t2 = to_trait(Pair, Arity2, &p);
+    DynArity2 t2 = dyn(Arity2, &p);
 
     call(Arity2.combine, &t2, 5, 6);
     CHECK(p.x == 5);
@@ -336,7 +336,7 @@ int main(void) {
   // ==========================================================================
   {
     Accum a = { .val = 100 };
-    DynArity3 t = to_trait(Accum, Arity3, &a);
+    DynArity3 t = dyn(Arity3, &a);
 
     // sum3 (immutable): self->val + a + b + c
     CHECK(call(Arity3.sum3, &t, 1, 2, 3) == 106);  // 100+1+2+3
@@ -352,7 +352,7 @@ int main(void) {
 
     // Pair
     Pair p = { .x = 0, .y = 0 };
-    DynArity3 t2 = to_trait(Pair, Arity3, &p);
+    DynArity3 t2 = dyn(Arity3, &p);
 
     int r2 = call(Arity3.mix3, &t2, 5, 10, 15);
     CHECK(r2 == 30);     // x=5+10=15, y=15, total=30
@@ -372,7 +372,7 @@ int main(void) {
   // ==========================================================================
   {
     Accum a = { .val = 0 };
-    DynArity4 t = to_trait(Accum, Arity4, &a);
+    DynArity4 t = dyn(Arity4, &a);
 
     // mix4 (mutable): self->val = a+b+c+d
     int r = call(Arity4.mix4, &t, 1, 2, 3, 4);
@@ -388,7 +388,7 @@ int main(void) {
 
     // Pair: def weighted4
     Pair p = { .x = 2, .y = 3 };
-    DynArity4 t2 = to_trait(Pair, Arity4, &p);
+    DynArity4 t2 = dyn(Arity4, &p);
 
     int r2 = call(Arity4.mix4, &t2, 10, 20, 30, 40);
     CHECK(r2 == 100);    // x=10+20=30, y=30+40=70, total=100
@@ -411,11 +411,11 @@ int main(void) {
   {
     Accum a = { .val = 5 };
 
-    DynArity0 t0 = to_trait(Accum, Arity0, &a);
-    DynArity1 t1 = to_trait(Accum, Arity1, &a);
-    DynArity2 t2 = to_trait(Accum, Arity2, &a);
-    DynArity3 t3 = to_trait(Accum, Arity3, &a);
-    DynArity4 t4 = to_trait(Accum, Arity4, &a);
+    DynArity0 t0 = dyn(Arity0, &a);
+    DynArity1 t1 = dyn(Arity1, &a);
+    DynArity2 t2 = dyn(Arity2, &a);
+    DynArity3 t3 = dyn(Arity3, &a);
+    DynArity4 t4 = dyn(Arity4, &a);
 
     CHECK(call(Arity0.get_val, &t0) == 5);
     call(Arity1.set_val, &t1, 10);
