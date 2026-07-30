@@ -494,6 +494,15 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 // defaults/impl/counter/enforce still run but SD/DynSD loops are skipped.
 // When ___TRAIT_IS_STATIC_CURRENT is set, defaults/impl/DynSD/enforce are skipped.
 // ═════════════════════════════════════════════════════════════════════════════
+// ── DFL/SDFL storage-class: must be defined before defaults()/static_defaults()
+//    in the same include pass so the wrapper-linkage matches FWDDECL.
+#undef ___TRAIT_DFL_STORAGE
+#ifdef ___TRAIT_FWDIMPL_DONE
+#define ___TRAIT_DFL_STORAGE ___TRAIT_UNUSED
+#else
+#define ___TRAIT_DFL_STORAGE ___TRAIT_UNUSED static inline
+#endif
+
 #ifndef ___TRAIT_IS_STATIC_CURRENT
 defaults();
 impl()
@@ -1013,139 +1022,139 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 
 #define ___TRAIT_DFL_0_00(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self) {   \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     return glue5(Default, _, Type, _, Name)(&_obj);                            \
   }
 
 #define ___TRAIT_DFL_0_10(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self) {              \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self) {              \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     return glue5(Default, _, Type, _, Name)(&_obj);                            \
   }
 
 #define ___TRAIT_DFL_1_00(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self) {  \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_DFL_1_10(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self) {             \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self) {             \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_DFL_0_01(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                T1 a1) {        \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
   }
 
 #define ___TRAIT_DFL_0_11(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self, T1 a1) {       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self, T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
   }
 
 #define ___TRAIT_DFL_1_01(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self,    \
                                                                 T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_DFL_1_11(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self, T1 a1) {      \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self, T1 a1) {      \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_DFL_0_02(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                T1 a1, T2 a2) { \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
   }
 
 #define ___TRAIT_DFL_0_12(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
   }
 
 #define ___TRAIT_DFL_1_02(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(void *self, T1 a1, T2 a2) {     \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(For *self, T1 a1, T2 a2) {     \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_DFL_1_12(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_DFL_0_03(Type, Ret, Name, T1, T2, T3)                            \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
   }
 
 #define ___TRAIT_DFL_0_13(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
   }
 
 #define ___TRAIT_DFL_1_03(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_DFL_1_13(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_DFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
   }
 
 #define ___TRAIT_DFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
   }
 
 #define ___TRAIT_DFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
 
 #define ___TRAIT_DFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
@@ -1171,139 +1180,139 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // Limitation: default bodies cannot call other trait methods on self.
 // -----------------------------------------------------------------------------
 #define ___TRAIT_SDFL_0_00(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self) {   \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     return glue5(Default, _, Type, _, Name)(&_obj);                            \
   }
 
 #define ___TRAIT_SDFL_0_10(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self) {              \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self) {              \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     return glue5(Default, _, Type, _, Name)(&_obj);                            \
   }
 
 #define ___TRAIT_SDFL_1_00(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self) {  \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_SDFL_1_10(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self) {             \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self) {             \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_SDFL_0_01(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                 T1 a1) {        \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
   }
 
 #define ___TRAIT_SDFL_0_11(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self, T1 a1) {       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self, T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
   }
 
 #define ___TRAIT_SDFL_1_01(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self,    \
                                                                  T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_SDFL_1_11(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self, T1 a1) {      \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self, T1 a1) {      \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_SDFL_0_02(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                 T1 a1, T2 a2) { \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
   }
 
 #define ___TRAIT_SDFL_0_12(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
   }
 
 #define ___TRAIT_SDFL_1_02(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(void *self, T1 a1, T2 a2) {     \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(For *self, T1 a1, T2 a2) {     \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_SDFL_1_12(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_SDFL_0_03(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
   }
 
 #define ___TRAIT_SDFL_0_13(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
   }
 
 #define ___TRAIT_SDFL_1_03(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_SDFL_1_13(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_SDFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
   }
 
 #define ___TRAIT_SDFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
   }
 
 #define ___TRAIT_SDFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self};                                      \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
 
 #define ___TRAIT_SDFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self};                              \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
