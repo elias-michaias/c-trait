@@ -1,4 +1,4 @@
-// Auto-impl: second #include "trait.h" triggers impl()/cleanup
+// Auto-impl: second #include "trait.h" triggers ___TRAIT_IMPL()/cleanup
 #ifdef For
 #ifdef Impl
 #ifdef ___TRAIT_SD_ACTIVE
@@ -494,7 +494,7 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 // defaults/impl/counter/enforce still run but SD/DynSD loops are skipped.
 // When ___TRAIT_IS_STATIC_CURRENT is set, defaults/impl/DynSD/enforce are skipped.
 // ═════════════════════════════════════════════════════════════════════════════
-// ── DFL/SDFL storage-class: must be defined before defaults()/static_defaults()
+// ── DFL/SDFL storage-class: must be defined before ___TRAIT_DFL()/___TRAIT_SDFL()
 //    in the same include pass so the wrapper-linkage matches FWDDECL.
 #undef ___TRAIT_DFL_STORAGE
 #ifdef ___TRAIT_FWDIMPL_DONE
@@ -503,9 +503,14 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 #define ___TRAIT_DFL_STORAGE ___TRAIT_UNUSED static inline
 #endif
 
+// ── IMPLS check: define a per-(For,Impl) marker type so
+//    sizeof(glue3(___TRAIT_IMPLS_TYPE_, For, _And_, Impl)) is a valid
+//    integer constant expression only when the trait is implemented.
+typedef struct { int ___trait_impls_check_; } glue4(___TRAIT_IMPLS_TYPE_, For, _, Impl);
+
 #ifndef ___TRAIT_IS_STATIC_CURRENT
-defaults();
-impl()
+___TRAIT_DFL();
+___TRAIT_IMPL()
 // ── TT (dyn) registration: emit pair type + wrapper for this impl ──
 ___TRAIT_TT_EMIT()
 // ── Increment 6-digit octal TT counter ──────────────────────────────
@@ -661,7 +666,7 @@ ___TRAIT_TT_EMIT()
 #endif
 #endif
 #else
-static_defaults()
+___TRAIT_SDFL()
 #endif
 #ifndef ___TRAIT_FWDIMPL_DONE
 
@@ -1402,7 +1407,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // methods) and also define:
 //   #define Override_<Type>_<Trait>_<Method> 1
 // before the #include "trait.h" that processes the impl block, so that
-// defaults() knows to skip the DFL wrapper for that method.
+// ___TRAIT_DFL() knows to skip the DFL wrapper for that method.
 // -----------------------------------------------------------------------------
 #define def(Name, ...)                                                         \
   glue5(For, _, Impl, _,                                                       \
@@ -1413,18 +1418,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
         Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
-// `defaults()` emits wrappers for default methods when implementing a trait.
-// `static_defaults()` emits SDFL wrappers for static traits (no vtable).
-// `impl()` emits the vtable object plus trait conversion helpers.
+// `___TRAIT_DFL()` emits wrappers for default methods when implementing a trait.
+// `___TRAIT_SDFL()` emits SDFL wrappers for static traits (no vtable).
+// `___TRAIT_IMPL()` emits the vtable object plus trait conversion helpers.
 // -----------------------------------------------------------------------------
-#define defaults()                                                             \
+#define ___TRAIT_DFL()                                                             \
   ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl) ___TRAIT_VTNAME(For, Impl);   \
   ___TRAIT_PASTE(Impl, Signature)((Impl, DFL))
 
-#define static_defaults()                                                      \
+#define ___TRAIT_SDFL()                                                      \
   ___TRAIT_PASTE(Impl, Signature)((Impl, SDFL))
 
-#define impl()                                                                 \
+#define ___TRAIT_IMPL()                                                                 \
   ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl)                          \
       ___TRAIT_VTNAME(For, Impl) = {___TRAIT_PASTE(Impl, Signature)((Impl, BIND))};    \
   ___TRAIT_UNUSED static inline glue(Dyn, Impl)                                 \
@@ -1436,7 +1441,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
     return (For *)obj.self;                                                    \
   }
 
-#define impl_vt() impl()
+#define ___TRAIT_IMPL_VT() ___TRAIT_IMPL()
 
 // -----------------------------------------------------------------------------
 // TT (dyn) registration: emits a _Generic-association pair type + wrapper
@@ -2419,5 +2424,11 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
   )(obj __VA_OPT__(,) __VA_ARGS__)
 
 #endif // ___TRAIT_C23
+
+// ── IMPLS(Type, Trait) ──────────────────────────────────────────────────────
+// Compile-time check: produces sizeof(marker-type) (an integer constant
+// expression > 0) if Type implements Trait; fails to compile with
+// "unknown type name" otherwise.  Usable in static_assert, if(), etc.
+#define IMPLS(TYPE, TRAIT) (sizeof(glue4(___TRAIT_IMPLS_TYPE_, TYPE, _, TRAIT)))
 
 #endif // TRAIT_ALT_H

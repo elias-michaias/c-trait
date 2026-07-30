@@ -59,7 +59,7 @@ int def(get_length) { return *self; }
 #include "../trait.h"
 
 // ---- impl: Searchable for int -----------------------------------------------
-// Static trait: no defaults(), no impl(), no DynTrait.
+// Static trait: no ___TRAIT_DFL(), no ___TRAIT_IMPL(), no DynTrait.
 // Only implements `search` — Measurable's get_length is separate.
 #define For int
 #define Impl Searchable

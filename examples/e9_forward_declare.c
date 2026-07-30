@@ -178,6 +178,12 @@ int main(void) {
     printf("  HiddenWidget(hidden).is_visible() = %d\n", vis2);
   }
 
+  // ── IMPLS compile-time checks ──────────────────────────────────────────
+  static_assert(IMPLS(Dog, Animal),     "Dog must implement Animal");
+  static_assert(IMPLS(Cat, Animal),     "Cat must implement Animal");
+  static_assert(IMPLS(Widget, Drawable), "Widget must implement Drawable");
+  static_assert(IMPLS(HiddenWidget, Drawable), "HiddenWidget must implement Drawable");
+
   printf("\n=== Results: %d/%d tests passed ===\n", passed, tests);
   if (pass) printf("ALL PASS\n");
   return pass ? 0 : 1;
