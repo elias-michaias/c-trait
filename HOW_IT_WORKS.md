@@ -89,8 +89,8 @@ When you write:
 #define Trait Animal
 #define Dynamic
 #define AnimalSignature(Self)    \
-  require(Self, int, get_snacks) \
-  default(Self, void, feed, int)
+  required(Self, int, get_snacks) \
+  defaults(Self, void, feed, int)
 #include "trait.h"
 ```
 
@@ -105,7 +105,7 @@ typedef struct {
 } Animal_vtable;
 ```
 
-Each method becomes a function pointer field. The `FN` action makes `require` and `default` emit `RetType (*Name)(void *Self, Args...)`. This is the layout that dynamic dispatch will index into at runtime.
+Each method becomes a function pointer field. The `FN` action makes `required` and `defaults` emit `RetType (*Name)(void *Self, Args...)`. This is the layout that dynamic dispatch will index into at runtime.
 
 ### 2. DynTrait typedef
 
@@ -338,7 +338,7 @@ The companion `#define Override_Dog_Animal_feed 1` (placed *before* the `#includ
 
 ### The DFL wrapper
 
-For methods declared with `default()`, the `defaults()` pass generates a wrapper function with the *same name* as what `def()` would generate — but only if the user has **not** opted out via `Override_<Type>_<Trait>_<Method>`:
+For methods declared with `defaults()`, the `defaults()` pass generates a wrapper function with the *same name* as what `def()` would generate — but only if the user has **not** opted out via `Override_<Type>_<Trait>_<Method>`:
 
 ```c
 static inline void Dog_Animal_feed(void *self, int n) {

@@ -17,9 +17,9 @@ A trait is defined by a **signature macro** and a declaration block:
 
 ```c
 #define AnimalSignature(Self)                \
-  require(Self, int,  get_snacks)            \
-  default(Self, void, feed, int)             \
-  default(immutable(Self), void, check)
+  required(Self, int,  get_snacks)            \
+  defaults(Self, void, feed, int)             \
+  defaults(immutable(Self), void, check)
 
 #define Trait Animal
 #include "trait.h"
@@ -31,8 +31,8 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 
 | Macro | Purpose |
 |-------|---------|
-| `require(Self, Ret, Name, Args...)` | Method the implementor must provide |
-| `default(Self, Ret, Name, Args...)` | Method with a default implementation |
+| `required(Self, Ret, Name, Args...)` | Method the implementor must provide |
+| `defaults(Self, Ret, Name, Args...)` | Method with a default implementation |
 | `immutable(Self)` | Marks the method as const (implement with `constdef()`) |
 | `extends(Base, Self)` | Declares a supertrait constraint |
 
@@ -40,8 +40,8 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 
 ```c
 #define ReaderSignature(Self)                \
-  require(immutable(Self), int,  read)       \
-  default(immutable(Self), void, describe)
+  required(immutable(Self), int,  read)       \
+  defaults(immutable(Self), void, describe)
 #define Trait Reader
 #include "trait.h"
 ```
@@ -124,7 +124,7 @@ The `Override_Dog_Animal_feed` macro tells `defaults()` to skip generating the D
 ```c
 #define PetSignature(Self) \
   extends(Animal, Self) \
-  require(Self, void, play)
+  required(Self, void, play)
 #define Dynamic
 #define Trait Pet
 #include "trait.h"
@@ -138,7 +138,7 @@ Multiple supertraits are supported:
 #define IntroducibleSignature(Self) \
   extends(Greetable, Self) \
   extends(Describable, Self) \
-  require(immutable(Self), void, introduce, const char *)
+  required(immutable(Self), void, introduce, const char *)
 ```
 
 ## Parametric traits
@@ -147,8 +147,8 @@ Traits can take additional type parameters. Each instantiation is a separate tra
 
 ```c
 #define ContainerSignature(Self, T) \
-  require(Self, T, get)         \
-  require(Self, void, set, T)
+  required(Self, T, get)         \
+  required(Self, void, set, T)
 
 // Create concrete traits via <Name>Signature aliases
 #define Container_intSignature(Self) ContainerSignature(Self, int)
@@ -168,8 +168,8 @@ Use preprocessor defines to specialize a trait per implementation:
 
 ```c
 #define ContainerSignature(Self) \
-  require(Self, int, push, Container_Item) \
-  require(Self, int, pop)
+  required(Self, int, push, Container_Item) \
+  required(Self, int, pop)
 #define Trait Container
 #include "trait.h"
 

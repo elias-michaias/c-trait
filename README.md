@@ -41,7 +41,7 @@ Copies `trait.h` to `~/.local/include/trait.h`.
 
 #define Trait Greet
 #define Dynamic
-#define GreetSignature(Self) require(Self, void, greet)
+#define GreetSignature(Self) required(Self, void, greet)
 #include "trait.h"
 
 typedef struct { const char *name; } Person;
@@ -134,7 +134,7 @@ See [`examples/`](examples/) for complete, runnable demos:
 | [`e8_arity.c`](examples/e8_arity.c) | Method arity from 0 to 4 extra arguments |
 | [`e9_forward_declare.c`](examples/e9_forward_declare.c) | `Forward` flag: `call()` inside `def()` bodies |
 | [`e10_static_traits.c`](examples/e10_static_traits.c) | Static traits, associated types, no vtable |
-| [`e11_static_defaults.c`](examples/e11_static_defaults.c) | Static traits with `default()` and `Override_` |
+| [`e11_static_defaults.c`](examples/e11_static_defaults.c) | Static traits with `defaults()` and `Override_` |
 
 Build and run any example:
 
