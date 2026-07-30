@@ -17,7 +17,7 @@
 // ---- trait: Measurable (non-static base for extends test) ------------------
 #define Dynamic
 #define Trait Measurable
-#define MeasurableSignature(Self) require(Self, int, get_length)
+#define MeasurableSignature(Self) required(Self, int, get_length)
 #include "../trait.h"
 
 // ---- trait: Searchable (static, extends Measurable) -------------------------
@@ -25,13 +25,13 @@
 // The extends is purely declarative — impl only provides `search`.
 #define Trait Searchable
 #define SearchableSignature(Self)                                              \
-  extends(Measurable, Self) require(Self, int, search)
+  extends(Measurable, Self) required(Self, int, search)
 #include "../trait.h"
 
 // ---- trait: Container (static, with associated type) -----------------------
 #define Trait Container
 #define ContainerSignature(Self)                                               \
-  require(Self, int, push, Container_Item) require(Self, int, pop)
+  required(Self, int, push, Container_Item) required(Self, int, pop)
 #include "../trait.h"
 
 // ---- type definitions -------------------------------------------------------
@@ -81,7 +81,7 @@ int def(pop) { return self->count > 0 ? self->values[--self->count] : 0; }
 
 // ---- impl: Container for StrContainer (Item = const char*) -----------------
 // Container_Item = const char* — multi-token type.
-// The extra arg in require() is Container_Item which becomes const char*.
+// The extra arg in required() is Container_Item which becomes const char*.
 // This means NARG counts it as 1 arg (good), and SDREG uses T1 = const char*.
 #define For StrContainer
 #define Impl Container

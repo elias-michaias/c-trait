@@ -1,7 +1,7 @@
 // clang-format off
 // e7_exhaustive.c — Exhaustive tests for c-trait
 // Covers: multiple traits, multiple types, varying arg counts/types,
-// require/default/def, immutable, extends, parametric traits,
+// required/default/def, immutable, extends, parametric traits,
 // vcall/dyn/from_trait/new_trait, assertions.
 #include "../trait.h"
 #include <assert.h>
@@ -12,17 +12,17 @@
 // TRAIT DEFINITIONS
 // ============================================================================
 
-// ---- Stringify: 0-arg require (immutable) -----------------------------------
+// ---- Stringify: 0-arg required (immutable) -----------------------------------
 #define StringifySignature(Self)                            \
-  require(immutable(Self), const char *, stringify)
+  required(immutable(Self), const char *, stringify)
 #define Dynamic
 #define Trait Stringify
 #include "../trait.h"
 
-// ---- Describable: 0-arg default (immutable) + 0-arg require -----------------
+// ---- Describable: 0-arg default (immutable) + 0-arg required -----------------
 #define DescribableSignature(Self)                           \
-  require(immutable(Self), const char *, name)           \
-  default(immutable(Self), int,          name_len)
+  required(immutable(Self), const char *, name)           \
+  defaults(immutable(Self), int,          name_len)
 #define Dynamic
 #define Trait Describable
 #include "../trait.h"
@@ -36,11 +36,11 @@
 
 // ---- Arithmetic: 1-arg methods, mixed mutability ----------------------------
 #define ArithmeticSignature(Self)                        \
-  require(Self,            void, add, int)               \
-  require(Self,            void, mul, int)               \
-  require(immutable(Self), int,  value)                  \
-  default(immutable(Self), int,  doubled)                \
-  default(Self,            void, reset)
+  required(Self,            void, add, int)               \
+  required(Self,            void, mul, int)               \
+  required(immutable(Self), int,  value)                  \
+  defaults(immutable(Self), int,  doubled)                \
+  defaults(Self,            void, reset)
 #define Dynamic
 #define Trait Arithmetic
 #include "../trait.h"
@@ -57,8 +57,8 @@
 
 // ---- Transform: 2-arg method ------------------------------------------------
 #define TransformSignature(Self)                             \
-  require(Self, int, apply, int, int)                    \
-  default(immutable(Self), const char *, kind)
+  required(Self, int, apply, int, int)                    \
+  defaults(immutable(Self), const char *, kind)
 #define Dynamic
 #define Trait Transform
 #include "../trait.h"
@@ -73,22 +73,22 @@
 
 // ---- Mapper: 2-arg method with pointer + int --------------------------------
 #define MapperSignature(Self)                                \
-  require(immutable(Self), int, map_val, int, int)
+  required(immutable(Self), int, map_val, int, int)
 #define Dynamic
 #define Trait Mapper
 #include "../trait.h"
 
 // ---- Cloneable: returns pointer type ----------------------------------------
 #define CloneableSignature(Self)                             \
-  require(immutable(Self), void *, clone)
+  required(immutable(Self), void *, clone)
 #define Dynamic
 #define Trait Cloneable
 #include "../trait.h"
 
-// ---- Resettable: 0-arg mutable require + default ----------------------------
+// ---- Resettable: 0-arg mutable required + default ----------------------------
 #define ResettableSignature(Self)                            \
-  require(Self, void, zero_out)                          \
-  default(Self, void, zero_and_report)
+  required(Self, void, zero_out)                          \
+  defaults(Self, void, zero_and_report)
 #define Dynamic
 #define Trait Resettable
 #include "../trait.h"
@@ -104,8 +104,8 @@
 // ---- Measurable extends Describable: trait inheritance -----------------------
 #define MeasurableSignature(Self)                            \
   extends(Describable, Self)                             \
-  require(immutable(Self), int,    measure)              \
-  default(immutable(Self), int,    is_big)
+  required(immutable(Self), int,    measure)              \
+  defaults(immutable(Self), int,    is_big)
 #define Dynamic
 #define Trait Measurable
 #include "../trait.h"
@@ -119,8 +119,8 @@
 
 // ---- Parametric: Container with int and double ------------------------------
 #define ContainerSignature(Self, T)                          \
-  require(immutable(Self), T,    peek)                   \
-  require(Self,            void, poke, T)
+  required(immutable(Self), T,    peek)                   \
+  required(Self,            void, poke, T)
 
 #define Container_intSignature(Self)    ContainerSignature(Self, int)
 #define Container_doubleSignature(Self) ContainerSignature(Self, double)
@@ -442,7 +442,7 @@ int main(void) {
   StrBuf        sb  = { .buf = "hello", .len = 5 };
 
   // ==========================================================================
-  SECTION("Stringify (0-arg, immutable, require-only)");
+  SECTION("Stringify (0-arg, immutable, required-only)");
   // ==========================================================================
   {
     DynStringify s1 = dyn(Stringify, &iw);
@@ -459,7 +459,7 @@ int main(void) {
   }
 
   // ==========================================================================
-  SECTION("Describable (0-arg, immutable, require + default + def)");
+  SECTION("Describable (0-arg, immutable, required + default + def)");
   // ==========================================================================
   {
     DynDescribable d1 = dyn(Describable, &iw);
@@ -484,7 +484,7 @@ int main(void) {
   }
 
   // ==========================================================================
-  SECTION("Arithmetic (1-arg, mutable+immutable, require+default+def)");
+  SECTION("Arithmetic (1-arg, mutable+immutable, required+default+def)");
   // ==========================================================================
   {
     // IntWrapper: uses default doubled & reset

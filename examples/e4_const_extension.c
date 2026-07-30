@@ -4,8 +4,8 @@
 
 // ---- trait: Reader -----------------------------------------------------------
 #define ReaderSignature(Self)               \
-  require(immutable(Self), int,  read)  \
-  default(immutable(Self), void, describe)
+  required(immutable(Self), int,  read)  \
+  defaults(immutable(Self), void, describe)
 #define Dynamic
 #define Trait Reader
 #include "../trait.h"
@@ -22,8 +22,8 @@
 // Purely declarative: LoggedReader requires Reader, adds its own methods.
 #define LoggedReaderSignature(Self) \
   extends(Reader, Self)         \
-  require(immutable(Self), int,  count) \
-  default(immutable(Self), void, summary)
+  required(immutable(Self), int,  count) \
+  defaults(immutable(Self), void, summary)
 #define Dynamic
 #define Trait LoggedReader
 #include "../trait.h"

@@ -4,10 +4,10 @@
 
 // ---- trait: Animal -----------------------------------------------------------
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(immutable(Self), void, check)      \
-  default(Self, void, eat_snack)             \
-  default(Self, void, feed, int)
+  required(Self, int,  get_snacks)            \
+  defaults(immutable(Self), void, check)      \
+  defaults(Self, void, eat_snack)             \
+  defaults(Self, void, feed, int)
 #define Dynamic
 #define Trait Animal
 #include "../trait.h"
@@ -33,7 +33,7 @@
 // extends is purely declarative: Pet requires Animal, but has its own methods.
 #define PetSignature(Self) \
   extends(Animal, Self) \
-  require(Self, void, play)
+  required(Self, void, play)
 #define Dynamic
 #define Trait Pet
 #include "../trait.h"
@@ -67,7 +67,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 // ---- trait: Greetable (standalone) --------------------------------------------
 #define GreetableSignature(Self) \
-  require(immutable(Self), void, greet)
+  required(immutable(Self), void, greet)
 #define Dynamic
 #define Trait Greetable
 #include "../trait.h"
@@ -79,8 +79,8 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 // ---- trait: Describable (standalone) ------------------------------------------
 #define DescribableSignature(Self) \
-  require(immutable(Self), void, describe) \
-  default(immutable(Self), int, priority)
+  required(immutable(Self), void, describe) \
+  defaults(immutable(Self), int, priority)
 #define Dynamic
 #define Trait Describable
 #include "../trait.h"
@@ -98,7 +98,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 // Purely declarative: SuperPet requires Pet, has its own method.
 #define SuperPetSignature(Self) \
   extends(Pet, Self) \
-  require(Self, void, super_play)
+  required(Self, void, super_play)
 #define Dynamic
 #define Trait SuperPet
 #include "../trait.h"
@@ -109,7 +109,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 #define IntroducibleSignature(Self) \
   extends(Greetable, Self) \
   extends(Describable, Self) \
-  require(immutable(Self), void, introduce, const char *)
+  required(immutable(Self), void, introduce, const char *)
 #define Dynamic
 #define Trait Introducible
 #include "../trait.h"

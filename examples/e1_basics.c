@@ -8,10 +8,10 @@
 #define Dynamic
 #define Trait Animal
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(immutable(Self), void, check)      \
-  default(Self, void, eat_snack)             \
-  default(Self, void, feed, int)
+  required(Self, int,  get_snacks)            \
+  defaults(immutable(Self), void, check)      \
+  defaults(Self, void, eat_snack)             \
+  defaults(Self, void, feed, int)
 #include "../trait.h"
 
 // ---- default implementation for Animal ---------------------------------------
@@ -37,7 +37,7 @@
 // A simple trait with one required method.
 #define Dynamic
 #define Trait Show
-#define ShowSignature(Self) require(Self, void, show)
+#define ShowSignature(Self) required(Self, void, show)
 #include "../trait.h"
 
 

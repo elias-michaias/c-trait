@@ -8,8 +8,18 @@ on:
 
 jobs:
   examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc, clang]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install compiler
+        run: |
+          if [ "${{ matrix.cc }}" = gcc ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq gcc
+          fi
       - name: Build and run all examples
-        run: ./test.sh
+        run: ./test.sh ${{ matrix.cc }}

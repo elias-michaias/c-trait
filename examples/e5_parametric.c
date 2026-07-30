@@ -6,8 +6,8 @@
 // T acts as a type parameter; macro arity handles passing it cleanly.
 // Each instantiation (Container_int, Container_str) is a separate trait.
 #define ContainerSignature(Self, T) \
-  require(Self, T, get)         \
-  require(Self, void, set, T)
+  required(Self, T, get)         \
+  required(Self, void, set, T)
 
 #define Container_intSignature(Self) ContainerSignature(Self, int)
 #define Container_strSignature(Self) ContainerSignature(Self, const char *)

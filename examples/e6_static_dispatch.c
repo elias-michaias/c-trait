@@ -4,9 +4,9 @@
 
 // ---- trait: Animal -----------------------------------------------------------
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(immutable(Self), void, check)      \
-  default(Self, void, feed, int)
+  required(Self, int,  get_snacks)            \
+  defaults(immutable(Self), void, check)      \
+  defaults(Self, void, feed, int)
 #define Dynamic
 #define Trait Animal
 #include "../trait.h"

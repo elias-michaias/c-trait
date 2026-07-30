@@ -11,7 +11,7 @@
 // ---- trait: Drawable ----------------------------------------------------------
 #define Dynamic
 #define Trait Drawable
-#define DrawableSignature(Self) require(Self, void, draw)
+#define DrawableSignature(Self) required(Self, void, draw)
 #include "../trait.h"
 
 // ---- struct vec_int (the expanded form of vec(int)) ---------------------------

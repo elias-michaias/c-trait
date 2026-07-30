@@ -11,16 +11,16 @@
 #include <assert.h>
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 1. Dynamic trait: Animal (require + default)
+// 1. Dynamic trait: Animal (required + default)
 //    Signature declares method names only — no bodies.
 //    Default bodies go in a For=Default block below.
 // ═════════════════════════════════════════════════════════════════════════════
 #define Dynamic
 #define Trait Animal
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  require(Self, void, feed, int)             \
-  default(Self, int, get_age)
+  required(Self, int,  get_snacks)            \
+  required(Self, void, feed, int)             \
+  defaults(Self, int, get_age)
 #include "../trait.h"
 
 // Default implementation for Animal
@@ -66,13 +66,13 @@ typedef struct { int snacks; } Cat;
 #include "../trait.h"
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 4. Static trait: Drawable (require + default)
+// 4. Static trait: Drawable (required + default)
 //    Signature declares method names only — no bodies.
 // ═════════════════════════════════════════════════════════════════════════════
 #define Trait Drawable
 #define DrawableSignature(Self)                     \
-  require(Self, void, draw)                      \
-  default(Self, int,  is_visible)
+  required(Self, void, draw)                      \
+  defaults(Self, int,  is_visible)
 #include "../trait.h"
 
 // Default implementation for Drawable

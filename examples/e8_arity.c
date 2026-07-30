@@ -2,7 +2,7 @@
 // e8_arity.c — Tests for impl methods of arbitrary arity (0–4 extra args).
 // Covers: unary (self-only), binary (self + 1), ternary (self + 2),
 // quaternary (self + 3), and quinary (self + 4) methods.
-// Tests require, default, def, immutable, call, and direct calls.
+// Tests required, default, def, immutable, call, and direct calls.
 #include "../trait.h"
 #include <assert.h>
 #include <stdio.h>
@@ -13,9 +13,9 @@
 
 // ---- Arity0: 0 extra args (unary: self only) --------------------------------
 #define Arity0Signature(Self)                                \
-  require(Self, int, get_val)                            \
-  require(immutable(Self), int, peek_val)                \
-  default(Self, void, double_it)
+  required(Self, int, get_val)                            \
+  required(immutable(Self), int, peek_val)                \
+  defaults(Self, void, double_it)
 #define Dynamic
 #define Trait Arity0
 #include "../trait.h"
@@ -31,9 +31,9 @@
 
 // ---- Arity1: 1 extra arg (binary: self + 1) --------------------------------
 #define Arity1Signature(Self)                                \
-  require(Self, void, set_val, int)                      \
-  require(immutable(Self), int, add_pure, int)           \
-  default(Self, void, increment, int)
+  required(Self, void, set_val, int)                      \
+  required(immutable(Self), int, add_pure, int)           \
+  defaults(Self, void, increment, int)
 #define Dynamic
 #define Trait Arity1
 #include "../trait.h"
@@ -48,8 +48,8 @@
 
 // ---- Arity2: 2 extra args (ternary: self + 2) ------------------------------
 #define Arity2Signature(Self)                                \
-  require(Self, int, combine, int, int)                  \
-  default(immutable(Self), int, combine_default, int, int)
+  required(Self, int, combine, int, int)                  \
+  defaults(immutable(Self), int, combine_default, int, int)
 #define Dynamic
 #define Trait Arity2
 #include "../trait.h"
@@ -64,9 +64,9 @@
 
 // ---- Arity3: 3 extra args (quaternary: self + 3) ----------------------------
 #define Arity3Signature(Self)                                \
-  require(Self, int, mix3, int, int, int)                \
-  require(immutable(Self), int, sum3, int, int, int)     \
-  default(Self, void, accum3, int, int, int)
+  required(Self, int, mix3, int, int, int)                \
+  required(immutable(Self), int, sum3, int, int, int)     \
+  defaults(Self, void, accum3, int, int, int)
 #define Dynamic
 #define Trait Arity3
 #include "../trait.h"
@@ -81,9 +81,9 @@
 
 // ---- Arity4: 4 extra args (quinary: self + 4) ------------------------------
 #define Arity4Signature(Self)                                      \
-  require(Self, int, mix4, int, int, int, int)                 \
-  require(immutable(Self), int, sum4, int, int, int, int)      \
-  default(immutable(Self), int, weighted4, int, int, int, int)
+  required(Self, int, mix4, int, int, int, int)                 \
+  required(immutable(Self), int, sum4, int, int, int, int)      \
+  defaults(immutable(Self), int, weighted4, int, int, int, int)
 #define Dynamic
 #define Trait Arity4
 #include "../trait.h"

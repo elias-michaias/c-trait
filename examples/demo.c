@@ -7,21 +7,21 @@
 #define Trait Animal
 #define Dynamic
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(Self, void, feed, int)             \
-  default(Self, void, check)
+  required(Self, int,  get_snacks)            \
+  defaults(Self, void, feed, int)             \
+  defaults(Self, void, check)
 #include "../trait.h"
 
 #define Trait Pet
 #define Dynamic
 #define PetSignature(Self)                       \
   extends(Animal, Self)                      \
-  require(Self, void, play)
+  required(Self, void, play)
 #include "../trait.h"
 
 #define Trait Show
 #define Dynamic
-#define ShowSignature(Self) require(Self, void, show)
+#define ShowSignature(Self) required(Self, void, show)
 #include "../trait.h"
 
 // ── Defaults ─────────────────────────────────────────────────────────────
