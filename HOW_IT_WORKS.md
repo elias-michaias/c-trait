@@ -432,7 +432,7 @@ The trade-off is that the counter is **monotonically increasing and never reset*
 
 | Limitation | Reason |
 |------------|--------|
-| **Max 8 methods per trait** | SD loop iterates 0–7 via `___TRAIT_SD_PASS`. `_Generic` nesting becomes impractical beyond 8. |
+| **Max 15 methods per trait** | SD loop iterates 0–14 via `___TRAIT_SD_PASS` (DynSD via `___TRAIT_DYNSD_PASS`); slot 15 is the sentinel. `_Generic` nesting becomes impractical beyond this. |
 | **Max 2,097,152 SD dispatch slots** | 7-digit octal counter (SD_C7–SD_C1). Each method of each impl consumes one slot. |
 | **GNU extensions** | `##__VA_ARGS__` and `__typeof__` (both C11, both with standard C23 equivalents).  In C23 mode, `##__VA_ARGS__` → `__VA_OPT__`, `__typeof__` → `typeof`, `__attribute__((unused))` → `[[maybe_unused]]` automatically. |
 | **Compile-time linear scan** | `call()` checks all SD slots sequentially. Many registrations slow compilation (but runtime is a direct call). In the future, this will be optimized. |

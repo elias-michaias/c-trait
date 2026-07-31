@@ -196,7 +196,7 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 #endif
 #endif
 #endif
-// Increment pass counter (max 8 methods per trait)
+// Increment pass counter (max 15 methods per trait)
 #if   ___TRAIT_SD_PASS == 0
 #undef  ___TRAIT_SD_PASS
 #define ___TRAIT_SD_PASS 1
@@ -219,7 +219,31 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 #undef  ___TRAIT_SD_PASS
 #define ___TRAIT_SD_PASS 7
 #elif ___TRAIT_SD_PASS == 7
-#error "c-trait: too many methods per trait for SD (max 8)"
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 8
+#elif ___TRAIT_SD_PASS == 8
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 9
+#elif ___TRAIT_SD_PASS == 9
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 10
+#elif ___TRAIT_SD_PASS == 10
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 11
+#elif ___TRAIT_SD_PASS == 11
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 12
+#elif ___TRAIT_SD_PASS == 12
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 13
+#elif ___TRAIT_SD_PASS == 13
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 14
+#elif ___TRAIT_SD_PASS == 14
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 15
+#elif ___TRAIT_SD_PASS == 15
+#error "c-trait: too many methods per trait for SD (max 15)"
 #endif
 // Self-include for next iteration
 #include "trait.h"
@@ -234,10 +258,14 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 // This branch emits SD entries for DynTraitname (the trait object type), so
 // that call(Animal.method, &dyn_obj) dispatches through the vtable.
 // For/Impl are still defined.  The SD counter is shared with the SD loop.
+//
+// The DMLIST action (instead of MLIST) replays the direct base's signature,
+// registering base methods for the Dyn pair so that
+// call(Base.method, &dyn_derived) dispatches through the embedded base field.
 // ═══════════════════════════════════════════════════════════════════════════════
-#if !___TRAIT_SD_IS_STOP(___TRAIT_DYNSD_PASS, Impl)
+#if !___TRAIT_SD_IS_STOP_DYN(___TRAIT_DYNSD_PASS, Impl)
 // Emit DynSD slot: DynImpl as concrete type, selector type, vtable wrapper
-___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
+___TRAIT_DYNSD_EMIT(___TRAIT_DYNSD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 // Increment 6-digit octal SD counter (shared with SD loop)
 #if   ___TRAIT_SD_C1 == 0
 #undef  ___TRAIT_SD_C1
@@ -415,7 +443,7 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 #endif
 #endif
 #endif
-// Increment DynSD pass counter (max 8 methods per trait)
+// Increment DynSD pass counter (max 15 methods per trait)
 #if   ___TRAIT_DYNSD_PASS == 0
 #undef  ___TRAIT_DYNSD_PASS
 #define ___TRAIT_DYNSD_PASS 1
@@ -438,7 +466,31 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 #undef  ___TRAIT_DYNSD_PASS
 #define ___TRAIT_DYNSD_PASS 7
 #elif ___TRAIT_DYNSD_PASS == 7
-#error "c-trait: too many methods per trait for DynSD (max 8)"
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 8
+#elif ___TRAIT_DYNSD_PASS == 8
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 9
+#elif ___TRAIT_DYNSD_PASS == 9
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 10
+#elif ___TRAIT_DYNSD_PASS == 10
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 11
+#elif ___TRAIT_DYNSD_PASS == 11
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 12
+#elif ___TRAIT_DYNSD_PASS == 12
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 13
+#elif ___TRAIT_DYNSD_PASS == 13
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 14
+#elif ___TRAIT_DYNSD_PASS == 14
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 15
+#elif ___TRAIT_DYNSD_PASS == 15
+#error "c-trait: too many methods per trait for DynSD (max 15)"
 #endif
 // Self-include for next iteration
 #include "trait.h"
@@ -1015,8 +1067,54 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
   , (Type, 1, Ret, Name, ##__VA_ARGS__)
 
-// extends is purely declarative — no method tuples propagated to MLIST.
+// extends is purely declarative for MLIST — base methods must NOT be
+// replayed through the static SD loop.  The base trait registers its own SD
+// entries when the implementing type implements it (enforced via ENFORCE);
+// replaying them here would duplicate (sel, For) pair types in the _Generic
+// dispatch.
 #define ___TRAIT_EXTENDS_MLIST(Base, SelfSpec) /* no-op */
+
+// -----------------------------------------------------------------------------
+// Actions: DMLIST (DynSD method list with base-trait replay)
+//
+// The DynSD loop uses DMLIST instead of MLIST.  extends replays the direct
+// base's signature so base methods are registered as (sel, DynImpl) pairs,
+// enabling call(Base.method, &dyn_derived).  This is safe for Dyn pairs
+// because DynImpl != DynBase, so no pair type collides with the base's own
+// registrations.
+//
+// Replayed methods use the DMLISTV action, which marks each tuple with the
+// ___TRAIT_VT token at position 4 so the DynSD emitter can route the wrapper
+// to the embedded base field (self->vt->Base.method) instead of a top-level
+// vtable field.
+//
+// Blue-paint note: a replayed base's OWN extends is deferred and absorbed by
+// the MSEL dummy argument, so replay is intentionally limited to one hop.
+// Transitive base methods (call(GrandBase.method, &dyn_derived)) therefore
+// are not registered — a hard preprocessor limit, not a design choice.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_DMLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+
+#define ___TRAIT_EXTENDS_DMLIST(Base, SelfSpec)                                   \
+  ___TRAIT_PASTE(Base, Signature)((Base, DMLISTV))
+#define ___TRAIT_EXTENDS_DMLISTV(Base, SelfSpec)                                  \
+  ___TRAIT_PASTE(Base, Signature)((Base, DMLISTV))
 
 // -----------------------------------------------------------------------------
 // Actions: BIND (vtable initializer)
@@ -1350,26 +1448,41 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
       NameSignature = {0}
 
 // -----------------------------------------------------------------------------
-// `extends(Base, Self)` declares a supertrait constraint: the derived trait
-// requires the base trait to also be implemented.  This is purely
-// declarative — no methods are copied into the derived namespace and no
-// vtables are merged.  Each trait is implemented independently (Rust model).
+// `extends(Base, Self)` merges the base trait's vtable into the derived
+// trait's vtable by composition.  FN embeds a `Base##_vtable Base;` field and
+// BIND copies the base trait's vtable object into it.  Because the base
+// vtable is embedded by value, inheritance is transitive: a derived trait's
+// vtable nests its base's vtable, which itself nests its own bases.
+// Base methods are reached through the embedded field:
+//   DynPet dp = dyn(Pet, &dog);
+//   dp.vt->Animal.get_snacks(dp.self);
 //
-// Enforcement: the SD loop's MLIST action replays the base trait's methods,
-// so the SD entry for inherited methods calls For_BaseTrait_Method.  If the
-// implementing type hasn't implemented the base trait, that symbol is
-// undefined → linker error.
+// The base vtable object (For##_Base##_vtable) must be defined before the
+// derived trait's impl in the same translation unit — extends already
+// requires the base trait to be implemented for the type.
+//
+// The remaining action passes are no-ops:
+//   - FWD/STAG/SSEL: no per-method FWD actions; base selector types exist.
+//   - DFL/SDFL: replaying them would redefine the base trait's default
+//     wrappers (they are already generated by the base trait's own impl).
+//   - MLIST: static SD replay would duplicate (sel, For) pair types in the
+//     _Generic dispatch, so it stays a no-op.  The DynSD loop uses DMLIST,
+//     which replays the direct base's signature for Dyn pairs only.
+//   - FWDDECL: no longer needed; BIND references the base vtable object
+//     rather than individual base impl functions.
 // -----------------------------------------------------------------------------
 #define extends(Base, SelfSpec)                                                \
   glue(___TRAIT_EXTENDS_, ___TRAIT_GET_ACTION(SelfSpec))(Base, SelfSpec)
-#define ___TRAIT_EXTENDS_FN(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_BIND(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_FN(Base, SelfSpec)                                        \
+  Base##_vtable Base;
+#define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op: no per-method FWD actions */
+#define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op: selector tags already exist */
+#define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op: selector fields already exist */
+#define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op: base DFL wrappers already exist */
+#define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op: base SDFL wrappers already exist */
+#define ___TRAIT_EXTENDS_BIND(Base, SelfSpec)                                      \
+  .Base = ___TRAIT_VTNAME(For, Base),
+#define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op: BIND uses the base vtable */
 #define ___TRAIT_EXTENDS_ENFORCE(Base, SelfSpec)                                 \
   ___TRAIT_UNUSED static void *const                                              \
       glue5(___trait_enforce, _, For, _, Base) =                                  \
@@ -1535,7 +1648,7 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 //
 // ___TRAIT_MSEL_K(dummy, a0, a1, ..., aK, ...) → aK
 // The `dummy` argument absorbs the leading comma from MLIST expansion.
-// Supports up to 8 methods per trait.
+// Supports up to 16 method slots (MSEL_0..MSEL_15).
 // -----------------------------------------------------------------------------
 #define ___TRAIT_MSEL_0(d, a, ...) a
 #define ___TRAIT_MSEL_1(d, a, b, ...) b
@@ -1545,6 +1658,14 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 #define ___TRAIT_MSEL_5(d, a, b, c, e, f, g, ...) g
 #define ___TRAIT_MSEL_6(d, a, b, c, e, f, g, h, ...) h
 #define ___TRAIT_MSEL_7(d, a, b, c, e, f, g, h, i, ...) i
+#define ___TRAIT_MSEL_8(d, a, b, c, e, f, g, h, i, j, ...) j
+#define ___TRAIT_MSEL_9(d, a, b, c, e, f, g, h, i, j, k, ...) k
+#define ___TRAIT_MSEL_10(d, a, b, c, e, f, g, h, i, j, k, l, ...) l
+#define ___TRAIT_MSEL_11(d, a, b, c, e, f, g, h, i, j, k, l, m, ...) m
+#define ___TRAIT_MSEL_12(d, a, b, c, e, f, g, h, i, j, k, l, m, n, ...) n
+#define ___TRAIT_MSEL_13(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, ...) o
+#define ___TRAIT_MSEL_14(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, p, ...) p
+#define ___TRAIT_MSEL_15(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, p, q, ...) q
 
 // Relay macro: forces expansion of args before argument splitting.
 // This is critical because MLIST expansion produces commas that must be
@@ -1557,6 +1678,8 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 #define ___TRAIT_SD_SELECT(K, TraitImpl)                                         \
   ___TRAIT_SD_APPLY(glue(___TRAIT_MSEL_, K),                                       \
       0 ___TRAIT_PASTE(TraitImpl, Signature)((TraitImpl, MLIST))                   \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
       , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
       , (_STOP) , (_STOP) , (_STOP) , (_STOP))
 
@@ -1573,6 +1696,25 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
       ___TRAIT_SD_TUPLE_FIRST(___TRAIT_SD_SELECT(K, TraitImpl))))
 
 // -----------------------------------------------------------------------------
+// DynSD method selection: DMLIST variant.
+// The DynSD loop selects method tuples the same way as the SD loop, but the
+// signature is expanded under the DMLIST action so extends replays the direct
+// base's signature (base methods are registered for the Dyn pair).  Replayed
+// tuples carry the ___TRAIT_VT marker at position 4.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_DYNSD_SELECT(K, TraitImpl)                                       \
+  ___TRAIT_SD_APPLY(glue(___TRAIT_MSEL_, K),                                       \
+      0 ___TRAIT_PASTE(TraitImpl, Signature)((TraitImpl, DMLIST))                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP))
+
+#define ___TRAIT_SD_IS_STOP_DYN(K, TraitImpl)                                     \
+  ___TRAIT_CHECK(glue(___TRAIT_SD_STOP_CHECK_,                                     \
+      ___TRAIT_SD_TUPLE_FIRST(___TRAIT_DYNSD_SELECT(K, TraitImpl))))
+
+// -----------------------------------------------------------------------------
 // SD registration emission
 //
 // ___TRAIT_SD_EMIT(tuple) unpacks a method tuple and emits:
@@ -1586,12 +1728,9 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 #define ___TRAIT_SD_EMIT(tuple) ___TRAIT_SD_EMIT_I tuple
 #define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
   typedef For glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);   \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
   glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
         ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name, ##__VA_ARGS__)
 
@@ -1717,18 +1856,39 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 // Like ___TRAIT_SD_EMIT but uses DynImpl as the concrete type and generates
 // vtable-dispatching wrapper functions instead of direct-call wrappers.
 // -----------------------------------------------------------------------------
-#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_I tuple
-#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_D tuple
+// Dispatch: replayed base tuples carry ___TRAIT_VT at position 4; own tuples
+// carry the method name.  glue(___TRAIT_DYNVT_, ___TRAIT_VT) yields
+// ___TRAIT_DYNVT____TRAIT_VT (note: four underscores at the junction — the
+// prefix ends in one, the marker begins with three), the only defined
+// ___TRAIT_DYNVT_* token, so ___TRAIT_CHECK selects 1 vs 0.
+#define ___TRAIT_DYNSD_EMIT_D(NameSignature, ConstFlag, Ret, T4, ...)                \
+  glue(___TRAIT_DYNSD_EMIT_,                                                         \
+       ___TRAIT_CHECK(glue(___TRAIT_DYNVT_, T4)))(                                   \
+      NameSignature, ConstFlag, Ret, T4, ##__VA_ARGS__)
+#define ___TRAIT_DYNVT____TRAIT_VT ___TRAIT_PROBE()
+
+// Own method tuple: (NameSignature, ConstFlag, Ret, Name, ExtraArgs...)
+#define ___TRAIT_DYNSD_EMIT_0(NameSignature, ConstFlag, Ret, Name, ...)              \
   typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
                                   ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
   glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
         ___TRAIT_NARG(__VA_ARGS__))(Ret, Name, ##__VA_ARGS__)
+
+// Replayed base method tuple:
+// (NameSignature, ConstFlag, Ret, ___TRAIT_VT, Name, ExtraArgs...)
+// The wrapper routes through the embedded base vtable field: NameSignature.Name.
+#define ___TRAIT_DYNSD_EMIT_1(NameSignature, ConstFlag, Ret, VT, Name, ...)          \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
+                                  ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, NameSignature.Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 // DYNSDREG: DynTraitname wrapper function emitters
@@ -2314,6 +2474,33 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 #define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
   , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
 
+// ── DMLIST actions (DynSD loop with base-trait replay) ───────────────────────
+#undef  ___TRAIT_ACT_DMLIST_REQUIRE_0
+#define ___TRAIT_ACT_DMLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_REQUIRE_1
+#define ___TRAIT_ACT_DMLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_DEFAULT_0
+#define ___TRAIT_ACT_DMLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_DEFAULT_1
+#define ___TRAIT_ACT_DMLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+#undef  ___TRAIT_ACT_DMLISTV_REQUIRE_0
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_REQUIRE_1
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_DEFAULT_0
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_DEFAULT_1
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+
 
 // ── BIND actions (vtable initializer) ─────────────────────────────────────────
 #undef  ___TRAIT_ACT_BIND_REQUIRE_0
@@ -2379,27 +2566,42 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 #undef  ___TRAIT_SD_EMIT_I
 #define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
   typedef For glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);   \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
   glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
         ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name __VA_OPT__(,) __VA_ARGS__)
 
-#undef  ___TRAIT_DYNSD_EMIT_I
-#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+#undef  ___TRAIT_DYNSD_EMIT
+#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_D tuple
+#undef  ___TRAIT_DYNSD_EMIT_D
+#define ___TRAIT_DYNSD_EMIT_D(NameSignature, ConstFlag, Ret, T4, ...)                \
+  glue(___TRAIT_DYNSD_EMIT_,                                                         \
+       ___TRAIT_CHECK(glue(___TRAIT_DYNVT_, T4)))(                                   \
+      NameSignature, ConstFlag, Ret, T4 __VA_OPT__(,) __VA_ARGS__)
+
+// Own method tuple: (NameSignature, ConstFlag, Ret, Name, ExtraArgs...)
+#undef  ___TRAIT_DYNSD_EMIT_0
+#define ___TRAIT_DYNSD_EMIT_0(NameSignature, ConstFlag, Ret, Name, ...)              \
   typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
                                   ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
   glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
         ___TRAIT_NARG(__VA_ARGS__))(Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// Replayed base method tuple:
+// (NameSignature, ConstFlag, Ret, ___TRAIT_VT, Name, ExtraArgs...)
+#undef  ___TRAIT_DYNSD_EMIT_1
+#define ___TRAIT_DYNSD_EMIT_1(NameSignature, ConstFlag, Ret, VT, Name, ...)          \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
+                                  ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, NameSignature.Name __VA_OPT__(,) __VA_ARGS__)
 
 // ── def / constdef ────────────────────────────────────────────────────────────
 #undef  def
