@@ -296,6 +296,46 @@ Each `___trait_sd_fn_NNN` wrapper is the one generated during SD registration (f
 
 The compiler sees the entire `_Generic` at compile time, picks the matching branch, and discards all others. The result is a **direct function call** — no branches, no lookup, no overhead.
 
+### C99/GNU99 mode: `__builtin_choose_expr` fallback
+
+`_Generic` is a C11 keyword, so pre-C11 modes (e.g. `-std=gnu99`) have no direct equivalent. When `trait.h` detects `__STDC_VERSION__ < 201112L` (and a GCC/Clang compiler, which is already required for `__typeof__` and the other GNU extensions), it sets `___TRAIT_CE` and switches `call()`/`dyn()` to **nested `__builtin_choose_expr`** dispatch:
+
+```c
+call(sel, obj, ...)
+// expands to (C99/GNU99):
+(
+  __builtin_choose_expr(
+    __builtin_types_compatible_p(void (*)(typeof(sel), typeof(*obj)),
+                                 ___trait_sd_pair_001),
+    ___trait_sd_fn_001,
+    __builtin_choose_expr(
+      __builtin_types_compatible_p(void (*)(typeof(sel), typeof(*obj)),
+                                   ___trait_sd_pair_002),
+      ___trait_sd_fn_002,
+      ...
+      ERROR_trait_not_implemented_for_this_type   // no impl matched
+    )
+  )
+)(obj, ##__VA_ARGS__)
+```
+
+The slot recursion (R1–R6) is reused verbatim — only the per-slot output changes from a `pair: fn,` association to an `__builtin_choose_expr` opening. The nesting depth (and number of closing parens) equals the slot count:
+
+```
+C1 + 8*C2 + 64*C3 + 512*C4 + 4096*C5 + 32768*C6
+```
+
+Two behavioral differences from `_Generic` are worth noting:
+
+1. **Unchosen branches are still type-checked.** Every branch must be a valid expression. This is safe here because every branch is a wrapper function name; the only non-function branch is the fallback `ERROR_trait_not_implemented_for_this_type` object, which produces the same "called object ... is not a function or function pointer" diagnostic as the `_Generic` default arm.
+2. **The type comparison is symmetric and unqualified.** `__builtin_types_compatible_p` compares the exact pair types the same way `_Generic` does, so the dispatch semantics (including const-ness) are identical.
+
+The static-assert shim below also matters for C99: `<assert.h>` only provides `static_assert` from C11 onward, so `trait.h` defines a C99-safe fallback (a `typedef` of a `[-1]` array when the condition is false) behind the same `___TRAIT_CE` guard.
+
+#### Mode override: `TRAIT_MODE`
+
+Both `___TRAIT_CE` and `___TRAIT_C23` are normally derived from `__STDC_VERSION__`. Defining `TRAIT_MODE` (`-DTRAIT_MODE=c99 | c11 | c23`) forces either flag regardless of the standard level. It uses the same token-match trick as the other probes: `___TRAIT_MODE_GET(TRAIT_MODE)` pastes the value into `___TRAIT_MODE_MATCH_c99/c11/c23`, expanding to a number that the `#if` ladder compares against — so a forced `TRAIT_MODE=c99` sets `___TRAIT_CE=1` and `___TRAIT_C23=0` even on a C23 compiler. An unknown value expands to 0 and falls through to auto-detection. Note the two modes are mutually exclusive: `___TRAIT_CE` and `___TRAIT_C23` are never both set.
+
 ---
 
 ## Dynamic dispatch (DynSD)
@@ -435,5 +475,7 @@ The trade-off is that the counter is **monotonically increasing and never reset*
 | **Max 15 methods per trait** | SD loop iterates 0–14 via `___TRAIT_SD_PASS` (DynSD via `___TRAIT_DYNSD_PASS`); slot 15 is the sentinel. `_Generic` nesting becomes impractical beyond this. |
 | **Max 2,097,152 SD dispatch slots** | 7-digit octal counter (SD_C7–SD_C1). Each method of each impl consumes one slot. |
 | **GNU extensions** | `##__VA_ARGS__` and `__typeof__` (both C11, both with standard C23 equivalents).  In C23 mode, `##__VA_ARGS__` → `__VA_OPT__`, `__typeof__` → `typeof`, `__attribute__((unused))` → `[[maybe_unused]]` automatically. |
+| **No ISO C99 (no GNU extensions)** | The C99 mode (`-std=gnu99`) still requires GCC/Clang GNU extensions: `__builtin_choose_expr`, `__builtin_types_compatible_p`, `__typeof__`, `##__VA_ARGS__`. Plain `-std=c99 -Wpedantic` rejects these. |
+| **choose_expr nesting depth in C99 mode** | Each registered SD/TT slot nests one `__builtin_choose_expr`. At the example scale (~80 slots) this compiles fine on GCC/Clang; extreme slot counts may hit compiler nesting limits before the 8⁷ counter ceiling. |
 | **Compile-time linear scan** | `call()` checks all SD slots sequentially. Many registrations slow compilation (but runtime is a direct call). In the future, this will be optimized. |
 | **Single translation unit** | SD/DynSD slots are file-scoped. Cross-TU dispatch requires the vtable (dynamic) path. |

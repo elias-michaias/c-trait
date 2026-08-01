@@ -47,6 +47,27 @@ test_mode() {
 # -Wgnu-zero-variadic-macro-arguments is inactive)
 test_mode "gnu11 (C11 + GNU extensions)" -std=gnu11
 
+# gnu99: C99 + GNU extensions + -Wpedantic.
+# No _Generic in C99, so call()/dyn() dispatch via __builtin_choose_expr.
+# The __builtin_choose_expr/__builtin_types_compatible_p builtins are
+# GNU extensions, which are fine under gnu99 (not ISO C99).  clang's
+# -Wgnu-zero-variadic-macro-arguments fires on the `##__VA_ARGS__` idiom;
+# suppress it for clang only.
+gnu99_flags=(-std=gnu99 -Wpedantic)
+case "$(basename "$CC")" in
+  *clang*) gnu99_flags+=(-Wno-gnu-zero-variadic-macro-arguments) ;;
+esac
+test_mode "gnu99 (C99 + GNU extensions, choose_expr dispatch)" "${gnu99_flags[@]}"
+
+# forced c99: -DTRAIT_MODE=c99 forces the choose_expr dispatch path even
+# though this compiler/std supports _Generic, proving the C99 code path stays
+# healthy on newer compilers (and stays pedantic-clean).
+c99_forced_flags=(-std=gnu11 -DTRAIT_MODE=c99 -Wpedantic)
+case "$(basename "$CC")" in
+  *clang*) c99_forced_flags+=(-Wno-gnu-zero-variadic-macro-arguments) ;;
+esac
+test_mode "forced c99 (TRAIT_MODE=c99 on gnu11)" "${c99_forced_flags[@]}"
+
 # c23: ISO C23 + -Wpedantic.
 # Some compilers (GCC <15) use -std=c2x instead of -std=c23.
 c23_std=-std=c23
@@ -71,5 +92,5 @@ if [ "$overall_failed" -ne 0 ]; then
 fi
 
 echo "════════════════════════════════════════════════════════════════"
-echo "  OVERALL: ALL TESTS PASSED (gnu11 + c23)"
+  echo "  OVERALL: ALL TESTS PASSED (gnu11 + gnu99 + forced c99 + c23)"
 echo "════════════════════════════════════════════════════════════════"
