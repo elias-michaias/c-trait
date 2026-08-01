@@ -127,9 +127,9 @@ call(Animal.get_snacks, &da);
 | **C11** (`-std=gnu11` / `-std=c11`) | `_Generic` (standard C11) | `__typeof__`, `##__VA_ARGS__`, `__attribute__` | GCC/Clang only |
 | **C23** (`-std=c23` / `-std=c2x`) | `_Generic` (standard C23) | none — fully ISO | any conforming compiler |
 
-**C99.** `_Generic` didn't exist in C99, so dispatch uses the GNU builtins `__builtin_choose_expr` and `__builtin_types_compatible_p`, which together reproduce exactly what `_Generic` does — compare a controlling type against a list and pick the matching branch at compile time. This mode is exercised as `-std=gnu99` (GNU extensions are required, so plain `-std=c99` won't work).
+**C99.** `_Generic` didn't exist in C99, so dispatch uses the GNU builtins `__builtin_choose_expr` and `__builtin_types_compatible_p`, which together reproduce exactly what `_Generic` does — compare a controlling type against a list and pick the matching branch at compile time. 
 
-**C11.** C11 standardized that compile-time type dispatch as `_Generic`, so `call()`/`dyn()` switch to it — standard syntax instead of builtins, but with identical semantics and error messages. However, C11 still lacks `typeof` and `__VA_OPT__`, so `__typeof__` and the `, ##__VA_ARGS__` idiom (GNU extensions) remain in the trait/impl macros.
+**C11.** C11 introduced `_Generic`, so `call()`/`dyn()` switch to it — standard syntax instead of builtins, but with identical semantics and error messages. However, C11 still lacks `typeof` and `__VA_OPT__`, so `__typeof__` and the `, ##__VA_ARGS__` idiom (GNU extensions) remain in the trait/impl macros.
 
 **C23.** C23 standardizes the rest: `typeof` (replacing `__typeof__`), `__VA_OPT__` (replacing `, ##__VA_ARGS__`), and `[[maybe_unused]]` (replacing `__attribute__((__unused__))`). When `__STDC_VERSION__` indicates C23, `trait.h` switches to these standard forms, producing code a conforming ISO C23 compiler can build.
 
@@ -142,8 +142,6 @@ Compile with `-DTRAIT_MODE=c99`, `-DTRAIT_MODE=c11`, or `-DTRAIT_MODE=c23` to ov
 - `TRAIT_MODE=c99` — force the `choose_expr` dispatch, e.g. to exercise the C99 path on a compiler/standard that would normally pick `_Generic`.
 - `TRAIT_MODE=c11` — force the C11-style definitions (`_Generic` + `##__VA_ARGS__`), e.g. to get C11 behavior under a C23 compiler's GNU dialect.
 - `TRAIT_MODE=c23` — force the ISO C23 definitions, e.g. to use `typeof`/`__VA_OPT__` without passing `-std=c23`.
-
-An unrecognized value (or no `TRAIT_MODE`) falls back to auto-detection. Two caveats: modes other than `c23` rely on the GNU `##__VA_ARGS__` idiom, which ISO C23 rejects — so only force `c99`/`c11` under a GNU dialect (`-std=gnu99`/`-std=gnu11`); and forcing `c11`/`c23` requires a compiler that accepts `_Generic`. The CI suite runs the suite with `-DTRAIT_MODE=c99` under gnu11 to keep the C99 path regression-tested on newer compilers.
 
 ## Examples
 
