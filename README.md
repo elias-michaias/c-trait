@@ -120,7 +120,7 @@ call(Animal.get_snacks, &da);
 
 ## Compatibility
 
-`trait.h` supports three language levels. The story is one of standards catching up: each revision of C standardizes a piece of what c-trait originally needed GNU extensions for, until C23 is fully ISO-clean.
+`trait.h` supports three language levels. For C99 and C11, `trait.h` relies on GNU extensions that are supported by GCC and Clang. For C23 mode, `trait.h` is compatible with ISO C and should build on any conforming compiler:
 
 | Mode | Dispatch mechanism | Remaining GNU extensions | Compiler support |
 |------|--------------------|--------------------------|------------------|
