@@ -4,8 +4,8 @@
 
 // ---- trait: Reader -----------------------------------------------------------
 #define ReaderSignature(Self)               \
-  require(immutable(Self), int,  read)  \
-  default(immutable(Self), void, describe)
+  required(immutable(Self), int,  read)  \
+  defaults(immutable(Self), void, describe)
 #define Dynamic
 #define Trait Reader
 #include "../trait.h"
@@ -22,8 +22,8 @@
 // Purely declarative: LoggedReader requires Reader, adds its own methods.
 #define LoggedReaderSignature(Self) \
   extends(Reader, Self)         \
-  require(immutable(Self), int,  count) \
-  default(immutable(Self), void, summary)
+  required(immutable(Self), int,  count) \
+  defaults(immutable(Self), void, summary)
 #define Dynamic
 #define Trait LoggedReader
 #include "../trait.h"
@@ -64,12 +64,12 @@ int main(void) {
   printf("=== const extends: LoggedReader extends Reader ===\n");
 
   // Reader: own methods
-  DynReader r = to_trait(IntBox, Reader, &ib);
+  DynReader r = dyn(Reader, &ib);
   printf("read: %d\n", call(Reader.read, &r));
   call(Reader.describe, &r);
 
   // LoggedReader: own methods (uses Reader internally via SD dispatch)
-  DynLoggedReader lr = to_trait(IntBox, LoggedReader, &ib);
+  DynLoggedReader lr = dyn(LoggedReader, &ib);
   printf("count: %d\n", call(LoggedReader.count, &lr));
   call(LoggedReader.summary, &lr);
 

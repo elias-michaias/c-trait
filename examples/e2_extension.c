@@ -4,10 +4,10 @@
 
 // ---- trait: Animal -----------------------------------------------------------
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(immutable(Self), void, check)      \
-  default(Self, void, eat_snack)             \
-  default(Self, void, feed, int)
+  required(Self, int,  get_snacks)            \
+  defaults(immutable(Self), void, check)      \
+  defaults(Self, void, eat_snack)             \
+  defaults(Self, void, feed, int)
 #define Dynamic
 #define Trait Animal
 #include "../trait.h"
@@ -30,10 +30,14 @@
 
 
 // ---- trait: Pet (extends Animal) ---------------------------------------------
-// extends is purely declarative: Pet requires Animal, but has its own methods.
+// extends merges the base vtable into Pet's vtable by composition:
+//   typedef struct { Animal_vtable Animal; void (*play)(void *); } Pet_vtable;
+// Base methods are dispatched through the embedded field via call():
+//   DynPet dp = dyn(Pet, &dog);  call(Animal.get_snacks, &dp);
+//   dp.vt->Animal.get_snacks(dp.self);  // equivalent direct access
 #define PetSignature(Self) \
   extends(Animal, Self) \
-  require(Self, void, play)
+  required(Self, void, play)
 #define Dynamic
 #define Trait Pet
 #include "../trait.h"
@@ -53,7 +57,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 #include "../trait.h"
 
 // ---- impl: Pet for Dog -------------------------------------------------------
-// Only `play` — Pet's own method. No inherited methods.
+// Only `play` — Pet's own method. The Animal vtable is merged by composition.
 #define For Dog
 #define Impl Pet
   void def(play) {
@@ -67,7 +71,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 // ---- trait: Greetable (standalone) --------------------------------------------
 #define GreetableSignature(Self) \
-  require(immutable(Self), void, greet)
+  required(immutable(Self), void, greet)
 #define Dynamic
 #define Trait Greetable
 #include "../trait.h"
@@ -79,8 +83,8 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 // ---- trait: Describable (standalone) ------------------------------------------
 #define DescribableSignature(Self) \
-  require(immutable(Self), void, describe) \
-  default(immutable(Self), int, priority)
+  required(immutable(Self), void, describe) \
+  defaults(immutable(Self), int, priority)
 #define Dynamic
 #define Trait Describable
 #include "../trait.h"
@@ -95,21 +99,22 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 
 // ---- SuperPet: extends Pet ---------------------------------------------------
-// Purely declarative: SuperPet requires Pet, has its own method.
+// Transitive composition: SuperPet's vtable nests Pet's, which nests Animal's.
 #define SuperPetSignature(Self) \
   extends(Pet, Self) \
-  require(Self, void, super_play)
+  required(Self, void, super_play)
 #define Dynamic
 #define Trait SuperPet
 #include "../trait.h"
 
 
 // ---- Introducible: multi-base extends ----------------------------------------
-// Purely declarative: requires both Greetable and Describable.
+// Multiple inheritance by composition: nests Greetable_vtable and
+// Describable_vtable side by side.
 #define IntroducibleSignature(Self) \
   extends(Greetable, Self) \
   extends(Describable, Self) \
-  require(immutable(Self), void, introduce, const char *)
+  required(immutable(Self), void, introduce, const char *)
 #define Dynamic
 #define Trait Introducible
 #include "../trait.h"
@@ -188,31 +193,43 @@ int main(void) {
 
   // --- Basic Animal (standalone) ---
   printf("=== Animal (standalone) ===\n");
-  DynAnimal da = to_trait(Dog, Animal, &d);
+  DynAnimal da = dyn(Animal, &d);
   TEST(call(Animal.get_snacks, &da) == 2, "get_snacks == 2");
   call(Animal.feed, &da, 2);
   TEST(call(Animal.get_snacks, &da) == 4, "get_snacks == 4 after feed(2)");
   call(Animal.check, &da);        // default
   call(Animal.eat_snack, &da);    // default: get_snacks > 0, feed(-1)
 
-  // --- Pet (new method, no inheritance) ---
-  printf("\n=== Pet (own method only) ===\n");
-  DynPet dp = to_trait(Dog, Pet, &d);
+  // --- Pet (own method + merged base vtable) ---
+  printf("\n=== Pet (own method + merged base vtable) ===\n");
+  DynPet dp = dyn(Pet, &d);
   call(Pet.play, &dp);            // "Dog plays fetch!"
   TEST(1, "Pet.play works");
+  TEST(call(Animal.get_snacks, &dp) == 3, "call(Animal.get_snacks) via DynPet");
+  call(Animal.check, &dp);        // default via merged vtable
+  TEST(1, "default Animal.check via call()");
+  call(Animal.feed, &dp, 2);      // default with args via merged vtable
+  TEST(call(Animal.get_snacks, &dp) == 5, "call(Animal.feed) default with args via DynPet");
+  TEST(dp.vt->Animal.get_snacks(dp.self) == 5, "direct: merged vtable Animal.get_snacks");
 
   // --- Chain: Animal → Pet → SuperPet ---
   printf("\n=== Chain: Animal → Pet → SuperPet ===\n");
-  DynAnimal pa = to_trait(Puppy, Animal, &pw);
+  DynAnimal pa = dyn(Animal, &pw);
   TEST(call(Animal.get_snacks, &pa) == 3, "Puppy get_snacks == 3");
 
-  DynPet pp = to_trait(Puppy, Pet, &pw);
+  DynPet pp = dyn(Pet, &pw);
   call(Pet.play, &pp);            // "Puppy plays with ball!"
   TEST(1, "Pet.play works");
 
-  DynSuperPet sp = to_trait(Puppy, SuperPet, &pw);
+  DynSuperPet sp = dyn(SuperPet, &pw);
   call(SuperPet.super_play, &sp); // "Puppy does a backflip!"
   TEST(1, "SuperPet.super_play works");
+  call(Pet.play, &sp);            // Pet's method via the embedded Pet vtable
+  TEST(1, "call(Pet.play) via DynSuperPet");
+  TEST(sp.vt->Pet.Animal.get_snacks(sp.self) == 3, "transitive merge: Animal.get_snacks via SuperPet");
+  sp.vt->Pet.Animal.check(sp.self); // default via nested merge
+  sp.vt->Pet.play(sp.self);         // direct access (call() path covered above)
+  TEST(1, "transitive merge: nested base methods work");
 
   // Static dispatch via call() on concrete type (no vtable)
   int ss = call(Animal.get_snacks, &pw);
@@ -220,18 +237,23 @@ int main(void) {
 
   // --- Multi-base: Greetable + Describable → Introducible ---
   printf("\n=== Multi-base: Greetable + Describable → Introducible ===\n");
-  DynGreetable dg = to_trait(Person, Greetable, &p);
+  DynGreetable dg = dyn(Greetable, &p);
   call(Greetable.greet, &dg);     // "Hi, I'm Alice."
   TEST(1, "Greetable.greet works");
 
-  DynDescribable dd = to_trait(Person, Describable, &p);
+  DynDescribable dd = dyn(Describable, &p);
   call(Describable.describe, &dd); // "Alice, age 30."
   TEST(1, "Describable.describe works");
   TEST(call(Describable.priority, &dd) == 0, "Describable.priority == 0");
 
-  DynIntroducible di = to_trait(Person, Introducible, &p);
+  DynIntroducible di = dyn(Introducible, &p);
   call(Introducible.introduce, &di, "Bob"); // introduces + cross-trait calls
   TEST(1, "Introducible.introduce works");
+  call(Greetable.greet, &di);             // "Hi, I'm Alice." via embedded vtable
+  call(Describable.describe, &di);        // "Alice, age 30."
+  TEST(call(Describable.priority, &di) == 0, "multi-base merge: default Describable.priority via call()");
+  TEST(di.vt->Describable.priority(di.self) == 0, "multi-base merge: direct default access");
+  TEST(1, "multi-base merge: nested base methods work");
 
   // Static dispatch for cross-trait methods via call()
   call(Greetable.greet, &p);

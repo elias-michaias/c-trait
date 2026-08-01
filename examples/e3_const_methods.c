@@ -4,10 +4,10 @@
 
 // ---- trait: Reader -----------------------------------------------------------
 // `immutable(Self)` marks a method as const (takes `const void *`).
-// `require` = must be implemented; `default` = has a fallback.
+// `required` = must be implemented; `default` = has a fallback.
 #define ReaderSignature(Self)               \
-  require(immutable(Self), int,  read)  \
-  default(immutable(Self), void, describe)
+  required(immutable(Self), int,  read)  \
+  defaults(immutable(Self), void, describe)
 #define Dynamic
 #define Trait Reader
 #include "../trait.h"
@@ -34,7 +34,7 @@ typedef struct { int *ptr; } IntBox;
 // ---- main --------------------------------------------------------------------
 int main(void) {
   IntBox ib = { .ptr = &(int){42} };
-  DynReader r = to_trait(IntBox, Reader, &ib);
+  DynReader r = dyn(Reader, &ib);
 
   printf("=== const methods: Reader ===\n");
   printf("read: %d\n", call(Reader.read, &r));

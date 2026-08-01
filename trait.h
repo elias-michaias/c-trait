@@ -1,4 +1,4 @@
-// Auto-impl: second #include "trait.h" triggers impl()/cleanup
+// Auto-impl: second #include "trait.h" triggers ___TRAIT_IMPL()/cleanup
 #ifdef For
 #ifdef Impl
 #ifdef ___TRAIT_SD_ACTIVE
@@ -196,7 +196,7 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 #endif
 #endif
 #endif
-// Increment pass counter (max 8 methods per trait)
+// Increment pass counter (max 15 methods per trait)
 #if   ___TRAIT_SD_PASS == 0
 #undef  ___TRAIT_SD_PASS
 #define ___TRAIT_SD_PASS 1
@@ -219,7 +219,31 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 #undef  ___TRAIT_SD_PASS
 #define ___TRAIT_SD_PASS 7
 #elif ___TRAIT_SD_PASS == 7
-#error "c-trait: too many methods per trait for SD (max 8)"
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 8
+#elif ___TRAIT_SD_PASS == 8
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 9
+#elif ___TRAIT_SD_PASS == 9
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 10
+#elif ___TRAIT_SD_PASS == 10
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 11
+#elif ___TRAIT_SD_PASS == 11
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 12
+#elif ___TRAIT_SD_PASS == 12
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 13
+#elif ___TRAIT_SD_PASS == 13
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 14
+#elif ___TRAIT_SD_PASS == 14
+#undef  ___TRAIT_SD_PASS
+#define ___TRAIT_SD_PASS 15
+#elif ___TRAIT_SD_PASS == 15
+#error "c-trait: too many methods per trait for SD (max 15)"
 #endif
 // Self-include for next iteration
 #include "trait.h"
@@ -234,10 +258,14 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 // This branch emits SD entries for DynTraitname (the trait object type), so
 // that call(Animal.method, &dyn_obj) dispatches through the vtable.
 // For/Impl are still defined.  The SD counter is shared with the SD loop.
+//
+// The DMLIST action (instead of MLIST) replays the direct base's signature,
+// registering base methods for the Dyn pair so that
+// call(Base.method, &dyn_derived) dispatches through the embedded base field.
 // ═══════════════════════════════════════════════════════════════════════════════
-#if !___TRAIT_SD_IS_STOP(___TRAIT_DYNSD_PASS, Impl)
+#if !___TRAIT_SD_IS_STOP_DYN(___TRAIT_DYNSD_PASS, Impl)
 // Emit DynSD slot: DynImpl as concrete type, selector type, vtable wrapper
-___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
+___TRAIT_DYNSD_EMIT(___TRAIT_DYNSD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 // Increment 6-digit octal SD counter (shared with SD loop)
 #if   ___TRAIT_SD_C1 == 0
 #undef  ___TRAIT_SD_C1
@@ -415,7 +443,7 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 #endif
 #endif
 #endif
-// Increment DynSD pass counter (max 8 methods per trait)
+// Increment DynSD pass counter (max 15 methods per trait)
 #if   ___TRAIT_DYNSD_PASS == 0
 #undef  ___TRAIT_DYNSD_PASS
 #define ___TRAIT_DYNSD_PASS 1
@@ -438,7 +466,31 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_SD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 #undef  ___TRAIT_DYNSD_PASS
 #define ___TRAIT_DYNSD_PASS 7
 #elif ___TRAIT_DYNSD_PASS == 7
-#error "c-trait: too many methods per trait for DynSD (max 8)"
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 8
+#elif ___TRAIT_DYNSD_PASS == 8
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 9
+#elif ___TRAIT_DYNSD_PASS == 9
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 10
+#elif ___TRAIT_DYNSD_PASS == 10
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 11
+#elif ___TRAIT_DYNSD_PASS == 11
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 12
+#elif ___TRAIT_DYNSD_PASS == 12
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 13
+#elif ___TRAIT_DYNSD_PASS == 13
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 14
+#elif ___TRAIT_DYNSD_PASS == 14
+#undef  ___TRAIT_DYNSD_PASS
+#define ___TRAIT_DYNSD_PASS 15
+#elif ___TRAIT_DYNSD_PASS == 15
+#error "c-trait: too many methods per trait for DynSD (max 15)"
 #endif
 // Self-include for next iteration
 #include "trait.h"
@@ -494,15 +546,180 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 // defaults/impl/counter/enforce still run but SD/DynSD loops are skipped.
 // When ___TRAIT_IS_STATIC_CURRENT is set, defaults/impl/DynSD/enforce are skipped.
 // ═════════════════════════════════════════════════════════════════════════════
-#ifndef ___TRAIT_IS_STATIC_CURRENT
-defaults();
-impl()
+// ── DFL/SDFL storage-class: must be defined before ___TRAIT_DFL()/___TRAIT_SDFL()
+//    in the same include pass so the wrapper-linkage matches FWDDECL.
+#undef ___TRAIT_DFL_STORAGE
+#ifdef ___TRAIT_FWDIMPL_DONE
+#define ___TRAIT_DFL_STORAGE ___TRAIT_UNUSED
 #else
-static_defaults()
+#define ___TRAIT_DFL_STORAGE ___TRAIT_UNUSED static inline
 #endif
 
+// ── IMPLS check: define a per-(For,Impl) marker type so
+//    sizeof(glue3(___TRAIT_IMPLS_TYPE_, For, _And_, Impl)) is a valid
+//    integer constant expression only when the trait is implemented.
+typedef struct { int ___trait_impls_check_; } glue4(___TRAIT_IMPLS_TYPE_, For, _, Impl);
 
-// ── SD loop (skip if already emitted in forward-declare pass) ────────────
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+___TRAIT_DFL()
+___TRAIT_IMPL()
+// ── TT (dyn) registration: emit pair type + wrapper for this impl ──
+___TRAIT_TT_EMIT()
+// ── Increment 6-digit octal TT counter ──────────────────────────────
+#if   ___TRAIT_TT_C1 == 0
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 1
+#elif ___TRAIT_TT_C1 == 1
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 2
+#elif ___TRAIT_TT_C1 == 2
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 3
+#elif ___TRAIT_TT_C1 == 3
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 4
+#elif ___TRAIT_TT_C1 == 4
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 5
+#elif ___TRAIT_TT_C1 == 5
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 6
+#elif ___TRAIT_TT_C1 == 6
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 7
+#elif ___TRAIT_TT_C1 == 7
+#undef  ___TRAIT_TT_C1
+#define ___TRAIT_TT_C1 0
+#if   ___TRAIT_TT_C2 == 0
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 1
+#elif ___TRAIT_TT_C2 == 1
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 2
+#elif ___TRAIT_TT_C2 == 2
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 3
+#elif ___TRAIT_TT_C2 == 3
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 4
+#elif ___TRAIT_TT_C2 == 4
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 5
+#elif ___TRAIT_TT_C2 == 5
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 6
+#elif ___TRAIT_TT_C2 == 6
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 7
+#elif ___TRAIT_TT_C2 == 7
+#undef  ___TRAIT_TT_C2
+#define ___TRAIT_TT_C2 0
+#if   ___TRAIT_TT_C3 == 0
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 1
+#elif ___TRAIT_TT_C3 == 1
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 2
+#elif ___TRAIT_TT_C3 == 2
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 3
+#elif ___TRAIT_TT_C3 == 3
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 4
+#elif ___TRAIT_TT_C3 == 4
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 5
+#elif ___TRAIT_TT_C3 == 5
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 6
+#elif ___TRAIT_TT_C3 == 6
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 7
+#elif ___TRAIT_TT_C3 == 7
+#undef  ___TRAIT_TT_C3
+#define ___TRAIT_TT_C3 0
+#if   ___TRAIT_TT_C4 == 0
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 1
+#elif ___TRAIT_TT_C4 == 1
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 2
+#elif ___TRAIT_TT_C4 == 2
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 3
+#elif ___TRAIT_TT_C4 == 3
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 4
+#elif ___TRAIT_TT_C4 == 4
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 5
+#elif ___TRAIT_TT_C4 == 5
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 6
+#elif ___TRAIT_TT_C4 == 6
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 7
+#elif ___TRAIT_TT_C4 == 7
+#undef  ___TRAIT_TT_C4
+#define ___TRAIT_TT_C4 0
+#if   ___TRAIT_TT_C5 == 0
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 1
+#elif ___TRAIT_TT_C5 == 1
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 2
+#elif ___TRAIT_TT_C5 == 2
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 3
+#elif ___TRAIT_TT_C5 == 3
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 4
+#elif ___TRAIT_TT_C5 == 4
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 5
+#elif ___TRAIT_TT_C5 == 5
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 6
+#elif ___TRAIT_TT_C5 == 6
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 7
+#elif ___TRAIT_TT_C5 == 7
+#undef  ___TRAIT_TT_C5
+#define ___TRAIT_TT_C5 0
+#if   ___TRAIT_TT_C6 == 0
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 1
+#elif ___TRAIT_TT_C6 == 1
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 2
+#elif ___TRAIT_TT_C6 == 2
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 3
+#elif ___TRAIT_TT_C6 == 3
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 4
+#elif ___TRAIT_TT_C6 == 4
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 5
+#elif ___TRAIT_TT_C6 == 5
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 6
+#elif ___TRAIT_TT_C6 == 6
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 7
+#elif ___TRAIT_TT_C6 == 7
+#undef  ___TRAIT_TT_C6
+#define ___TRAIT_TT_C6 0
+#error "c-trait: too many TT slots (max 262144)"
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#else
+___TRAIT_SDFL()
+#endif
 #ifndef ___TRAIT_FWDIMPL_DONE
 
 // ── Start SD (selector-based dispatch) self-include loop ─────────────────
@@ -559,7 +776,7 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, ENFORCE))
 // The flag persists until the next trait definition clears it.
 #undef ___TRAIT_IS_STATIC_CURRENT
 #ifndef Dynamic
-#define ___TRAIT_IS_STATIC_CURRENT
+#define ___TRAIT_IS_STATIC_CURRENT 1
 #else
 #undef Dynamic
 #endif
@@ -572,9 +789,6 @@ typedef struct {
   void *self;
   const glue(Trait, _vtable) *vt;
 } glue(Dyn, Trait);
-#else
-// Static: minimal DynTrait (for default function signatures, no vtable)
-typedef struct { void *self; } glue(Dyn, Trait);
 #endif
 ___TRAIT_TRAIT_PASTE(Trait)((Trait, STAG))
 typedef struct {
@@ -681,7 +895,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // Compiler portability
 // -----------------------------------------------------------------------------
 // C23 mode detection
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L
 #define ___TRAIT_C23 1
 #else
 #define ___TRAIT_C23 0
@@ -717,6 +931,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // Count arguments in a variadic list up to 4.
 #define ___TRAIT_NARG_IMPL(_0, _1, _2, _3, _4, N, ...) N
 #define ___TRAIT_NARG(...) ___TRAIT_NARG_IMPL(dummy, ##__VA_ARGS__, 4, 3, 2, 1, 0)
+
+// Suppress -Wpedantic 'return with expression' in void functions (GCC/clang)
+// (C23 DR#113 permits this; compilers haven't fully adjusted yet).
+#if defined(__GNUC__)
+#define ___TRAIT_RETURN(...) \
+  _Pragma("GCC diagnostic push") \
+  _Pragma("GCC diagnostic ignored \"-Wpedantic\"") \
+  return (__VA_ARGS__); \
+  _Pragma("GCC diagnostic pop")
+#else
+#define ___TRAIT_RETURN(...) return (__VA_ARGS__)
+#endif
 
 // -----------------------------------------------------------------------------
 // Self-spec tuples
@@ -758,6 +984,9 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_IS_VOID_token_void ___TRAIT_PROBE()
 #define ___TRAIT_IS_VOID(Ret) ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_VOID_token_, Ret))
 
+#define ___TRAIT_IS_STATIC_TOKEN_1 ___TRAIT_PROBE()
+#define ___TRAIT_IS_STATIC() ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_STATIC_TOKEN_, ___TRAIT_IS_STATIC_CURRENT))
+
 // -----------------------------------------------------------------------------
 // Vtable / trait object helper names
 // -----------------------------------------------------------------------------
@@ -781,9 +1010,9 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
         ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name,  \
                                        ##__VA_ARGS__)
 
-#define default(SelfSpec, Ret, Name, ...)                                      \
+#define defaults(SelfSpec, Ret, Name, ...)                                      \
   trait_default(SelfSpec, Ret, Name, ##__VA_ARGS__)
-#define require(SelfSpec, Ret, Name, ...)                                      \
+#define required(SelfSpec, Ret, Name, ...)                                      \
   trait_require(SelfSpec, Ret, Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
@@ -838,8 +1067,54 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
   , (Type, 1, Ret, Name, ##__VA_ARGS__)
 
-// extends is purely declarative — no method tuples propagated to MLIST.
+// extends is purely declarative for MLIST — base methods must NOT be
+// replayed through the static SD loop.  The base trait registers its own SD
+// entries when the implementing type implements it (enforced via ENFORCE);
+// replaying them here would duplicate (sel, For) pair types in the _Generic
+// dispatch.
 #define ___TRAIT_EXTENDS_MLIST(Base, SelfSpec) /* no-op */
+
+// -----------------------------------------------------------------------------
+// Actions: DMLIST (DynSD method list with base-trait replay)
+//
+// The DynSD loop uses DMLIST instead of MLIST.  extends replays the direct
+// base's signature so base methods are registered as (sel, DynImpl) pairs,
+// enabling call(Base.method, &dyn_derived).  This is safe for Dyn pairs
+// because DynImpl != DynBase, so no pair type collides with the base's own
+// registrations.
+//
+// Replayed methods use the DMLISTV action, which marks each tuple with the
+// ___TRAIT_VT token at position 4 so the DynSD emitter can route the wrapper
+// to the embedded base field (self->vt->Base.method) instead of a top-level
+// vtable field.
+//
+// Blue-paint note: a replayed base's OWN extends is deferred and absorbed by
+// the MSEL dummy argument, so replay is intentionally limited to one hop.
+// Transitive base methods (call(GrandBase.method, &dyn_derived)) therefore
+// are not registered — a hard preprocessor limit, not a design choice.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_DMLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name, ##__VA_ARGS__)
+
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name, ##__VA_ARGS__)
+
+#define ___TRAIT_EXTENDS_DMLIST(Base, SelfSpec)                                   \
+  ___TRAIT_PASTE(Base, Signature)((Base, DMLISTV))
+#define ___TRAIT_EXTENDS_DMLISTV(Base, SelfSpec)                                  \
+  ___TRAIT_PASTE(Base, Signature)((Base, DMLISTV))
 
 // -----------------------------------------------------------------------------
 // Actions: BIND (vtable initializer)
@@ -862,139 +1137,139 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 
 #define ___TRAIT_DFL_0_00(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self) {   \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
-    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj));                            \
   }
 
 #define ___TRAIT_DFL_0_10(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self) {              \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self) {              \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
-    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj));                            \
   }
 
 #define ___TRAIT_DFL_1_00(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self) {  \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_DFL_1_10(Type, Ret, Name)                                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self) {             \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self) {             \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj);                                   \
   }
 
 #define ___TRAIT_DFL_0_01(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                T1 a1) {        \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1));                        \
   }
 
 #define ___TRAIT_DFL_0_11(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self, T1 a1) {       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self, T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1));                        \
   }
 
 #define ___TRAIT_DFL_1_01(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self,    \
                                                                 T1 a1) {       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_DFL_1_11(Type, Ret, Name, T1)                                   \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self, T1 a1) {      \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self, T1 a1) {      \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
   }
 
 #define ___TRAIT_DFL_0_02(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                T1 a1, T2 a2) { \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2));                    \
   }
 
 #define ___TRAIT_DFL_0_12(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2));                    \
   }
 
 #define ___TRAIT_DFL_1_02(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(void *self, T1 a1, T2 a2) {     \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(For *self, T1 a1, T2 a2) {     \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_DFL_1_12(Type, Ret, Name, T1, T2)                               \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2) {                                        \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2) {                                        \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
   }
 
 #define ___TRAIT_DFL_0_03(Type, Ret, Name, T1, T2, T3)                            \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3));                \
   }
 
 #define ___TRAIT_DFL_0_13(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3));                \
   }
 
 #define ___TRAIT_DFL_1_03(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_DFL_1_13(Type, Ret, Name, T1, T2, T3)                           \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_DFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4));            \
   }
 
 #define ___TRAIT_DFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4));            \
   }
 
 #define ___TRAIT_DFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
     glue(Dyn, Type) _obj = {.self = self, .vt = &___TRAIT_VTNAME(For, Type)};               \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
 
 #define ___TRAIT_DFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                       \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
     glue(Dyn, Type) _obj = {.self = (void *)self, .vt = &___TRAIT_VTNAME(For, Type)};       \
     glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
   }
@@ -1012,149 +1287,129 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
     Type, Ret, Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
-// Actions: SDFL (static default wrappers — no vtable, no DynTrait construction)
+// Actions: SDFL (static default wrappers — no vtable, no DynTrait wrapper)
 //
-// Like DFL but the Dyn<Trait> wrapper only stores {.self = ptr} with no .vt.
-// Used for static traits where defaults require no dynamic dispatch.
-// The Default_Trait_method takes Dyn<Trait>* (a minimal {void *self} struct).
-// Limitation: default bodies cannot call other trait methods on self.
+// For static traits, the SDFL wrapper is a thin forwarding function that
+// passes the concrete pointer (For *) directly as (void *) to the default
+// body via implicit conversion.  No DynTrait construction needed.
+// The default body receives void *self (or const void *self for immutable).
 // -----------------------------------------------------------------------------
 #define ___TRAIT_SDFL_0_00(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self) {   \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self) {   \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self));                            \
   }
 
 #define ___TRAIT_SDFL_0_10(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self) {              \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    return glue5(Default, _, Type, _, Name)(&_obj);                            \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self) {              \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self));                            \
   }
 
 #define ___TRAIT_SDFL_1_00(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self) {  \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self) {  \
+    glue5(Default, _, Type, _, Name)(self);                                   \
   }
 
 #define ___TRAIT_SDFL_1_10(Type, Ret, Name)                                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self) {             \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    glue5(Default, _, Type, _, Name)(&_obj);                                   \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self) {             \
+    glue5(Default, _, Type, _, Name)(self);                                   \
   }
 
 #define ___TRAIT_SDFL_0_01(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                 T1 a1) {        \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1));                        \
   }
 
 #define ___TRAIT_SDFL_0_11(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _,                       \
-                                        Name)(const void *self, T1 a1) {       \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1);                        \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _,                       \
+                                        Name)(const For *self, T1 a1) {       \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1));                        \
   }
 
 #define ___TRAIT_SDFL_1_01(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(void *self,    \
-                                                                 T1 a1) {       \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(For *self,    \
+                                                                  T1 a1) {       \
+    glue5(Default, _, Type, _, Name)(self, a1);                               \
   }
 
 #define ___TRAIT_SDFL_1_11(Type, Ret, Name, T1)                                  \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(const void *self, T1 a1) {      \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    glue5(Default, _, Type, _, Name)(&_obj, a1);                               \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(const For *self, T1 a1) {      \
+    glue5(Default, _, Type, _, Name)(self, a1);                               \
   }
 
 #define ___TRAIT_SDFL_0_02(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(void *self,     \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(For *self,     \
                                                                 T1 a1, T2 a2) { \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2));                    \
   }
 
 #define ___TRAIT_SDFL_0_12(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2) {                                        \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                    \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2) {                                        \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2));                    \
   }
 
 #define ___TRAIT_SDFL_1_02(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _,                      \
-                                         Name)(void *self, T1 a1, T2 a2) {     \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _,                      \
+                                         Name)(For *self, T1 a1, T2 a2) {     \
+    glue5(Default, _, Type, _, Name)(self, a1, a2);                           \
   }
 
 #define ___TRAIT_SDFL_1_12(Type, Ret, Name, T1, T2)                              \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2) {                                        \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2);                           \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2) {                                        \
+    glue5(Default, _, Type, _, Name)(self, a1, a2);                           \
   }
 
 #define ___TRAIT_SDFL_0_03(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2, a3));                \
   }
 
 #define ___TRAIT_SDFL_0_13(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2, a3));                \
   }
 
 #define ___TRAIT_SDFL_1_03(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3) {                                       \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3) {                                       \
+    glue5(Default, _, Type, _, Name)(self, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_SDFL_1_13(Type, Ret, Name, T1, T2, T3)                          \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3) {                                 \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3);                       \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3) {                                 \
+    glue5(Default, _, Type, _, Name)(self, a1, a2, a3);                       \
   }
 
 #define ___TRAIT_SDFL_0_04(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2, a3, a4));            \
   }
 
 #define ___TRAIT_SDFL_0_14(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline Ret glue5(For, _, Type, _, Name)(                \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    return glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);            \
+  ___TRAIT_DFL_STORAGE Ret glue5(For, _, Type, _, Name)(                \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    ___TRAIT_RETURN(glue5(Default, _, Type, _, Name)(self, a1, a2, a3, a4));            \
   }
 
 #define ___TRAIT_SDFL_1_04(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
-    glue(Dyn, Type) _obj = {.self = self};                                      \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                                \
+    glue5(Default, _, Type, _, Name)(self, a1, a2, a3, a4);                   \
   }
 
 #define ___TRAIT_SDFL_1_14(Type, Ret, Name, T1, T2, T3, T4)                      \
-  ___TRAIT_UNUSED static inline void glue5(For, _, Type, _, Name)(               \
-      const void *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
-    glue(Dyn, Type) _obj = {.self = (void *)self};                              \
-    glue5(Default, _, Type, _, Name)(&_obj, a1, a2, a3, a4);                   \
+  ___TRAIT_DFL_STORAGE void glue5(For, _, Type, _, Name)(               \
+      const For *self, T1 a1, T2 a2, T3 a3, T4 a4) {                          \
+    glue5(Default, _, Type, _, Name)(self, a1, a2, a3, a4);                   \
   }
 
 #define ___TRAIT_ACT_SDFL_REQUIRE_0(Type, Ret, Name, ...) /* required: no wrap */
@@ -1193,26 +1448,41 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
       NameSignature = {0}
 
 // -----------------------------------------------------------------------------
-// `extends(Base, Self)` declares a supertrait constraint: the derived trait
-// requires the base trait to also be implemented.  This is purely
-// declarative — no methods are copied into the derived namespace and no
-// vtables are merged.  Each trait is implemented independently (Rust model).
+// `extends(Base, Self)` merges the base trait's vtable into the derived
+// trait's vtable by composition.  FN embeds a `Base##_vtable Base;` field and
+// BIND copies the base trait's vtable object into it.  Because the base
+// vtable is embedded by value, inheritance is transitive: a derived trait's
+// vtable nests its base's vtable, which itself nests its own bases.
+// Base methods are reached through the embedded field:
+//   DynPet dp = dyn(Pet, &dog);
+//   dp.vt->Animal.get_snacks(dp.self);
 //
-// Enforcement: the SD loop's MLIST action replays the base trait's methods,
-// so the SD entry for inherited methods calls For_BaseTrait_Method.  If the
-// implementing type hasn't implemented the base trait, that symbol is
-// undefined → linker error.
+// The base vtable object (For##_Base##_vtable) must be defined before the
+// derived trait's impl in the same translation unit — extends already
+// requires the base trait to be implemented for the type.
+//
+// The remaining action passes are no-ops:
+//   - FWD/STAG/SSEL: no per-method FWD actions; base selector types exist.
+//   - DFL/SDFL: replaying them would redefine the base trait's default
+//     wrappers (they are already generated by the base trait's own impl).
+//   - MLIST: static SD replay would duplicate (sel, For) pair types in the
+//     _Generic dispatch, so it stays a no-op.  The DynSD loop uses DMLIST,
+//     which replays the direct base's signature for Dyn pairs only.
+//   - FWDDECL: no longer needed; BIND references the base vtable object
+//     rather than individual base impl functions.
 // -----------------------------------------------------------------------------
 #define extends(Base, SelfSpec)                                                \
   glue(___TRAIT_EXTENDS_, ___TRAIT_GET_ACTION(SelfSpec))(Base, SelfSpec)
-#define ___TRAIT_EXTENDS_FN(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_BIND(Base, SelfSpec) /* no-op */
-#define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op */
+#define ___TRAIT_EXTENDS_FN(Base, SelfSpec)                                        \
+  Base##_vtable Base;
+#define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op: no per-method FWD actions */
+#define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op: selector tags already exist */
+#define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op: selector fields already exist */
+#define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op: base DFL wrappers already exist */
+#define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op: base SDFL wrappers already exist */
+#define ___TRAIT_EXTENDS_BIND(Base, SelfSpec)                                      \
+  .Base = ___TRAIT_VTNAME(For, Base),
+#define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op: BIND uses the base vtable */
 #define ___TRAIT_EXTENDS_ENFORCE(Base, SelfSpec)                                 \
   ___TRAIT_UNUSED static void *const                                              \
       glue5(___trait_enforce, _, For, _, Base) =                                  \
@@ -1222,18 +1492,26 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // `def(...)` defines the implementation function body.
 // `redef(...)` defines an overriding implementation for a default method.
 // The self type is chosen automatically from trait metadata.
-// If `For == Default`, the body is for the trait's default implementation and
-// uses `Impl` as the receiver type; otherwise it uses `For`.
+// If `For == Default`, the body is for the trait's default implementation;
+// for static traits, self is `void *`; for dynamic traits, self is `DynImpl *`.
+// For concrete types (`For != Default`), self is always `For *`.
 // -----------------------------------------------------------------------------
+#define ___TRAIT_IMPL_SELF_VAL_00 0
+#define ___TRAIT_IMPL_SELF_VAL_01 0
+#define ___TRAIT_IMPL_SELF_VAL_10 1
+#define ___TRAIT_IMPL_SELF_VAL_11 2
 #define ___TRAIT_IMPL_SELF_BASE_0 For
 #define ___TRAIT_IMPL_SELF_BASE_1 ___TRAIT_DYN(Impl)
+#define ___TRAIT_IMPL_SELF_BASE_2 void
 #define ___TRAIT_IMPL_SELF_BASE_SEL(n) glue(___TRAIT_IMPL_SELF_BASE_, n)
-#define ___TRAIT_IMPL_SELF_BASE ___TRAIT_IMPL_SELF_BASE_SEL(___TRAIT_IS_DEFAULT(For))
+#define ___TRAIT_IMPL_SELF_BASE                                       \
+  ___TRAIT_IMPL_SELF_BASE_SEL(glue(___TRAIT_IMPL_SELF_VAL_,           \
+    glue(___TRAIT_IS_DEFAULT(For), ___TRAIT_IS_STATIC())))
 
 // -----------------------------------------------------------------------------
 // `def(...)` defines the implementation function body (mutable self).
 // `constdef(...)` defines the implementation function body (const self).
-// For `For == Default`, self is `DynImpl *` / `const DynImpl *`.
+// For `For == Default`, self is `void *` (static) or `DynImpl *` (dynamic).
 // For concrete types, self is `For *` / `const For *`.
 // The user chooses def/constdef based on the method's constness in the
 // trait declaration (`immutable(Self)` → constdef).
@@ -1242,7 +1520,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // methods) and also define:
 //   #define Override_<Type>_<Trait>_<Method> 1
 // before the #include "trait.h" that processes the impl block, so that
-// defaults() knows to skip the DFL wrapper for that method.
+// ___TRAIT_DFL() knows to skip the DFL wrapper for that method.
 // -----------------------------------------------------------------------------
 #define def(Name, ...)                                                         \
   glue5(For, _, Impl, _,                                                       \
@@ -1253,18 +1531,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
         Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
-// `defaults()` emits wrappers for default methods when implementing a trait.
-// `static_defaults()` emits SDFL wrappers for static traits (no vtable).
-// `impl()` emits the vtable object plus trait conversion helpers.
+// `___TRAIT_DFL()` emits wrappers for default methods when implementing a trait.
+// `___TRAIT_SDFL()` emits SDFL wrappers for static traits (no vtable).
+// `___TRAIT_IMPL()` emits the vtable object plus trait conversion helpers.
 // -----------------------------------------------------------------------------
-#define defaults()                                                             \
+#define ___TRAIT_DFL()                                                             \
   ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl) ___TRAIT_VTNAME(For, Impl);   \
   ___TRAIT_PASTE(Impl, Signature)((Impl, DFL))
 
-#define static_defaults()                                                      \
+#define ___TRAIT_SDFL()                                                      \
   ___TRAIT_PASTE(Impl, Signature)((Impl, SDFL))
 
-#define impl()                                                                 \
+#define ___TRAIT_IMPL()                                                                 \
   ___TRAIT_UNUSED static const ___TRAIT_VTTYPE(Impl)                          \
       ___TRAIT_VTNAME(For, Impl) = {___TRAIT_PASTE(Impl, Signature)((Impl, BIND))};    \
   ___TRAIT_UNUSED static inline glue(Dyn, Impl)                                 \
@@ -1276,15 +1554,44 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
     return (For *)obj.self;                                                    \
   }
 
-#define impl_vt() impl()
+#define ___TRAIT_IMPL_VT() ___TRAIT_IMPL()
+
+// -----------------------------------------------------------------------------
+// TT (dyn) registration: emits a _Generic-association pair type + wrapper
+// for the current For/Impl so that dyn(Trait, ptr) can dispatch via _Generic
+// without needing an explicit Type argument.
+// Uses the global 6-digit octal TT counter (___TRAIT_TT_C1..C6).
+// -----------------------------------------------------------------------------
+#define ___TRAIT_TT_EMIT()                                                         \
+  typedef void (*glue8(___trait_tt_pair_, ___TRAIT_TT_C6, ___TRAIT_TT_C5,         \
+                      ___TRAIT_TT_C4, ___TRAIT_TT_C3, ___TRAIT_TT_C2,             \
+                      ___TRAIT_TT_C1, _p))(glue(Impl, ___sel_t), For);            \
+  ___TRAIT_UNUSED static inline glue(Dyn, Impl)                                    \
+      glue7(___trait_tt_fn_, ___TRAIT_TT_C6, ___TRAIT_TT_C5, ___TRAIT_TT_C4,      \
+            ___TRAIT_TT_C3, ___TRAIT_TT_C2, ___TRAIT_TT_C1)(For * ptr) {          \
+    return glue3(For, _as_, Impl)(ptr);                                           \
+  }
 
 // -----------------------------------------------------------------------------
 // Call-site ergonomics
-//   Indirection through ___TRAIT_PASTE ensures Type is macro-expanded before ##
-//   (e.g. to_trait(vec(int), Drawable, &v) works when vec(T) is a type macro).
+//   dyn(Trait, ptr) dispatches via _Generic on (Trait___sel_t, typeof(*ptr)).
+//   No Type parameter needed — the concrete type is inferred from the pointer.
+//
+//   Each impl(Type, Trait) registers a pair type void (*)(Trait___sel_t, Type)
+//   via ___TRAIT_TT_EMIT.  The _Generic matches on this pair and invokes the
+//   registered wrapper, which calls Type##_as_##Trait(ptr).
+//
+//   Error on default: "called object type 'struct ERROR_type_not_impl_for_this_trait'
+//                      is not a function or function pointer"
 // -----------------------------------------------------------------------------
-#define ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr) Type##_as_##Trait(ptr)
-#define to_trait(Type, Trait, ptr) ___TRAIT_TO_TRAIT_IMPL(Type, Trait, ptr)
+struct ERROR_type_not_impl_for_this_trait;
+extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_trait;
+#define dyn(Trait, ptr)                                                            \
+  _Generic(                                                                        \
+      (void (*)(glue(Trait, ___sel_t), ___TRAIT_TYPEOF(*(ptr))))0,                \
+      ___TRAIT_TT_SLOTS                                                            \
+      default: ERROR_type_not_impl_for_this_trait                                  \
+  )(ptr)
 
 #define ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj) Type##_from_##Trait(obj)
 #define from_trait(Type, Trait, obj) ___TRAIT_FROM_TRAIT_IMPL(Type, Trait, obj)
@@ -1341,7 +1648,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 //
 // ___TRAIT_MSEL_K(dummy, a0, a1, ..., aK, ...) → aK
 // The `dummy` argument absorbs the leading comma from MLIST expansion.
-// Supports up to 8 methods per trait.
+// Supports up to 16 method slots (MSEL_0..MSEL_15).
 // -----------------------------------------------------------------------------
 #define ___TRAIT_MSEL_0(d, a, ...) a
 #define ___TRAIT_MSEL_1(d, a, b, ...) b
@@ -1351,6 +1658,14 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_MSEL_5(d, a, b, c, e, f, g, ...) g
 #define ___TRAIT_MSEL_6(d, a, b, c, e, f, g, h, ...) h
 #define ___TRAIT_MSEL_7(d, a, b, c, e, f, g, h, i, ...) i
+#define ___TRAIT_MSEL_8(d, a, b, c, e, f, g, h, i, j, ...) j
+#define ___TRAIT_MSEL_9(d, a, b, c, e, f, g, h, i, j, k, ...) k
+#define ___TRAIT_MSEL_10(d, a, b, c, e, f, g, h, i, j, k, l, ...) l
+#define ___TRAIT_MSEL_11(d, a, b, c, e, f, g, h, i, j, k, l, m, ...) m
+#define ___TRAIT_MSEL_12(d, a, b, c, e, f, g, h, i, j, k, l, m, n, ...) n
+#define ___TRAIT_MSEL_13(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, ...) o
+#define ___TRAIT_MSEL_14(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, p, ...) p
+#define ___TRAIT_MSEL_15(d, a, b, c, e, f, g, h, i, j, k, l, m, n, o, p, q, ...) q
 
 // Relay macro: forces expansion of args before argument splitting.
 // This is critical because MLIST expansion produces commas that must be
@@ -1363,6 +1678,8 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_SD_SELECT(K, TraitImpl)                                         \
   ___TRAIT_SD_APPLY(glue(___TRAIT_MSEL_, K),                                       \
       0 ___TRAIT_PASTE(TraitImpl, Signature)((TraitImpl, MLIST))                   \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
       , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
       , (_STOP) , (_STOP) , (_STOP) , (_STOP))
 
@@ -1379,6 +1696,25 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
       ___TRAIT_SD_TUPLE_FIRST(___TRAIT_SD_SELECT(K, TraitImpl))))
 
 // -----------------------------------------------------------------------------
+// DynSD method selection: DMLIST variant.
+// The DynSD loop selects method tuples the same way as the SD loop, but the
+// signature is expanded under the DMLIST action so extends replays the direct
+// base's signature (base methods are registered for the Dyn pair).  Replayed
+// tuples carry the ___TRAIT_VT marker at position 4.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_DYNSD_SELECT(K, TraitImpl)                                       \
+  ___TRAIT_SD_APPLY(glue(___TRAIT_MSEL_, K),                                       \
+      0 ___TRAIT_PASTE(TraitImpl, Signature)((TraitImpl, DMLIST))                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP)                                  \
+      , (_STOP) , (_STOP) , (_STOP) , (_STOP))
+
+#define ___TRAIT_SD_IS_STOP_DYN(K, TraitImpl)                                     \
+  ___TRAIT_CHECK(glue(___TRAIT_SD_STOP_CHECK_,                                     \
+      ___TRAIT_SD_TUPLE_FIRST(___TRAIT_DYNSD_SELECT(K, TraitImpl))))
+
+// -----------------------------------------------------------------------------
 // SD registration emission
 //
 // ___TRAIT_SD_EMIT(tuple) unpacks a method tuple and emits:
@@ -1392,12 +1728,9 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_SD_EMIT(tuple) ___TRAIT_SD_EMIT_I tuple
 #define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
   typedef For glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);   \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
   glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
         ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name, ##__VA_ARGS__)
 
@@ -1417,48 +1750,48 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // ── non-void return ─────────────────────────────────────────────────────────
 #define ___TRAIT_SDREG_0_00(NameSignature, Ret, Name)                                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self) {                \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                           \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self));                 \
   }
 #define ___TRAIT_SDREG_0_10(NameSignature, Ret, Name)                                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self) {           \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self);                           \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self));                 \
   }
 #define ___TRAIT_SDREG_0_01(NameSignature, Ret, Name, T1)                            \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1) {         \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                       \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1));             \
   }
 #define ___TRAIT_SDREG_0_11(NameSignature, Ret, Name, T1)                            \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1) {    \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1);                       \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1));             \
   }
 #define ___TRAIT_SDREG_0_02(NameSignature, Ret, Name, T1, T2)                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2) {  \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                   \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2));         \
   }
 #define ___TRAIT_SDREG_0_12(NameSignature, Ret, Name, T1, T2)                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
                                                     T2 a2) {                    \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2);                   \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2));         \
   }
 #define ___TRAIT_SDREG_0_03(NameSignature, Ret, Name, T1, T2, T3)                    \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,    \
                                                     T3 a3) {                    \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);               \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3));     \
   }
 #define ___TRAIT_SDREG_0_13(NameSignature, Ret, Name, T1, T2, T3)                    \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
                                                     T2 a2, T3 a3) {            \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3);               \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3));     \
   }
 #define ___TRAIT_SDREG_0_04(NameSignature, Ret, Name, T1, T2, T3, T4)                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(For * self, T1 a1, T2 a2,    \
                                                     T3 a3, T4 a4) {            \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);           \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4)); \
   }
 #define ___TRAIT_SDREG_0_14(NameSignature, Ret, Name, T1, T2, T3, T4)                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(const For *self, T1 a1,      \
                                                     T2 a2, T3 a3, T4 a4) {     \
-    return ___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4);           \
+    ___TRAIT_RETURN(___TRAIT_SDREG_IMPL(NameSignature, Name)(self, a1, a2, a3, a4)); \
   }
 
 // ── void return ─────────────────────────────────────────────────────────────
@@ -1523,18 +1856,39 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // Like ___TRAIT_SD_EMIT but uses DynImpl as the concrete type and generates
 // vtable-dispatching wrapper functions instead of direct-call wrappers.
 // -----------------------------------------------------------------------------
-#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_I tuple
-#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_D tuple
+// Dispatch: replayed base tuples carry ___TRAIT_VT at position 4; own tuples
+// carry the method name.  glue(___TRAIT_DYNVT_, ___TRAIT_VT) yields
+// ___TRAIT_DYNVT____TRAIT_VT (note: four underscores at the junction — the
+// prefix ends in one, the marker begins with three), the only defined
+// ___TRAIT_DYNVT_* token, so ___TRAIT_CHECK selects 1 vs 0.
+#define ___TRAIT_DYNSD_EMIT_D(NameSignature, ConstFlag, Ret, T4, ...)                \
+  glue(___TRAIT_DYNSD_EMIT_,                                                         \
+       ___TRAIT_CHECK(glue(___TRAIT_DYNVT_, T4)))(                                   \
+      NameSignature, ConstFlag, Ret, T4, ##__VA_ARGS__)
+#define ___TRAIT_DYNVT____TRAIT_VT ___TRAIT_PROBE()
+
+// Own method tuple: (NameSignature, ConstFlag, Ret, Name, ExtraArgs...)
+#define ___TRAIT_DYNSD_EMIT_0(NameSignature, ConstFlag, Ret, Name, ...)              \
   typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
                                   ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
   glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
         ___TRAIT_NARG(__VA_ARGS__))(Ret, Name, ##__VA_ARGS__)
+
+// Replayed base method tuple:
+// (NameSignature, ConstFlag, Ret, ___TRAIT_VT, Name, ExtraArgs...)
+// The wrapper routes through the embedded base vtable field: NameSignature.Name.
+#define ___TRAIT_DYNSD_EMIT_1(NameSignature, ConstFlag, Ret, VT, Name, ...)          \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
+                                  ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, NameSignature.Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 // DYNSDREG: DynTraitname wrapper function emitters
@@ -1548,52 +1902,52 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_DYNSDREG_0_00(Ret, Name)                                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       glue(Dyn, Impl) *self) {                                                 \
-    return self->vt->Name(self->self);                                         \
+    ___TRAIT_RETURN(self->vt->Name(self->self));                                     \
   }
 #define ___TRAIT_DYNSDREG_0_10(Ret, Name)                                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       const glue(Dyn, Impl) *self) {                                           \
-    return self->vt->Name(self->self);                                         \
+    ___TRAIT_RETURN(self->vt->Name(self->self));                                     \
   }
 #define ___TRAIT_DYNSDREG_0_01(Ret, Name, T1)                                    \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       glue(Dyn, Impl) *self, T1 a1) {                                          \
-    return self->vt->Name(self->self, a1);                                     \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1));                                 \
   }
 #define ___TRAIT_DYNSDREG_0_11(Ret, Name, T1)                                    \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       const glue(Dyn, Impl) *self, T1 a1) {                                    \
-    return self->vt->Name(self->self, a1);                                     \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1));                                 \
   }
 #define ___TRAIT_DYNSDREG_0_02(Ret, Name, T1, T2)                                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       glue(Dyn, Impl) *self, T1 a1, T2 a2) {                                   \
-    return self->vt->Name(self->self, a1, a2);                                 \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2));                             \
   }
 #define ___TRAIT_DYNSDREG_0_12(Ret, Name, T1, T2)                                \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       const glue(Dyn, Impl) *self, T1 a1, T2 a2) {                             \
-    return self->vt->Name(self->self, a1, a2);                                 \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2));                             \
   }
 #define ___TRAIT_DYNSDREG_0_03(Ret, Name, T1, T2, T3)                            \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                            \
-    return self->vt->Name(self->self, a1, a2, a3);                             \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2, a3));                         \
   }
 #define ___TRAIT_DYNSDREG_0_13(Ret, Name, T1, T2, T3)                            \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3) {                      \
-    return self->vt->Name(self->self, a1, a2, a3);                             \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2, a3));                         \
   }
 #define ___TRAIT_DYNSDREG_0_04(Ret, Name, T1, T2, T3, T4)                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {                     \
-    return self->vt->Name(self->self, a1, a2, a3, a4);                         \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2, a3, a4));                     \
   }
 #define ___TRAIT_DYNSDREG_0_14(Ret, Name, T1, T2, T3, T4)                        \
   ___TRAIT_UNUSED static inline Ret ___TRAIT_SDREG_FN(                             \
       const glue(Dyn, Impl) *self, T1 a1, T2 a2, T3 a3, T4 a4) {               \
-    return self->vt->Name(self->self, a1, a2, a3, a4);                         \
+    ___TRAIT_RETURN(self->vt->Name(self->self, a1, a2, a3, a4));                     \
   }
 
 // ── void return ─────────────────────────────────────────────────────────────
@@ -1660,6 +2014,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_SD_C5 0
 #define ___TRAIT_SD_C6 0
 #define ___TRAIT_SD_C7 0
+
+// =============================================================================
+// TT (dyn) counter: 6-digit octal, max 262144 type × trait pairs.
+// Each impl() of a distinct (Type, Trait) pair consumes one slot.
+// Persistent across re-include passes.
+// =============================================================================
+#define ___TRAIT_TT_C1 0
+#define ___TRAIT_TT_C2 0
+#define ___TRAIT_TT_C3 0
+#define ___TRAIT_TT_C4 0
+#define ___TRAIT_TT_C5 0
+#define ___TRAIT_TT_C6 0
 
 // =============================================================================
 // SD dispatch: _Generic-based (standard C11)
@@ -1848,6 +2214,186 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   glue(___TRAIT_SD_R5_, ___TRAIT_SD_C5)(___TRAIT_SD_C6)                          \
   glue(___TRAIT_SD_R6_, ___TRAIT_SD_C6)
 
+// =============================================================================
+// TT slot assembly (for dyn _Generic dispatch)
+//
+// Same recursive expansion pattern as SD slots but using the TT counter and
+// producing pair-type-to-wrapper-function associations.
+// =============================================================================
+
+// Single slot in the _Generic
+#define ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,d1) \
+  glue8(___trait_tt_pair_, d6,d5,d4,d3,d2,d1,_p): glue7(___trait_tt_fn_, d6,d5,d4,d3,d2,d1),
+
+// ── R1: innermost level (digit d1, 0–7 per group) ──────────────────────────
+#define ___TRAIT_TT_R1_0(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_1(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,0)
+#define ___TRAIT_TT_R1_2(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,1) \
+  ___TRAIT_TT_R1_1(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_3(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,2) \
+  ___TRAIT_TT_R1_2(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_4(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,3) \
+  ___TRAIT_TT_R1_3(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_5(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,4) \
+  ___TRAIT_TT_R1_4(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_6(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,5) \
+  ___TRAIT_TT_R1_5(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_7(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,6) \
+  ___TRAIT_TT_R1_6(d6,d5,d4,d3,d2)
+#define ___TRAIT_TT_R1_8(d6,d5,d4,d3,d2) \
+  ___TRAIT_TT_SLOT(d6,d5,d4,d3,d2,7) \
+  ___TRAIT_TT_R1_7(d6,d5,d4,d3,d2)
+
+// ── R2: digit d2 (0–7, each emits a full R1_8 group) ───────────────────────
+#define ___TRAIT_TT_R2_0(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_1(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,0)
+#define ___TRAIT_TT_R2_2(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,1) \
+  ___TRAIT_TT_R2_1(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_3(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,2) \
+  ___TRAIT_TT_R2_2(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_4(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,3) \
+  ___TRAIT_TT_R2_3(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_5(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,4) \
+  ___TRAIT_TT_R2_4(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_6(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,5) \
+  ___TRAIT_TT_R2_5(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_7(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,6) \
+  ___TRAIT_TT_R2_6(d6,d5,d4,d3)
+#define ___TRAIT_TT_R2_8(d6,d5,d4,d3) \
+  ___TRAIT_TT_R1_8(d6,d5,d4,d3,7) \
+  ___TRAIT_TT_R2_7(d6,d5,d4,d3)
+
+// ── R3: digit d3 (0–7, each emits a full R2_8 group) ───────────────────────
+#define ___TRAIT_TT_R3_0(d6,d5,d4)
+#define ___TRAIT_TT_R3_1(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,0)
+#define ___TRAIT_TT_R3_2(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,1) \
+  ___TRAIT_TT_R3_1(d6,d5,d4)
+#define ___TRAIT_TT_R3_3(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,2) \
+  ___TRAIT_TT_R3_2(d6,d5,d4)
+#define ___TRAIT_TT_R3_4(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,3) \
+  ___TRAIT_TT_R3_3(d6,d5,d4)
+#define ___TRAIT_TT_R3_5(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,4) \
+  ___TRAIT_TT_R3_4(d6,d5,d4)
+#define ___TRAIT_TT_R3_6(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,5) \
+  ___TRAIT_TT_R3_5(d6,d5,d4)
+#define ___TRAIT_TT_R3_7(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,6) \
+  ___TRAIT_TT_R3_6(d6,d5,d4)
+#define ___TRAIT_TT_R3_8(d6,d5,d4) \
+  ___TRAIT_TT_R2_8(d6,d5,d4,7) \
+  ___TRAIT_TT_R3_7(d6,d5,d4)
+
+// ── R4: digit d4 (0–7, each emits a full R3_8 group) ───────────────────────
+#define ___TRAIT_TT_R4_0(d6,d5)
+#define ___TRAIT_TT_R4_1(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,0)
+#define ___TRAIT_TT_R4_2(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,1) \
+  ___TRAIT_TT_R4_1(d6,d5)
+#define ___TRAIT_TT_R4_3(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,2) \
+  ___TRAIT_TT_R4_2(d6,d5)
+#define ___TRAIT_TT_R4_4(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,3) \
+  ___TRAIT_TT_R4_3(d6,d5)
+#define ___TRAIT_TT_R4_5(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,4) \
+  ___TRAIT_TT_R4_4(d6,d5)
+#define ___TRAIT_TT_R4_6(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,5) \
+  ___TRAIT_TT_R4_5(d6,d5)
+#define ___TRAIT_TT_R4_7(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,6) \
+  ___TRAIT_TT_R4_6(d6,d5)
+#define ___TRAIT_TT_R4_8(d6,d5) \
+  ___TRAIT_TT_R3_8(d6,d5,7) \
+  ___TRAIT_TT_R4_7(d6,d5)
+
+// ── R5: digit d5 (0–7, each emits a full R4_8 group) ───────────────────────
+#define ___TRAIT_TT_R5_0(d6)
+#define ___TRAIT_TT_R5_1(d6) \
+  ___TRAIT_TT_R4_8(d6,0)
+#define ___TRAIT_TT_R5_2(d6) \
+  ___TRAIT_TT_R4_8(d6,1) \
+  ___TRAIT_TT_R5_1(d6)
+#define ___TRAIT_TT_R5_3(d6) \
+  ___TRAIT_TT_R4_8(d6,2) \
+  ___TRAIT_TT_R5_2(d6)
+#define ___TRAIT_TT_R5_4(d6) \
+  ___TRAIT_TT_R4_8(d6,3) \
+  ___TRAIT_TT_R5_3(d6)
+#define ___TRAIT_TT_R5_5(d6) \
+  ___TRAIT_TT_R4_8(d6,4) \
+  ___TRAIT_TT_R5_4(d6)
+#define ___TRAIT_TT_R5_6(d6) \
+  ___TRAIT_TT_R4_8(d6,5) \
+  ___TRAIT_TT_R5_5(d6)
+#define ___TRAIT_TT_R5_7(d6) \
+  ___TRAIT_TT_R4_8(d6,6) \
+  ___TRAIT_TT_R5_6(d6)
+#define ___TRAIT_TT_R5_8(d6) \
+  ___TRAIT_TT_R4_8(d6,7) \
+  ___TRAIT_TT_R5_7(d6)
+
+// ── R6: digit d6 (most significant, 0–7) ────────────────────────────────────
+#define ___TRAIT_TT_R6_0
+#define ___TRAIT_TT_R6_1 \
+  ___TRAIT_TT_R5_8(0)
+#define ___TRAIT_TT_R6_2 \
+  ___TRAIT_TT_R5_8(1) \
+  ___TRAIT_TT_R6_1
+#define ___TRAIT_TT_R6_3 \
+  ___TRAIT_TT_R5_8(2) \
+  ___TRAIT_TT_R6_2
+#define ___TRAIT_TT_R6_4 \
+  ___TRAIT_TT_R5_8(3) \
+  ___TRAIT_TT_R6_3
+#define ___TRAIT_TT_R6_5 \
+  ___TRAIT_TT_R5_8(4) \
+  ___TRAIT_TT_R6_4
+#define ___TRAIT_TT_R6_6 \
+  ___TRAIT_TT_R5_8(5) \
+  ___TRAIT_TT_R6_5
+#define ___TRAIT_TT_R6_7 \
+  ___TRAIT_TT_R5_8(6) \
+  ___TRAIT_TT_R6_6
+#define ___TRAIT_TT_R6_8 \
+  ___TRAIT_TT_R5_8(7) \
+  ___TRAIT_TT_R6_7
+
+// ── Assemble all TT slots ──────────────────────────────────────────────────
+#define ___TRAIT_TT_SLOTS                                                          \
+  glue(___TRAIT_TT_R1_, ___TRAIT_TT_C1)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3,          \
+                                        ___TRAIT_TT_C2)                           \
+  glue(___TRAIT_TT_R2_, ___TRAIT_TT_C2)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3)          \
+  glue(___TRAIT_TT_R3_, ___TRAIT_TT_C3)(___TRAIT_TT_C6, ___TRAIT_TT_C5,          \
+                                        ___TRAIT_TT_C4)                           \
+  glue(___TRAIT_TT_R4_, ___TRAIT_TT_C4)(___TRAIT_TT_C6, ___TRAIT_TT_C5)          \
+  glue(___TRAIT_TT_R5_, ___TRAIT_TT_C5)(___TRAIT_TT_C6)                          \
+  glue(___TRAIT_TT_R6_, ___TRAIT_TT_C6)
+
 // ── call(sel, obj, ...) ─────────────────────────────────────────────────────
 //
 // Unified dispatch via _Generic.  The controlling expression is a null
@@ -1893,11 +2439,11 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
         ___TRAIT_IS_IMMUTABLE(SelfSpec))(___TRAIT_SPEC_TYPE(SelfSpec), Ret, Name  \
                                         __VA_OPT__(,) __VA_ARGS__)
 
-#undef  default
-#define default(SelfSpec, Ret, Name, ...)                                      \
+#undef  defaults
+#define defaults(SelfSpec, Ret, Name, ...)                                      \
   trait_default(SelfSpec, Ret, Name __VA_OPT__(,) __VA_ARGS__)
-#undef  require
-#define require(SelfSpec, Ret, Name, ...)                                      \
+#undef  required
+#define required(SelfSpec, Ret, Name, ...)                                      \
   trait_require(SelfSpec, Ret, Name __VA_OPT__(,) __VA_ARGS__)
 
 // ── FN actions (vtable fields) ────────────────────────────────────────────────
@@ -1927,6 +2473,33 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 #undef  ___TRAIT_ACT_MLIST_DEFAULT_1
 #define ___TRAIT_ACT_MLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
   , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// ── DMLIST actions (DynSD loop with base-trait replay) ───────────────────────
+#undef  ___TRAIT_ACT_DMLIST_REQUIRE_0
+#define ___TRAIT_ACT_DMLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_REQUIRE_1
+#define ___TRAIT_ACT_DMLIST_REQUIRE_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_DEFAULT_0
+#define ___TRAIT_ACT_DMLIST_DEFAULT_0(Type, Ret, Name, ...)                       \
+  , (Type, 0, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLIST_DEFAULT_1
+#define ___TRAIT_ACT_DMLIST_DEFAULT_1(Type, Ret, Name, ...)                       \
+  , (Type, 1, Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+#undef  ___TRAIT_ACT_DMLISTV_REQUIRE_0
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_REQUIRE_1
+#define ___TRAIT_ACT_DMLISTV_REQUIRE_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_DEFAULT_0
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_0(Type, Ret, Name, ...)                      \
+  , (Type, 0, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
+#undef  ___TRAIT_ACT_DMLISTV_DEFAULT_1
+#define ___TRAIT_ACT_DMLISTV_DEFAULT_1(Type, Ret, Name, ...)                      \
+  , (Type, 1, Ret, ___TRAIT_VT, Name __VA_OPT__(,) __VA_ARGS__)
 
 
 // ── BIND actions (vtable initializer) ─────────────────────────────────────────
@@ -1993,27 +2566,42 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 #undef  ___TRAIT_SD_EMIT_I
 #define ___TRAIT_SD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)                 \
   typedef For glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);   \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), For); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), For); \
   glue5(___TRAIT_SDREG_, 0, _, ConstFlag,                                            \
         ___TRAIT_NARG(__VA_ARGS__))(NameSignature, Ret, Name __VA_OPT__(,) __VA_ARGS__)
 
-#undef  ___TRAIT_DYNSD_EMIT_I
-#define ___TRAIT_DYNSD_EMIT_I(NameSignature, ConstFlag, Ret, Name, ...)              \
+#undef  ___TRAIT_DYNSD_EMIT
+#define ___TRAIT_DYNSD_EMIT(tuple) ___TRAIT_DYNSD_EMIT_D tuple
+#undef  ___TRAIT_DYNSD_EMIT_D
+#define ___TRAIT_DYNSD_EMIT_D(NameSignature, ConstFlag, Ret, T4, ...)                \
+  glue(___TRAIT_DYNSD_EMIT_,                                                         \
+       ___TRAIT_CHECK(glue(___TRAIT_DYNVT_, T4)))(                                   \
+      NameSignature, ConstFlag, Ret, T4 __VA_OPT__(,) __VA_ARGS__)
+
+// Own method tuple: (NameSignature, ConstFlag, Ret, Name, ExtraArgs...)
+#undef  ___TRAIT_DYNSD_EMIT_0
+#define ___TRAIT_DYNSD_EMIT_0(NameSignature, ConstFlag, Ret, Name, ...)              \
   typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
                                   ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
-  typedef glue5(___sel_, Impl, _, Name, _t) glue8(                               \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
   typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
-      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _asty);             \
-  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, Impl, _, Name, _t), glue(Dyn, Impl)); \
-  typedef void (*glue8(___trait_sd_apair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
   glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
         ___TRAIT_NARG(__VA_ARGS__))(Ret, Name __VA_OPT__(,) __VA_ARGS__)
+
+// Replayed base method tuple:
+// (NameSignature, ConstFlag, Ret, ___TRAIT_VT, Name, ExtraArgs...)
+#undef  ___TRAIT_DYNSD_EMIT_1
+#define ___TRAIT_DYNSD_EMIT_1(NameSignature, ConstFlag, Ret, VT, Name, ...)          \
+  typedef glue(Dyn, Impl) glue8(___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5,       \
+                                  ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _ty);  \
+  typedef glue5(___sel_, NameSignature, _, Name, _t) glue8(                           \
+      ___trait_sd_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _sty);               \
+  typedef void (*glue8(___trait_sd_pair_, ___TRAIT_SD_C6, ___TRAIT_SD_C5, ___TRAIT_SD_C4, ___TRAIT_SD_C3, ___TRAIT_SD_C2, ___TRAIT_SD_C1, _p))(glue5(___sel_, NameSignature, _, Name, _t), glue(Dyn, Impl)); \
+  glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
+        ___TRAIT_NARG(__VA_ARGS__))(Ret, NameSignature.Name __VA_OPT__(,) __VA_ARGS__)
 
 // ── def / constdef ────────────────────────────────────────────────────────────
 #undef  def
@@ -2038,5 +2626,11 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
   )(obj __VA_OPT__(,) __VA_ARGS__)
 
 #endif // ___TRAIT_C23
+
+// ── IMPLS(Type, Trait) ──────────────────────────────────────────────────────
+// Compile-time check: produces sizeof(marker-type) (an integer constant
+// expression > 0) if Type implements Trait; fails to compile with
+// "unknown type name" otherwise.  Usable in static_assert, if(), etc.
+#define IMPLS(TYPE, TRAIT) (sizeof(glue4(___TRAIT_IMPLS_TYPE_, TYPE, _, TRAIT)))
 
 #endif // TRAIT_ALT_H

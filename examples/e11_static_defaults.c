@@ -2,7 +2,7 @@
  * e11_static_defaults.c — Static trait with default methods
  *
  * Tests:
- * 1. Static trait with require + default
+ * 1. Static trait with required + default
  * 2. Default implementation (simple: returns constant)
  * 3. Type uses default (no override)
  * 4. Type overrides default via def()
@@ -13,12 +13,12 @@
 #include <assert.h>
 #include <stdio.h>
 
-// ---- trait: Drawable (static, require + default) ----------------------------
-// require: draw() — each type must implement
+// ---- trait: Drawable (static, required + default) ----------------------------
+// required: draw() — each type must implement
 // default: is_visible() — returns 1 (visible by default)
 #define Trait Drawable
 #define DrawableSignature(Self)                                                \
-  require(Self, void, draw) default(Self, int, is_visible)
+  required(Self, void, draw) defaults(Self, int, is_visible)
 #include "../trait.h"
 
 // ---- default implementation -------------------------------------------------

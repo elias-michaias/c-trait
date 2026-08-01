@@ -89,8 +89,8 @@ When you write:
 #define Trait Animal
 #define Dynamic
 #define AnimalSignature(Self)    \
-  require(Self, int, get_snacks) \
-  default(Self, void, feed, int)
+  required(Self, int, get_snacks) \
+  defaults(Self, void, feed, int)
 #include "trait.h"
 ```
 
@@ -105,7 +105,7 @@ typedef struct {
 } Animal_vtable;
 ```
 
-Each method becomes a function pointer field. The `FN` action makes `require` and `default` emit `RetType (*Name)(void *Self, Args...)`. This is the layout that dynamic dispatch will index into at runtime.
+Each method becomes a function pointer field. The `FN` action makes `required` and `defaults` emit `RetType (*Name)(void *Self, Args...)`. This is the layout that dynamic dispatch will index into at runtime.
 
 ### 2. DynTrait typedef
 
@@ -303,7 +303,7 @@ The compiler sees the entire `_Generic` at compile time, picks the matching bran
 For DynTrait objects, the same `call()` macro works:
 
 ```c
-DynAnimal da = to_trait(Dog, Animal, &dog);
+DynAnimal da = dyn(Animal, &dog);
 call(Animal.get_snacks, &da);
 // Compiles to: da.vt->get_snacks(da.self)  (vtable indirection)
 ```
@@ -338,7 +338,7 @@ The companion `#define Override_Dog_Animal_feed 1` (placed *before* the `#includ
 
 ### The DFL wrapper
 
-For methods declared with `default()`, the `defaults()` pass generates a wrapper function with the *same name* as what `def()` would generate — but only if the user has **not** opted out via `Override_<Type>_<Trait>_<Method>`:
+For methods declared with `defaults()`, the `defaults()` pass generates a wrapper function with the *same name* as what `def()` would generate — but only if the user has **not** opted out via `Override_<Type>_<Trait>_<Method>`:
 
 ```c
 static inline void Dog_Animal_feed(void *self, int n) {
@@ -432,7 +432,7 @@ The trade-off is that the counter is **monotonically increasing and never reset*
 
 | Limitation | Reason |
 |------------|--------|
-| **Max 8 methods per trait** | SD loop iterates 0–7 via `___TRAIT_SD_PASS`. `_Generic` nesting becomes impractical beyond 8. |
+| **Max 15 methods per trait** | SD loop iterates 0–14 via `___TRAIT_SD_PASS` (DynSD via `___TRAIT_DYNSD_PASS`); slot 15 is the sentinel. `_Generic` nesting becomes impractical beyond this. |
 | **Max 2,097,152 SD dispatch slots** | 7-digit octal counter (SD_C7–SD_C1). Each method of each impl consumes one slot. |
 | **GNU extensions** | `##__VA_ARGS__` and `__typeof__` (both C11, both with standard C23 equivalents).  In C23 mode, `##__VA_ARGS__` → `__VA_OPT__`, `__typeof__` → `typeof`, `__attribute__((unused))` → `[[maybe_unused]]` automatically. |
 | **Compile-time linear scan** | `call()` checks all SD slots sequentially. Many registrations slow compilation (but runtime is a direct call). In the future, this will be optimized. |

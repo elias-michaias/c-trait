@@ -4,9 +4,9 @@
 
 // ---- trait: Animal -----------------------------------------------------------
 #define AnimalSignature(Self)                    \
-  require(Self, int,  get_snacks)            \
-  default(immutable(Self), void, check)      \
-  default(Self, void, feed, int)
+  required(Self, int,  get_snacks)            \
+  defaults(immutable(Self), void, check)      \
+  defaults(Self, void, feed, int)
 #define Dynamic
 #define Trait Animal
 #include "../trait.h"
@@ -67,8 +67,8 @@ int main(void) {
 
   // Dynamic dispatch still works alongside static dispatch
   printf("\n=== call: dynamic dispatch (for comparison) ===\n");
-  DynAnimal ac = to_trait(Cat, Animal, &c);
-  DynAnimal ad = to_trait(Dog, Animal, &d);
+  DynAnimal ac = dyn(Animal, &c);
+  DynAnimal ad = dyn(Animal, &d);
   printf("Cat snacks (vcall): %d\n", call(Animal.get_snacks, &ac));
   printf("Dog snacks (vcall): %d\n", call(Animal.get_snacks, &ad));
 
