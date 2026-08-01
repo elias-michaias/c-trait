@@ -64,13 +64,13 @@ int main(void) {
 Add `#define Dynamic` before the trait declaration for vtable-based runtime polymorphism:
 
 ```c
-#define Dynamic
 #define Trait Greet
+#define Dynamic
+#define GreetSignature(Self) require(Self, void, greet)
 #include "trait.h"
 
-// ...
 Person p = { .name = "World" };
-DynGreet g = dyn(Person, &p);
+DynGreet g = dyn(Greet, &p);
 call(Greet.greet, &g);  // goes through vtable
 ```
 
@@ -94,14 +94,13 @@ call(Greet.greet, &g);  // goes through vtable
 
 ### Static vs. dynamic traits
 
-Traits are **static by default** — no vtable, no overhead. Add `#define Dynamic` to opt in.
+Traits are **static by default** — no vtable, no overhead. Add `#define Dynamic` to generate an opt-in `DynTrait` struct that acts as a safe, type-erased, non-owning fat pointer. Construct one with the `dyn(...)` macro.
 
 | | Static (default) | Dynamic (`#define Dynamic`) |
 |---|---|---|
 | Vtable | No | Yes |
 | `dyn` / `from_trait` | Not available | Available |
-| Default methods | Supported | Supported |
-| `extends()` enforcement | Linker check | Linker check |
+| Default methods | Receives `void*` | Receives `DynTrait` |
 
 ### Unified `call()` dispatch
 
