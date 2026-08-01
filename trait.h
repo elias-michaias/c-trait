@@ -894,11 +894,48 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 // Compiler portability
 // -----------------------------------------------------------------------------
-// C23 mode detection
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L
+// Standard mode resolution.
+//
+// By default the mode is auto-detected from __STDC_VERSION__:
+//   C99-era (e.g. -std=gnu99) -> ___TRAIT_CE  = 1 (choose_expr dispatch)
+//   C11                        -> ___TRAIT_CE  = 0, ___TRAIT_C23 = 0 (_Generic)
+//   C23 and later              -> ___TRAIT_C23 = 1 (ISO C23 definitions)
+//
+// Compile with -DTRAIT_MODE=c99 | c11 | c23 to force a specific mode
+// regardless of the compiler's standard level (e.g. to exercise the gnu99
+// dispatch path on a newer compiler, or the ISO C23 definitions without
+// -std=c23).  An unrecognized value falls back to auto-detection.
+//
+// The c99 mode relies on the GNU extensions __builtin_choose_expr and
+// __builtin_types_compatible_p, so it requires GCC/Clang (as do __typeof__
+// and the other GNU extensions trait.h relies on in every mode — plain ISO
+// C99 without GNU extensions is not supported).
+#define ___TRAIT_MODE_GET_(x) ___TRAIT_MODE_MATCH_ ## x
+#define ___TRAIT_MODE_GET(x) ___TRAIT_MODE_GET_(x)
+#define ___TRAIT_MODE_MATCH_c99 1
+#define ___TRAIT_MODE_MATCH_c11 2
+#define ___TRAIT_MODE_MATCH_c23 3
+#define ___TRAIT_MODE_SEL ___TRAIT_MODE_GET(TRAIT_MODE)
+
+#if defined(TRAIT_MODE) && ___TRAIT_MODE_SEL == 3
 #define ___TRAIT_C23 1
+#define ___TRAIT_CE 0
+#elif defined(TRAIT_MODE) && ___TRAIT_MODE_SEL == 1
+#define ___TRAIT_C23 0
+#define ___TRAIT_CE 1
+#elif defined(TRAIT_MODE) && ___TRAIT_MODE_SEL == 2
+#define ___TRAIT_C23 0
+#define ___TRAIT_CE 0
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L
+#define ___TRAIT_C23 1
+#define ___TRAIT_CE 0
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L && \
+    (defined(__GNUC__) || defined(__clang__))
+#define ___TRAIT_C23 0
+#define ___TRAIT_CE 1
 #else
 #define ___TRAIT_C23 0
+#define ___TRAIT_CE 0
 #endif
 
 #if ___TRAIT_C23
@@ -913,6 +950,18 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_UNUSED
 #define ___TRAIT_TYPEOF __typeof__
 #define ___TRAIT_CONSTEXPR
+#endif
+
+// static_assert is only available from <assert.h> in C11 and later.  Provide a
+// C99-safe shim (negative-size typedef trick) so code using static_assert,
+// like examples/e9_forward_declare.c, works in gnu99 mode too.  The typedef
+// name embeds __LINE__ so multiple assertions on distinct lines don't collide.
+#if ___TRAIT_CE
+#ifndef static_assert
+#define static_assert(cond, msg)                                                 \
+  typedef char glue(___trait_static_assert_, __LINE__)[(cond) ? 1 : -1]          \
+      __attribute__((__unused__))
+#endif
 #endif
 
 // -----------------------------------------------------------------------------
@@ -2626,6 +2675,333 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
   )(obj __VA_OPT__(,) __VA_ARGS__)
 
 #endif // ___TRAIT_C23
+
+// =============================================================================
+// C99/GNU99 dispatch: __builtin_choose_expr-based (___TRAIT_CE)
+//
+// Pre-C11 (e.g. -std=gnu99) has no `_Generic`, so call() and dyn() dispatch via
+// nested __builtin_choose_expr + __builtin_types_compatible_p instead.  The
+// controlling type (the pair type `void (*)(SelectorType, ConcreteType)`) is
+// compared against each registered pair typedef; the matching wrapper is
+// selected at compile time and everything else is discarded.
+//
+// Unchosen branches ARE type-checked (unlike _Generic), but every branch is a
+// valid expression (a wrapper function name), so this is safe.  The fallback
+// expression is the same non-callable ERROR object as the _Generic default
+// arm, so the diagnostic on a missing impl is identical:
+//   "called object ... is not a function or function pointer"
+//
+// Slot counting mirrors the R1..R6 recursion used for the _Generic slots: the
+// total number of choose_expr openings (and therefore of closing parens) is
+// C1 + 8*C2 + 64*C3 + 512*C4 + 4096*C5 + 32768*C6.
+// =============================================================================
+#if ___TRAIT_CE
+
+// Controlling type for call(sel, obj): matches ___trait_sd_pair_* typedefs.
+#define ___TRAIT_CE_CTYPE(sel, obj) \
+  void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj)))
+
+// Controlling type for dyn(Trait, ptr): matches ___trait_tt_pair_* typedefs.
+#define ___TRAIT_CE_DYN_CTYPE(Trait, ptr) \
+  void (*)(glue(Trait, ___sel_t), ___TRAIT_TYPEOF(*(ptr)))
+
+// Single SD slot: opens one choose_expr (paren closed by the close macros).
+// clang-format off
+#define ___TRAIT_SD_CE_SLOT(CTYPE, d6, d5, d4, d3, d2, d1) \
+  __builtin_choose_expr(                                                    \
+      __builtin_types_compatible_p(CTYPE, glue8(___trait_sd_pair_,          \
+                                                d6, d5, d4, d3, d2, d1, _p)), \
+      glue7(___trait_sd_fn_, d6, d5, d4, d3, d2, d1),
+
+// Single TT slot (for dyn dispatch).
+#define ___TRAIT_TT_CE_SLOT(CTYPE, d6, d5, d4, d3, d2, d1) \
+  __builtin_choose_expr(                                                    \
+      __builtin_types_compatible_p(CTYPE, glue8(___trait_tt_pair_,          \
+                                                d6, d5, d4, d3, d2, d1, _p)), \
+      glue7(___trait_tt_fn_, d6, d5, d4, d3, d2, d1),
+
+// ── R1: innermost level (digit d1, 0–7 per group) ──────────────────────────
+#define ___TRAIT_CE_R1_0(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_1(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 0)
+#define ___TRAIT_CE_R1_2(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 1) \
+  ___TRAIT_CE_R1_1(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_3(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 2) \
+  ___TRAIT_CE_R1_2(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_4(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 3) \
+  ___TRAIT_CE_R1_3(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_5(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 4) \
+  ___TRAIT_CE_R1_4(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_6(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 5) \
+  ___TRAIT_CE_R1_5(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_7(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 6) \
+  ___TRAIT_CE_R1_6(SLOT, CTYPE, d6, d5, d4, d3, d2)
+#define ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, d2) \
+  SLOT(CTYPE, d6, d5, d4, d3, d2, 7) \
+  ___TRAIT_CE_R1_7(SLOT, CTYPE, d6, d5, d4, d3, d2)
+
+// ── R2: digit d2 (0–7, each emits a full R1_8 group) ───────────────────────
+#define ___TRAIT_CE_R2_0(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_1(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 0)
+#define ___TRAIT_CE_R2_2(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 1) \
+  ___TRAIT_CE_R2_1(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_3(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 2) \
+  ___TRAIT_CE_R2_2(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_4(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 3) \
+  ___TRAIT_CE_R2_3(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_5(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 4) \
+  ___TRAIT_CE_R2_4(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_6(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 5) \
+  ___TRAIT_CE_R2_5(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_7(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 6) \
+  ___TRAIT_CE_R2_6(SLOT, CTYPE, d6, d5, d4, d3)
+#define ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, d3) \
+  ___TRAIT_CE_R1_8(SLOT, CTYPE, d6, d5, d4, d3, 7) \
+  ___TRAIT_CE_R2_7(SLOT, CTYPE, d6, d5, d4, d3)
+
+// ── R3: digit d3 (0–7, each emits a full R2_8 group) ───────────────────────
+#define ___TRAIT_CE_R3_0(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_1(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 0)
+#define ___TRAIT_CE_R3_2(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 1) \
+  ___TRAIT_CE_R3_1(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_3(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 2) \
+  ___TRAIT_CE_R3_2(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_4(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 3) \
+  ___TRAIT_CE_R3_3(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_5(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 4) \
+  ___TRAIT_CE_R3_4(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_6(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 5) \
+  ___TRAIT_CE_R3_5(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_7(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 6) \
+  ___TRAIT_CE_R3_6(SLOT, CTYPE, d6, d5, d4)
+#define ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, d4) \
+  ___TRAIT_CE_R2_8(SLOT, CTYPE, d6, d5, d4, 7) \
+  ___TRAIT_CE_R3_7(SLOT, CTYPE, d6, d5, d4)
+
+// ── R4: digit d4 (0–7, each emits a full R3_8 group) ───────────────────────
+#define ___TRAIT_CE_R4_0(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_1(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 0)
+#define ___TRAIT_CE_R4_2(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 1) \
+  ___TRAIT_CE_R4_1(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_3(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 2) \
+  ___TRAIT_CE_R4_2(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_4(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 3) \
+  ___TRAIT_CE_R4_3(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_5(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 4) \
+  ___TRAIT_CE_R4_4(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_6(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 5) \
+  ___TRAIT_CE_R4_5(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_7(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 6) \
+  ___TRAIT_CE_R4_6(SLOT, CTYPE, d6, d5)
+#define ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, d5) \
+  ___TRAIT_CE_R3_8(SLOT, CTYPE, d6, d5, 7) \
+  ___TRAIT_CE_R4_7(SLOT, CTYPE, d6, d5)
+
+// ── R5: digit d5 (0–7, each emits a full R4_8 group) ───────────────────────
+#define ___TRAIT_CE_R5_0(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_1(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 0)
+#define ___TRAIT_CE_R5_2(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 1) \
+  ___TRAIT_CE_R5_1(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_3(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 2) \
+  ___TRAIT_CE_R5_2(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_4(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 3) \
+  ___TRAIT_CE_R5_3(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_5(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 4) \
+  ___TRAIT_CE_R5_4(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_6(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 5) \
+  ___TRAIT_CE_R5_5(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_7(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 6) \
+  ___TRAIT_CE_R5_6(SLOT, CTYPE, d6)
+#define ___TRAIT_CE_R5_8(SLOT, CTYPE, d6) \
+  ___TRAIT_CE_R4_8(SLOT, CTYPE, d6, 7) \
+  ___TRAIT_CE_R5_7(SLOT, CTYPE, d6)
+
+// ── R6: digit d6 (most significant, 0–7) ────────────────────────────────────
+#define ___TRAIT_CE_R6_0(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_1(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 0)
+#define ___TRAIT_CE_R6_2(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 1) \
+  ___TRAIT_CE_R6_1(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_3(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 2) \
+  ___TRAIT_CE_R6_2(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_4(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 3) \
+  ___TRAIT_CE_R6_3(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_5(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 4) \
+  ___TRAIT_CE_R6_4(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_6(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 5) \
+  ___TRAIT_CE_R6_5(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_7(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 6) \
+  ___TRAIT_CE_R6_6(SLOT, CTYPE)
+#define ___TRAIT_CE_R6_8(SLOT, CTYPE) \
+  ___TRAIT_CE_R5_8(SLOT, CTYPE, 7) \
+  ___TRAIT_CE_R6_7(SLOT, CTYPE)
+
+// ── Closing parens ──────────────────────────────────────────────────────────
+// The R-recursion above opens exactly one choose_expr per registered slot, so
+// the number of closing parens equals the slot count:
+//   C1 + 8*C2 + 64*C3 + 512*C4 + 4096*C5 + 32768*C6.
+#define ___TRAIT_CE_C1_0
+#define ___TRAIT_CE_C1_1 )
+#define ___TRAIT_CE_C1_2 ) )
+#define ___TRAIT_CE_C1_3 ) ) )
+#define ___TRAIT_CE_C1_4 ) ) ) )
+#define ___TRAIT_CE_C1_5 ) ) ) ) )
+#define ___TRAIT_CE_C1_6 ) ) ) ) ) )
+#define ___TRAIT_CE_C1_7 ) ) ) ) ) ) )
+#define ___TRAIT_CE_C1_8 ) ) ) ) ) ) ) )
+#define ___TRAIT_CE_C2_0
+#define ___TRAIT_CE_C2_1 ___TRAIT_CE_C1_8
+#define ___TRAIT_CE_C2_2 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_1
+#define ___TRAIT_CE_C2_3 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_2
+#define ___TRAIT_CE_C2_4 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_3
+#define ___TRAIT_CE_C2_5 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_4
+#define ___TRAIT_CE_C2_6 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_5
+#define ___TRAIT_CE_C2_7 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_6
+#define ___TRAIT_CE_C2_8 ___TRAIT_CE_C1_8 ___TRAIT_CE_C2_7
+#define ___TRAIT_CE_C3_0
+#define ___TRAIT_CE_C3_1 ___TRAIT_CE_C2_8
+#define ___TRAIT_CE_C3_2 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_1
+#define ___TRAIT_CE_C3_3 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_2
+#define ___TRAIT_CE_C3_4 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_3
+#define ___TRAIT_CE_C3_5 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_4
+#define ___TRAIT_CE_C3_6 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_5
+#define ___TRAIT_CE_C3_7 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_6
+#define ___TRAIT_CE_C3_8 ___TRAIT_CE_C2_8 ___TRAIT_CE_C3_7
+#define ___TRAIT_CE_C4_0
+#define ___TRAIT_CE_C4_1 ___TRAIT_CE_C3_8
+#define ___TRAIT_CE_C4_2 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_1
+#define ___TRAIT_CE_C4_3 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_2
+#define ___TRAIT_CE_C4_4 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_3
+#define ___TRAIT_CE_C4_5 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_4
+#define ___TRAIT_CE_C4_6 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_5
+#define ___TRAIT_CE_C4_7 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_6
+#define ___TRAIT_CE_C4_8 ___TRAIT_CE_C3_8 ___TRAIT_CE_C4_7
+#define ___TRAIT_CE_C5_0
+#define ___TRAIT_CE_C5_1 ___TRAIT_CE_C4_8
+#define ___TRAIT_CE_C5_2 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_1
+#define ___TRAIT_CE_C5_3 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_2
+#define ___TRAIT_CE_C5_4 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_3
+#define ___TRAIT_CE_C5_5 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_4
+#define ___TRAIT_CE_C5_6 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_5
+#define ___TRAIT_CE_C5_7 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_6
+#define ___TRAIT_CE_C5_8 ___TRAIT_CE_C4_8 ___TRAIT_CE_C5_7
+#define ___TRAIT_CE_C6_0
+#define ___TRAIT_CE_C6_1 ___TRAIT_CE_C5_8
+#define ___TRAIT_CE_C6_2 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_1
+#define ___TRAIT_CE_C6_3 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_2
+#define ___TRAIT_CE_C6_4 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_3
+#define ___TRAIT_CE_C6_5 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_4
+#define ___TRAIT_CE_C6_6 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_5
+#define ___TRAIT_CE_C6_7 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_6
+#define ___TRAIT_CE_C6_8 ___TRAIT_CE_C5_8 ___TRAIT_CE_C6_7
+
+// ── Slot-list assembly (left-open choose_expr chain) ───────────────────────
+#define ___TRAIT_SD_CE_SLOTS(CTYPE)                                              \
+  glue(___TRAIT_CE_R1_, ___TRAIT_SD_C1)(___TRAIT_SD_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_SD_C6, ___TRAIT_SD_C5,         \
+                                        ___TRAIT_SD_C4, ___TRAIT_SD_C3,         \
+                                        ___TRAIT_SD_C2)                          \
+  glue(___TRAIT_CE_R2_, ___TRAIT_SD_C2)(___TRAIT_SD_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_SD_C6, ___TRAIT_SD_C5,         \
+                                        ___TRAIT_SD_C4, ___TRAIT_SD_C3)          \
+  glue(___TRAIT_CE_R3_, ___TRAIT_SD_C3)(___TRAIT_SD_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_SD_C6, ___TRAIT_SD_C5,         \
+                                        ___TRAIT_SD_C4)                          \
+  glue(___TRAIT_CE_R4_, ___TRAIT_SD_C4)(___TRAIT_SD_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_SD_C6, ___TRAIT_SD_C5)          \
+  glue(___TRAIT_CE_R5_, ___TRAIT_SD_C5)(___TRAIT_SD_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_SD_C6)                          \
+  glue(___TRAIT_CE_R6_, ___TRAIT_SD_C6)(___TRAIT_SD_CE_SLOT, CTYPE)
+
+#define ___TRAIT_TT_CE_SLOTS(CTYPE)                                              \
+  glue(___TRAIT_CE_R1_, ___TRAIT_TT_C1)(___TRAIT_TT_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_TT_C6, ___TRAIT_TT_C5,         \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3,         \
+                                        ___TRAIT_TT_C2)                          \
+  glue(___TRAIT_CE_R2_, ___TRAIT_TT_C2)(___TRAIT_TT_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_TT_C6, ___TRAIT_TT_C5,         \
+                                        ___TRAIT_TT_C4, ___TRAIT_TT_C3)          \
+  glue(___TRAIT_CE_R3_, ___TRAIT_TT_C3)(___TRAIT_TT_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_TT_C6, ___TRAIT_TT_C5,         \
+                                        ___TRAIT_TT_C4)                          \
+  glue(___TRAIT_CE_R4_, ___TRAIT_TT_C4)(___TRAIT_TT_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_TT_C6, ___TRAIT_TT_C5)          \
+  glue(___TRAIT_CE_R5_, ___TRAIT_TT_C5)(___TRAIT_TT_CE_SLOT, CTYPE,             \
+                                        ___TRAIT_TT_C6)                          \
+  glue(___TRAIT_CE_R6_, ___TRAIT_TT_C6)(___TRAIT_TT_CE_SLOT, CTYPE)
+
+// ── Closing-paren assembly ──────────────────────────────────────────────────
+#define ___TRAIT_CE_CLOSES(C1, C2, C3, C4, C5, C6)                              \
+  glue(___TRAIT_CE_C1_, C1)                                                     \
+  glue(___TRAIT_CE_C2_, C2)                                                     \
+  glue(___TRAIT_CE_C3_, C3)                                                     \
+  glue(___TRAIT_CE_C4_, C4)                                                     \
+  glue(___TRAIT_CE_C5_, C5)                                                     \
+  glue(___TRAIT_CE_C6_, C6)
+
+#define ___TRAIT_SD_CE_CLOSES \
+  ___TRAIT_CE_CLOSES(___TRAIT_SD_C1, ___TRAIT_SD_C2, ___TRAIT_SD_C3,            \
+                     ___TRAIT_SD_C4, ___TRAIT_SD_C5, ___TRAIT_SD_C6)
+
+#define ___TRAIT_TT_CE_CLOSES \
+  ___TRAIT_CE_CLOSES(___TRAIT_TT_C1, ___TRAIT_TT_C2, ___TRAIT_TT_C3,            \
+                     ___TRAIT_TT_C4, ___TRAIT_TT_C5, ___TRAIT_TT_C6)
+
+// ── call / dyn overrides ────────────────────────────────────────────────────
+// clang-format off
+#undef  call
+#define call(sel, obj, ...)                                                       \
+  (___TRAIT_SD_CE_SLOTS(___TRAIT_CE_CTYPE(sel, obj))                              \
+   ERROR_trait_not_implemented_for_this_type                                      \
+   ___TRAIT_SD_CE_CLOSES)(obj, ##__VA_ARGS__)
+
+#undef  dyn
+#define dyn(Trait, ptr)                                                           \
+  (___TRAIT_TT_CE_SLOTS(___TRAIT_CE_DYN_CTYPE(Trait, ptr))                        \
+   ERROR_type_not_impl_for_this_trait                                             \
+   ___TRAIT_TT_CE_CLOSES)(ptr)
+
+#endif // ___TRAIT_CE
 
 // ── IMPLS(Type, Trait) ──────────────────────────────────────────────────────
 // Compile-time check: produces sizeof(marker-type) (an integer constant
