@@ -5,7 +5,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/implementation-header--only-brightgreen" alt="header-only">
-  <img src="https://img.shields.io/badge/standard-C11%20%7C%20C23%20%7C%20gnu99-blue" alt="C11/C23/gnu99">
+  <img src="https://img.shields.io/badge/standard-GNU99%20%7C%20GNU11%20%7C%20C23-blue" alt="GNU99/GNU11/C23">
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
   <a href="https://github.com/elias-michaias/c-trait/actions/workflows/ci.yml"><img src="https://github.com/elias-michaias/c-trait/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="https://github.com/elias-michaias/c-trait"><img src="https://img.shields.io/github/stars/elias-michaias/c-trait?style=social" alt="GitHub stars"></a>
@@ -88,7 +88,7 @@ call(Greet.greet, &g);  // goes through vtable
 | **Const methods** | `immutable()` / `constdef()` for read-only interfaces |
 | **Forward declarations** | `call()` inside `def()` bodies with the `Forward` flag |
 | **Header-only** | Single 2K-line header. No build system required. |
-| **Portable** | C11 or gnu99 (GCC/Clang) or C23 (any conforming compiler).  Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
+| **Portable** | GNU99 or GNU11 (GCC/Clang) or C23 (any conforming compiler).  Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
 
 ## Concepts
 
@@ -119,19 +119,19 @@ call(Animal.get_snacks, &da);
 
 ## Compatibility
 
-`trait.h` supports three language levels. For C99 and C11, `trait.h` relies on GNU extensions that are supported by GCC and Clang. For C23 mode, `trait.h` is compatible with ISO C and should build on any conforming compiler:
+`trait.h` supports three language levels, but only one is truly portable: the **C23** mode is ISO-clean and builds with any conforming compiler. The **GNU99** and **GNU11** modes are GNU dialect builds — they rely on GCC/Clang extensions and only build with GCC or Clang:
 
 | Mode | Dispatch mechanism | Remaining GNU extensions | Compiler support |
 |------|--------------------|--------------------------|------------------|
-| **C99** (`-std=gnu99`) | `__builtin_choose_expr` + `__builtin_types_compatible_p` | `__typeof__`, `##__VA_ARGS__`, `__attribute__` | GCC/Clang only |
-| **C11** (`-std=gnu11` / `-std=c11`) | `_Generic` (standard C11) | `__typeof__`, `##__VA_ARGS__`, `__attribute__` | GCC/Clang only |
+| **GNU99** (`-std=gnu99`) | `__builtin_choose_expr` + `__builtin_types_compatible_p` | `__typeof__`, `##__VA_ARGS__`, `__attribute__`, empty variadic args | GCC/Clang only |
+| **GNU11** (`-std=gnu11`) | `_Generic` (C11 keyword) | `__typeof__`, `##__VA_ARGS__`, `__attribute__`, empty variadic args | GCC/Clang only |
 | **C23** (`-std=c23` / `-std=c2x`) | `_Generic` (standard C23) | none — fully ISO | any conforming compiler |
 
-**C99.** `_Generic` didn't exist in C99, so dispatch uses the GNU builtins `__builtin_choose_expr` and `__builtin_types_compatible_p`, which together reproduce exactly what `_Generic` does — compare a controlling type against a list and pick the matching branch at compile time. 
+**GNU99.** `_Generic` didn't exist in C99, so dispatch uses the GNU builtins `__builtin_choose_expr` and `__builtin_types_compatible_p`, which together reproduce exactly what `_Generic` does — compare a controlling type against a list and pick the matching branch at compile time. Plain ISO `-std=c99` rejects the extensions this mode needs, so build with `-std=gnu99`.
 
-**C11.** C11 introduced `_Generic`, so `call()`/`dyn()` switch to it — standard syntax instead of builtins, but with identical semantics and error messages. However, C11 still lacks `typeof` and `__VA_OPT__`, so `__typeof__` and the `, ##__VA_ARGS__` idiom (GNU extensions) remain in the trait/impl macros.
+**GNU11.** C11 added the `_Generic` keyword, so `call()`/`dyn()` switch to it. But this is still a GNU dialect build — **not ISO C11**. C11 standardized `_Generic` yet left `typeof` and `__VA_OPT__` out, so `trait.h` keeps depending on the GNU extensions `__typeof__`, `, ##__VA_ARGS__`, and `__attribute__` — and on the GNU relaxation that lets a variadic macro be invoked with zero extra arguments, which ISO C11 forbids. Build with `-std=gnu11`; a strict `-std=c11` build fails.
 
-**C23.** C23 standardizes the rest: `typeof` (replacing `__typeof__`), `__VA_OPT__` (replacing `, ##__VA_ARGS__`), and `[[maybe_unused]]` (replacing `__attribute__((__unused__))`). When `__STDC_VERSION__` indicates C23, `trait.h` switches to these standard forms, producing code a conforming ISO C23 compiler can build.
+**C23.** C23 standardizes everything `trait.h` still did via extensions: `typeof` (replacing `__typeof__`), `__VA_OPT__` (replacing `, ##__VA_ARGS__`), `[[maybe_unused]]` (replacing `__attribute__((__unused__))`), and zero-argument variadic invocations. When `__STDC_VERSION__` indicates C23, `trait.h` switches to these standard forms, producing code a conforming ISO C23 compiler can build.
 
 The choice is automatic — `trait.h` detects the standard from `__STDC_VERSION__` — and all three modes are covered by `./test.sh` (gcc + clang, `-Wpedantic` where supported).
 
@@ -140,7 +140,7 @@ The choice is automatic — `trait.h` detects the standard from `__STDC_VERSION_
 Compile with `-DTRAIT_MODE=c99`, `-DTRAIT_MODE=c11`, or `-DTRAIT_MODE=c23` to override auto-detection:
 
 - `TRAIT_MODE=c99` — force the `choose_expr` dispatch, e.g. to exercise the C99 path on a compiler/standard that would normally pick `_Generic`.
-- `TRAIT_MODE=c11` — force the C11-style definitions (`_Generic` + `##__VA_ARGS__`), e.g. to get C11 behavior under a C23 compiler's GNU dialect.
+- `TRAIT_MODE=c11` — force the GNU11-style definitions (`_Generic` + `##__VA_ARGS__`), e.g. to run the gnu11 code path under a newer compiler's GNU dialect.
 - `TRAIT_MODE=c23` — force the ISO C23 definitions, e.g. to use `typeof`/`__VA_OPT__` without passing `-std=c23`.
 
 ## Examples

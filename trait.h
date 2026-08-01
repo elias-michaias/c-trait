@@ -12,9 +12,8 @@
 // Each iteration:
 //   1. Check sentinel → if past last method, stop looping.
 //   2. Emit SD registration (typedef + wrapper function) for the current method.
-//   4. Increment pass counter (___TRAIT_SD_PASS).
-//   4. Increment pass counter (___TRAIT_SD_PASS).
-//   5. Self-include trait.h for the next iteration.
+//   3. Increment pass counter (___TRAIT_SD_PASS).
+//   4. Self-include trait.h for the next iteration.
 // ═══════════════════════════════════════════════════════════════════════════════
 #if !___TRAIT_SD_IS_STOP(___TRAIT_SD_PASS, Impl)
 // Emit SD slot: typedef concrete type, typedef selector type, wrapper function
@@ -849,7 +848,8 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 // Override detection (PROBE trick — 100% standard C)
 //
-// When a user writes redef()/credef() for a default method, they also define:
+// When a user overrides a default method with def()/constdef(), they also
+// define:
 //   #define Override_<Type>_<Trait>_<Method> 1
 // before the #include "trait.h" that processes the impl block.
 // The trait name is included to avoid collisions when a type implements
@@ -973,10 +973,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 
 #define ___TRAIT_CAT(a, b) glue(a, b)
 
-// Detect whether a token macro is defined to 1.
-#define ___TRAIT_IS_DEFINED(x) ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_DEF_CHECK_, x))
-#define ___TRAIT_DEF_CHECK_1 ___TRAIT_PROBE()
-
 // Count arguments in a variadic list up to 4.
 #define ___TRAIT_NARG_IMPL(_0, _1, _2, _3, _4, N, ...) N
 #define ___TRAIT_NARG(...) ___TRAIT_NARG_IMPL(dummy, ##__VA_ARGS__, 4, 3, 2, 1, 0)
@@ -1030,9 +1026,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_IS_DEFAULT(For)                                                 \
   ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_DEFAULT_TOKEN_, For))
 
-#define ___TRAIT_IS_VOID_token_void ___TRAIT_PROBE()
-#define ___TRAIT_IS_VOID(Ret) ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_VOID_token_, Ret))
-
 #define ___TRAIT_IS_STATIC_TOKEN_1 ___TRAIT_PROBE()
 #define ___TRAIT_IS_STATIC() ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_STATIC_TOKEN_, ___TRAIT_IS_STATIC_CURRENT))
 
@@ -1041,10 +1034,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 #define ___TRAIT_VTTYPE(I) glue(I, _vtable)
 #define ___TRAIT_VTNAME(F, I) glue4(F, _, I, _vtable)
-
-// -----------------------------------------------------------------------------
-// Method metadata names (reserved for future use)
-// -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // Dispatch by action
@@ -1539,7 +1528,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 
 // -----------------------------------------------------------------------------
 // `def(...)` defines the implementation function body.
-// `redef(...)` defines an overriding implementation for a default method.
 // The self type is chosen automatically from trait metadata.
 // If `For == Default`, the body is for the trait's default implementation;
 // for static traits, self is `void *`; for dynamic traits, self is `DynImpl *`.
@@ -1602,8 +1590,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
       glue(Dyn, Impl) obj) {                                                   \
     return (For *)obj.self;                                                    \
   }
-
-#define ___TRAIT_IMPL_VT() ___TRAIT_IMPL()
 
 // -----------------------------------------------------------------------------
 // TT (dyn) registration: emits a _Generic-association pair type + wrapper
