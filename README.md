@@ -55,7 +55,7 @@ typedef struct { const char *name; } Person;
 
 int main(void) {
   Person p = { .name = "World" };
-  DynGreet d = dyn(Person, &p);
+  DynGreet d = dyn(Greet, &p);
   call(Greet.greet, &p);  // Hello, World! (statically dispatched)
   call(Greet.greet, &d);  // Hello, World! (dynamically dispatched)
 }
