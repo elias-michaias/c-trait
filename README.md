@@ -20,12 +20,11 @@
 </p>
 
 <p align="center">
-  <a href="https://emskeirik.dev/blog/typeclasses-in-c/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/assets/article-button-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="docs/assets/article-button-light.svg">
-      <img src="docs/assets/article-button-light.svg" width="280" height="60" alt="Read the article here!">
-    </picture>
+  <a href="https://emskeirik.dev/blog/typeclasses-in-c/#gh-dark-mode-only">
+    <img src="docs/assets/article-button-dark.svg" width="280" height="60" alt="Read the article here!">
+  </a>
+  <a href="https://emskeirik.dev/blog/typeclasses-in-c/#gh-light-mode-only">
+    <img src="docs/assets/article-button-light.svg" width="280" height="60" alt="Read the article here!">
   </a>
 </p>
 
