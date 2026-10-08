@@ -21,7 +21,7 @@
 
 ---
 
-<img src="./screenshot.png" alt="c-trait code" align="center" />
+<img src="./code.png" alt="c-trait code" align="center" />
 
 Define traits with required and default methods, implement them for your types, override defaults, and extend traits with supertraits. Works with both **static dispatch** (zero-cost, compile-time) and **dynamic dispatch** (vtable-based), unified through a single `$()` macro.
 
