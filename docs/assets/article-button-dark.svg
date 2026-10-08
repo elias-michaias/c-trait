@@ -7,5 +7,5 @@
     <path d="M25 14h-6v11l-6 7 6 7v11h6M39 14h6v11l6 7-6 7v11h-6" stroke="#c99bff" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
   </svg>
   <text x="58" y="34" fill="#e6e2f1" font-family="'Source Sans 3', 'Segoe UI', sans-serif" font-size="17" font-weight="600">Read the article here!</text>
-  <path d="M244 28h14m-5-5 5 5-5 5M263 44v-2m0 0h-2m2 0v-2m0 2h2M264 46h11v-11" stroke="#c99bff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M244 28H258M253 23L258 28L253 33" stroke="#c99bff" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
 </svg>
