@@ -6,7 +6,7 @@
  * 2. Default implementation (simple: returns constant)
  * 3. Type uses default (no override)
  * 4. Type overrides default via def()
- * 5. call() via SD dispatch for both types
+ * 5. $() via SD dispatch for both types
  * 6. No vtable, no DynTrait (no dynamic dispatch)
  */
 #include "../trait.h"
@@ -76,8 +76,8 @@ int main(void) {
   printf("--- Test 1: Widget (default is_visible) ---\n");
   {
     Widget w = {"button"};
-    call(Drawable.draw, &w);
-    int vis = call(Drawable.is_visible, &w);
+    $(Drawable.draw, &w);
+    int vis = $(Drawable.is_visible, &w);
     TEST(vis == 1, "Widget.is_visible() == 1 (default)");
     printf("  Widget.is_visible() = %d\n", vis);
   }
@@ -88,13 +88,13 @@ int main(void) {
     HiddenWidget hw1 = {"panel", 0};
     HiddenWidget hw2 = {"secret", 1};
 
-    call(Drawable.draw, &hw1);
-    int vis1 = call(Drawable.is_visible, &hw1);
+    $(Drawable.draw, &hw1);
+    int vis1 = $(Drawable.is_visible, &hw1);
     TEST(vis1 == 1, "HiddenWidget(visible).is_visible() == 1");
     printf("  HiddenWidget(visible).is_visible() = %d\n", vis1);
 
-    call(Drawable.draw, &hw2);
-    int vis2 = call(Drawable.is_visible, &hw2);
+    $(Drawable.draw, &hw2);
+    int vis2 = $(Drawable.is_visible, &hw2);
     TEST(vis2 == 0, "HiddenWidget(hidden).is_visible() == 0");
     printf("  HiddenWidget(hidden).is_visible() = %d\n", vis2);
   }

@@ -5,9 +5,9 @@
 // ---- trait: Animal -----------------------------------------------------------
 // Defines a trait with required methods (must be implemented) and default methods
 // (automatically provided unless overridden).
-#define Dynamic
 #define Trait Animal
 #define AnimalSignature(Self)                    \
+  dynamic(Self)                              \
   required(Self, int,  get_snacks)            \
   defaults(immutable(Self), void, check)      \
   defaults(Self, void, eat_snack)             \
@@ -23,7 +23,7 @@
     printf("(default) generic animal.\n");
   }
   void def(eat_snack) {
-    if (call(Animal.get_snacks, self) > 0) call(Animal.feed, self, -1);
+    if ($(Animal.get_snacks, self) > 0) $(Animal.feed, self, -1);
     else printf("(default) no snacks!\n");
   }
   void def(feed, int amount) {
@@ -35,9 +35,10 @@
 
 // ---- trait: Show -------------------------------------------------------------
 // A simple trait with one required method.
-#define Dynamic
 #define Trait Show
-#define ShowSignature(Self) required(Self, void, show)
+#define ShowSignature(Self) \
+  dynamic(Self) \
+  required(Self, void, show)
 #include "../trait.h"
 
 
@@ -69,16 +70,16 @@ int main(void) {
   DynAnimal da = dyn(Animal, &d);
 
   printf("=== defaults: check/feed forwarded, get_snacks custom ===\n");
-  call(Animal.check, &da);
-  call(Animal.eat_snack, &da);
-  printf("get_snacks: %d\n", call(Animal.get_snacks, &da));
-  call(Animal.feed, &da, 5);
-  printf("get_snacks: %d\n\n", call(Animal.get_snacks, &da));
+  $(Animal.check, &da);
+  $(Animal.eat_snack, &da);
+  printf("get_snacks: %d\n", $(Animal.get_snacks, &da));
+  $(Animal.feed, &da, 5);
+  printf("get_snacks: %d\n\n", $(Animal.get_snacks, &da));
 
   printf("=== Show trait (required method, vcall) ===\n");
   {
     DynShow s = dyn(Show, &d);
-    call(Show.show, &s);
+    $(Show.show, &s);
   }
 
   return 0;

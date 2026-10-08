@@ -9,9 +9,10 @@
 #define vec(T) vec_##T
 
 // ---- trait: Drawable ----------------------------------------------------------
-#define Dynamic
 #define Trait Drawable
-#define DrawableSignature(Self) required(Self, void, draw)
+#define DrawableSignature(Self) \
+  dynamic(Self) \
+  required(Self, void, draw)
 #include "../trait.h"
 
 // ---- struct vec_int (the expanded form of vec(int)) ---------------------------
@@ -31,6 +32,6 @@ int main(void) {
   vec_int v = { .x = 3, .y = 7 };
   DynDrawable dd = dyn(Drawable, &v);
   printf("=== type_macro: Drawable for vec(int) ===\n");
-  call(Drawable.draw, &dd);
+  $(Drawable.draw, &dd);
   return 0;
 }

@@ -57,18 +57,29 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 ```
 
 - `def()` / `constdef()` — generates the function with correct naming (`Type_Trait_method`). Use `def()` for mutable methods, `constdef()` for `immutable(Self)` methods.
+- Add `dynamic(Self)` anywhere in `<TraitName>Signature` to make that trait dynamic. The mode is derived from the signature for each impl, so dynamic and static impls can be freely interleaved.
 - To **override a default method**, use `def()`/`constdef()` as usual and define `#define Override_<Type>_<Trait>_<Method> 1` before the `#include "trait.h"` that processes this impl block, so that `defaults()` skips generating the DFL wrapper for that method (otherwise you get a duplicate definition).
 - `#include "trait.h"` — finalizes the block: emits registration, auto-calls `impl()` for dynamic traits, undefines `For`/`Impl`.
 
 ## Calling methods
 
+The default dispatcher is `$()`, an alias for `trait_dispatch_call`. To use a custom spelling or avoid the compiler-specific `$` token, define the alias before the first include:
+
+```c
+#define TraitCustomDispatch
+#define tcall trait_dispatch_call
+#include "trait.h"
+```
+
+Then call methods as `tcall(Trait.method, &obj)`.
+
 ```c
 // Static dispatch (concrete type pointer)
-call(Animal.get_snacks, &dog);         // -> Dog_Animal_get_snacks(&dog)
+$(Animal.get_snacks, &dog);         // -> Dog_Animal_get_snacks(&dog)
 
 // Dynamic dispatch (trait object pointer)
 DynAnimal da = dyn(Animal, &dog);
-call(Animal.get_snacks, &da);          // -> da.vt->get_snacks(da.self)
+$(Animal.get_snacks, &da);          // -> da.vt->get_snacks(da.self)
 
 // Call generated static functions directly (bypass dispatch)
 Dog_Animal_get_snacks(&dog);
@@ -100,7 +111,7 @@ Default implementations use `Default` as the sentinel type:
 #include "trait.h"
 ```
 
-In default bodies, `self` is a `Dyn<Trait> *` (the trait object), so you can call other trait methods via `call(Trait.method, self, ...)` or the generated `Dyn<Trait>_method(*self, ...)` wrappers.
+In default bodies, `self` is a `Dyn<Trait> *` (the trait object), so you can call other trait methods via `$(Trait.method, self, ...)` or the generated `Dyn<Trait>_method(*self, ...)` wrappers.
 
 ### Overriding a default
 
@@ -123,9 +134,9 @@ The `Override_Dog_Animal_feed` macro tells `defaults()` to skip generating the D
 
 ```c
 #define PetSignature(Self) \
+  dynamic(Self) \
   extends(Animal, Self) \
   required(Self, void, play)
-#define Dynamic
 #define Trait Pet
 #include "trait.h"
 ```
@@ -147,17 +158,16 @@ Traits can take additional type parameters. Each instantiation is a separate tra
 
 ```c
 #define ContainerSignature(Self, T) \
+  dynamic(Self) \
   required(Self, T, get)         \
   required(Self, void, set, T)
 
 // Create concrete traits via <Name>Signature aliases
 #define Container_intSignature(Self) ContainerSignature(Self, int)
-#define Dynamic
 #define Trait Container_int
 #include "trait.h"
 
 #define Container_strSignature(Self) ContainerSignature(Self, const char *)
-#define Dynamic
 #define Trait Container_str
 #include "trait.h"
 ```
@@ -192,7 +202,7 @@ Use preprocessor defines to specialize a trait per implementation:
 
 ## Forward declarations
 
-Normally, `call()` is not available inside `def()` bodies because SD entries haven't been emitted yet. The `Forward` flag fixes this:
+Normally, `$()` is not available inside `def()` bodies because SD entries haven't been emitted yet. The `Forward` flag fixes this:
 
 ```c
 #define For Dog
@@ -203,10 +213,10 @@ Normally, `call()` is not available inside `def()` bodies because SD entries hav
     return self->snacks;
   }
   void def(feed, int amount) {
-    int before = call(Animal.get_snacks, self);  // works!
+    int before = $(Animal.get_snacks, self);  // works!
     self->snacks += amount;
   }
 #include "trait.h"
 ```
 
-The first `#include` with `Forward` pre-emits extern declarations and SD entries, so `call()` resolves correctly inside the function bodies.
+The first `#include` with `Forward` pre-emits extern declarations and SD entries, so `$()` resolves correctly inside the function bodies.

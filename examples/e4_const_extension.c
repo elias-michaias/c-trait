@@ -4,16 +4,16 @@
 
 // ---- trait: Reader -----------------------------------------------------------
 #define ReaderSignature(Self)               \
+  dynamic(Self)                         \
   required(immutable(Self), int,  read)  \
   defaults(immutable(Self), void, describe)
-#define Dynamic
 #define Trait Reader
 #include "../trait.h"
 
 #define For Default
 #define Impl Reader
   void constdef(describe) {
-    printf("(default) value = %d\n", call(Reader.read, self));
+    printf("(default) value = %d\n", $(Reader.read, self));
   }
 #include "../trait.h"
 
@@ -21,10 +21,10 @@
 // ---- trait: LoggedReader (extends Reader) ------------------------------------
 // Purely declarative: LoggedReader requires Reader, adds its own methods.
 #define LoggedReaderSignature(Self) \
+  dynamic(Self) \
   extends(Reader, Self)         \
   required(immutable(Self), int,  count) \
   defaults(immutable(Self), void, summary)
-#define Dynamic
 #define Trait LoggedReader
 #include "../trait.h"
 
@@ -32,7 +32,7 @@
 #define Impl LoggedReader
   void def(summary) {
     printf("(default) summary: ");
-    printf("accessed %d time(s)\n", call(LoggedReader.count, self));
+    printf("accessed %d time(s)\n", $(LoggedReader.count, self));
   }
 #include "../trait.h"
 
@@ -65,13 +65,13 @@ int main(void) {
 
   // Reader: own methods
   DynReader r = dyn(Reader, &ib);
-  printf("read: %d\n", call(Reader.read, &r));
-  call(Reader.describe, &r);
+  printf("read: %d\n", $(Reader.read, &r));
+  $(Reader.describe, &r);
 
   // LoggedReader: own methods (uses Reader internally via SD dispatch)
   DynLoggedReader lr = dyn(LoggedReader, &ib);
-  printf("count: %d\n", call(LoggedReader.count, &lr));
-  call(LoggedReader.summary, &lr);
+  printf("count: %d\n", $(LoggedReader.count, &lr));
+  $(LoggedReader.summary, &lr);
 
   return 0;
 }

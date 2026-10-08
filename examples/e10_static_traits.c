@@ -5,7 +5,7 @@
  * 1. Static trait definition (no vtable, no DynTrait)
  * 2. Multiple impls of same static trait
  * 3. Associated types (each impl specializes a type)
- * 4. call() works via SD dispatch
+ * 4. $() works via SD dispatch
  * 5. DynTrait cannot be created (compile-time: no typedef exists)
  * 6. Static trait with extends (non-static base)
  */
@@ -15,9 +15,10 @@
 #include <string.h>
 
 // ---- trait: Measurable (non-static base for extends test) ------------------
-#define Dynamic
 #define Trait Measurable
-#define MeasurableSignature(Self) required(Self, int, get_length)
+#define MeasurableSignature(Self) \
+  dynamic(Self) \
+  required(Self, int, get_length)
 #include "../trait.h"
 
 // ---- trait: Searchable (static, extends Measurable) -------------------------
@@ -114,11 +115,11 @@ int main(void) {
 
   printf("=== Static traits test ===\n\n");
 
-  // -- Test 1: call() via SD dispatch on static trait --
-  printf("--- Test 1: call() via SD on static trait ---\n");
+  // -- Test 1: $() via SD dispatch on static trait --
+  printf("--- Test 1: $() via SD on static trait ---\n");
   {
     int val = 7;
-    int sl = call(Searchable.search, &val);
+    int sl = $(Searchable.search, &val);
     TEST(sl == 70, "Searchable.search(7) == 70");
     printf("  Searchable.search(7) = %d\n", sl);
   }
@@ -127,8 +128,11 @@ int main(void) {
   printf("\n--- Test 2: Static extends non-static ---\n");
   {
     int val = 5;
-    int ml = call(Measurable.get_length, &val);
+    int ml = $(Measurable.get_length, &val);
     TEST(ml == 5, "Measurable.get_length(5) == 5");
+    DynMeasurable dm = dyn(Measurable, &val);
+    TEST($(Measurable.get_length, &dm) == 5,
+         "dyn(Measurable, &val) dispatches after static trait declarations");
     printf("  Measurable.get_length(5) = %d\n", ml);
   }
 
@@ -137,13 +141,13 @@ int main(void) {
   {
     IntContainer ic = {{0}, 0};
     int n;
-    n = call(Container.push, &ic, 42);
+    n = $(Container.push, &ic, 42);
     TEST(n == 1, "IntContainer.push(42) -> count=1");
-    n = call(Container.push, &ic, 99);
+    n = $(Container.push, &ic, 99);
     TEST(n == 2, "IntContainer.push(99) -> count=2");
-    n = call(Container.pop, &ic);
+    n = $(Container.pop, &ic);
     TEST(n == 99, "IntContainer.pop -> 99");
-    n = call(Container.pop, &ic);
+    n = $(Container.pop, &ic);
     TEST(n == 42, "IntContainer.pop -> 42");
     printf("  IntContainer: push 42, 99; pop 99, 42 — OK\n");
   }
@@ -152,13 +156,13 @@ int main(void) {
   {
     StrContainer sc = {{0}, 0};
     int n;
-    n = call(Container.push, &sc, "hello");
+    n = $(Container.push, &sc, "hello");
     TEST(n == 1, "StrContainer.push(\"hello\") -> count=1");
-    n = call(Container.push, &sc, "world!");
+    n = $(Container.push, &sc, "world!");
     TEST(n == 2, "StrContainer.push(\"world!\") -> count=2");
-    n = call(Container.pop, &sc);
+    n = $(Container.pop, &sc);
     TEST(n == 6, "StrContainer.pop -> 6 (len(\"world!\"))");
-    n = call(Container.pop, &sc);
+    n = $(Container.pop, &sc);
     TEST(n == 5, "StrContainer.pop -> 5 (len(\"hello\"))");
     printf("  StrContainer: push \"hello\", \"world!\"; pop 6, 5 — OK\n");
   }

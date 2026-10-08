@@ -48,14 +48,14 @@ test_mode() {
 test_mode "gnu11 (C11 + GNU extensions)" -std=gnu11
 
 # gnu99: C99 + GNU extensions + -Wpedantic.
-# No _Generic in C99, so call()/dyn() dispatch via __builtin_choose_expr.
+# No _Generic in C99, so $()/dyn() dispatch via __builtin_choose_expr.
 # The __builtin_choose_expr/__builtin_types_compatible_p builtins are
 # GNU extensions, which are fine under gnu99 (not ISO C99).  clang's
 # -Wgnu-zero-variadic-macro-arguments fires on the `##__VA_ARGS__` idiom;
 # suppress it for clang only.
 gnu99_flags=(-std=gnu99 -Wpedantic)
 case "$(basename "$CC")" in
-  *clang*) gnu99_flags+=(-Wno-gnu-zero-variadic-macro-arguments) ;;
+  *clang*) gnu99_flags+=(-Wno-gnu-zero-variadic-macro-arguments -Wno-dollar-in-identifier-extension) ;;
 esac
 test_mode "gnu99 (C99 + GNU extensions, choose_expr dispatch)" "${gnu99_flags[@]}"
 
@@ -64,11 +64,12 @@ test_mode "gnu99 (C99 + GNU extensions, choose_expr dispatch)" "${gnu99_flags[@]
 # healthy on newer compilers (and stays pedantic-clean).
 c99_forced_flags=(-std=gnu11 -DTRAIT_MODE=c99 -Wpedantic)
 case "$(basename "$CC")" in
-  *clang*) c99_forced_flags+=(-Wno-gnu-zero-variadic-macro-arguments) ;;
+  *clang*) c99_forced_flags+=(-Wno-gnu-zero-variadic-macro-arguments -Wno-dollar-in-identifier-extension) ;;
 esac
 test_mode "forced c99 (TRAIT_MODE=c99 on gnu11)" "${c99_forced_flags[@]}"
 
-# c23: ISO C23 + -Wpedantic.
+# c23: C23 + -Wpedantic. The default `$` dispatch token is a compiler extension;
+# suppress its diagnostic for clang (strict C can select TraitCustomDispatch).
 # Some compilers (GCC <15) use -std=c2x instead of -std=c23.
 c23_std=-std=c23
 if ! echo "int x;" | "$CC" -Werror "$c23_std" -c -x c - -o /dev/null &>/dev/null; then
@@ -79,9 +80,9 @@ fi
 # hasn't updated its diagnostic yet).  Suppress it for clang only.
 c23_flags=("$c23_std" -Wpedantic)
 case "$(basename "$CC")" in
-  *clang*) c23_flags+=(-Wno-gnu-zero-variadic-macro-arguments) ;;
+  *clang*) c23_flags+=(-Wno-gnu-zero-variadic-macro-arguments -Wno-dollar-in-identifier-extension) ;;
 esac
-test_mode "c23 (ISO C23, no GNU extensions)" "${c23_flags[@]}"
+test_mode "c23 (C23 mode)" "${c23_flags[@]}"
 
 echo ""
 if [ "$overall_failed" -ne 0 ]; then

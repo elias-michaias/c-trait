@@ -5,29 +5,29 @@
 // ── Traits ───────────────────────────────────────────────────────────────
 
 #define Trait Animal
-#define Dynamic
 #define AnimalSignature(Self)                    \
+  dynamic(Self)                              \
   required(Self, int,  get_snacks)            \
   defaults(Self, void, feed, int)             \
   defaults(Self, void, check)
 #include "../trait.h"
 
 #define Trait Pet
-#define Dynamic
 #define PetSignature(Self)                       \
+  dynamic(Self)                              \
   extends(Animal, Self)                      \
   required(Self, void, play)
 #include "../trait.h"
 
 #define Trait Show
-#define Dynamic
-#define ShowSignature(Self) required(Self, void, show)
+#define ShowSignature(Self) \
+  dynamic(Self) \
+  required(Self, void, show)
 #include "../trait.h"
 
 // ── Defaults ─────────────────────────────────────────────────────────────
 
 #define For Default
-#define Dynamic
 #define Impl Animal
   void def(check)     { (void)self; printf("generic animal\n"); }
   void def(feed, int n) { (void)self; printf("fed %d\n", n); }
@@ -63,14 +63,14 @@ int main(void) {
   Dog rex = { .base = { .snacks = 2 }, .breed = "Labrador" };
 
   DynAnimal a = dyn(Animal, &rex);
-  call(Animal.check, &a);
-  call(Animal.feed, &rex, 5);
-  printf("snacks: %d\n\n", call(Animal.get_snacks, &a));
+  $(Animal.check, &a);
+  $(Animal.feed, &rex, 5);
+  printf("snacks: %d\n\n", $(Animal.get_snacks, &a));
 
   DynPet p = dyn(Pet, &rex);
   // vcall macro = don't need to specify trait
-  call(Pet.play, &p);
+  $(Pet.play, &p);
 
   DynShow s = dyn(Show, &rex);
-  call(Show.show, &s);
+  $(Show.show, &s);
 }

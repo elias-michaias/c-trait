@@ -6,15 +6,14 @@
 // T acts as a type parameter; macro arity handles passing it cleanly.
 // Each instantiation (Container_int, Container_str) is a separate trait.
 #define ContainerSignature(Self, T) \
+  dynamic(Self) \
   required(Self, T, get)         \
   required(Self, void, set, T)
 
 #define Container_intSignature(Self) ContainerSignature(Self, int)
 #define Container_strSignature(Self) ContainerSignature(Self, const char *)
-#define Dynamic
 #define Trait Container_int
 #include "../trait.h"
-#define Dynamic
 #define Trait Container_str
 #include "../trait.h"
 
@@ -47,14 +46,14 @@ int main(void) {
 
   printf("=== parametric traits: Container ===\n");
   DynContainer_int ci = dyn(Container_int, &ib);
-  printf("IntBox get: %d\n", call(Container_int.get, &ci));
-  call(Container_int.set, &ci, 99);
-  printf("IntBox get after set: %d\n", call(Container_int.get, &ci));
+  printf("IntBox get: %d\n", $(Container_int.get, &ci));
+  $(Container_int.set, &ci, 99);
+  printf("IntBox get after set: %d\n", $(Container_int.get, &ci));
 
   DynContainer_str cs = dyn(Container_str, &sb);
-  printf("StrBox get: %s\n", call(Container_str.get, &cs));
-  call(Container_str.set, &cs, "world");
-  printf("StrBox get after set: %s\n", call(Container_str.get, &cs));
+  printf("StrBox get: %s\n", $(Container_str.get, &cs));
+  $(Container_str.set, &cs, "world");
+  printf("StrBox get after set: %s\n", $(Container_str.get, &cs));
 
   return 0;
 }
