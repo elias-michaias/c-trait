@@ -6,16 +6,16 @@
 // `immutable(Self)` marks a method as const (takes `const void *`).
 // `required` = must be implemented; `default` = has a fallback.
 #define ReaderSignature(Self)               \
+  dynamic(Self)                         \
   required(immutable(Self), int,  read)  \
   defaults(immutable(Self), void, describe)
-#define Dynamic
 #define Trait Reader
 #include "../trait.h"
 
 #define For Default
 #define Impl Reader
   void constdef(describe) {
-    printf("(default) value = %d\n", call(Reader.read, self));
+    printf("(default) value = %d\n", $(Reader.read, self));
   }
 #include "../trait.h"
 
@@ -37,8 +37,8 @@ int main(void) {
   DynReader r = dyn(Reader, &ib);
 
   printf("=== const methods: Reader ===\n");
-  printf("read: %d\n", call(Reader.read, &r));
-  call(Reader.describe, &r);
+  printf("read: %d\n", $(Reader.read, &r));
+  $(Reader.describe, &r);
 
   return 0;
 }

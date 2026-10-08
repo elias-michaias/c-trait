@@ -12,10 +12,10 @@ This document explains the preprocessor machinery that powers c-trait's static a
 - [Selector objects and selector types](#selector-objects-and-selector-types)
 - [Impl registration](#impl-registration)
 - [Static dispatch (SD)](#static-dispatch-sd)
-- [The `call()` dispatch chain](#the-call-dispatch-chain)
+- [The trait dispatch chain](#the-trait-dispatch-chain)
 - [Dynamic dispatch (DynSD)](#dynamic-dispatch-dynsd)
 - [Default methods and override detection](#default-methods-and-override-detection)
-- [Why a single `call()` macro](#why-a-single-call-macro)
+- [Why a single trait dispatcher](#why-a-single-trait-dispatcher)
 - [The octal counter trick](#the-octal-counter-trick)
 - [Limitations](#limitations)
 
@@ -26,7 +26,7 @@ This document explains the preprocessor machinery that powers c-trait's static a
 C has no function overloading, no traits, and no open-world interfaces. The C preprocessor also cannot loop. So how do you:
 
 1. Register an unlimited number of type+trait+method combinations at compile time?
-2. Route a single function call (`call(Animal.get_snacks, &obj)`) to the correct implementation based on both the selector and the object's concrete type?
+2. Route a single function call (`$(Animal.get_snacks, &obj)`) to the correct implementation based on both the selector and the object's concrete type?
 3. Do all of this with zero runtime overhead for static dispatch?
 
 The answer is: **self-inclusion** + **type tags** + **a global octal counter**.
@@ -66,19 +66,20 @@ When you write:
 
 The preprocessor re-opens `trait.h` from the top. Because `For` is defined, it enters the `#ifdef For` branch and processes the impl code. The second `#include "trait.h"` at the bottom of that branch re-enters the file again — but this time, additional state macros (like `___TRAIT_SD_ACTIVE`) may be defined, routing it through a different branch.
 
-**State macros** that control which path is taken:
+**State macros and signature directives** that control which path is taken:
 
 | Macro | Meaning |
 |-------|---------|
 | `For` | Concrete type being implemented (or `Default`) |
 | `Impl` | Trait being implemented |
 | `Trait` | Trait being *defined* (not implemented) |
+| `dynamic(Self)` | Signature directive; a `DYN_QUERY` pass determines trait mode and impls re-query the same signature |
 | `___TRAIT_SD_ACTIVE` | Inside the SD self-include loop |
 | `___TRAIT_DYNSD_ACTIVE` | Inside the DynSD self-include loop |
 | `Forward` | Forward-declare pass (emits extern decls + SD entries before `def()` bodies) |
-| `___TRAIT_IS_STATIC_CURRENT` | Current trait is static (no vtable) |
+| `___TRAIT_IS_STATIC_CURRENT` | Current trait/impl is static (no vtable) |
 
-All of these are `#undef`-ed after use, making each `#include` block single-use.
+Transient state macros are `#undef`-ed after use, making each `#include` block single-use. `dynamic(Self)` expands to nothing in normal signature passes. In the `DYN_QUERY` pass, required/default entries are suppressed and `dynamic(Self)` contributes `| 1` to a `#if` expression. This detects it anywhere in the signature without retaining global mode state.
 
 ---
 
@@ -87,8 +88,8 @@ All of these are `#undef`-ed after use, making each `#include` block single-use.
 When you write:
 ```c
 #define Trait Animal
-#define Dynamic
 #define AnimalSignature(Self)    \
+  dynamic(Self)                  \
   required(Self, int, get_snacks) \
   defaults(Self, void, feed, int)
 #include "trait.h"
@@ -116,7 +117,7 @@ typedef struct {
 } DynAnimal;
 ```
 
-This is the "fat pointer" — a type-erased pointer plus a vtable pointer. Only emitted for dynamic traits. It's the object you pass to `call()` when you want runtime dispatch.
+This is the "fat pointer" — a type-erased pointer plus a vtable pointer. Only emitted for dynamic traits. It's the object you pass to `$()` when you want runtime dispatch.
 
 ### 3. Forward inline wrappers (FWD)
 
@@ -138,7 +139,7 @@ typedef struct { char _; } ___sel_Animal_get_snacks_t;
 typedef struct { char _; } ___sel_Animal_feed_t;
 ```
 
-Each method gets a **unique, empty struct type**. These are the selector types that `call()` matches against at compile time. They exist solely to give each method a distinct type that `_Generic` can dispatch on — they carry no data and cost nothing at runtime.
+Each method gets a **unique, empty struct type**. These are the selector types that `$()` matches against at compile time. They exist solely to give each method a distinct type that `_Generic` can dispatch on — they carry no data and cost nothing at runtime.
 
 ### 5. Selector struct + selector object (SSEL)
 
@@ -151,7 +152,7 @@ typedef struct {
 static const Animal___sel_t Animal = {0};
 ```
 
-The `Animal` variable is a zero-initialized struct. Its *type* carries the method tags. When you write `Animal.get_snacks`, C's `.` operator evaluates this to an expression of type `___sel_Animal_get_snacks_t` — and that's what `call()` inspects. The variable itself is never used at runtime; it exists to make the `Animal.method` syntax work through normal C struct access.
+The `Animal` variable is a zero-initialized struct. Its *type* carries the method tags. When you write `Animal.get_snacks`, C's `.` operator evaluates this to an expression of type `___sel_Animal_get_snacks_t` — and that's what `$()` inspects. The variable itself is never used at runtime; it exists to make the `Animal.method` syntax work through normal C struct access.
 
 ### 6. DynSD loop — register DynAnimal for vtable dispatch (dynamic traits only)
 
@@ -166,7 +167,7 @@ static inline int ___trait_sd_fn_000000(DynAnimal *self) {   // vtable dispatch!
 }
 ```
 
-This is what makes `call(Animal.get_snacks, &dyn_animal)` work — the SD dispatch chain matches `DynAnimal` as the concrete type, and the wrapper does vtable dispatch. Without this, you'd need a separate dispatch path for trait objects.
+This is what makes `$(Animal.get_snacks, &dyn_animal)` work — the SD dispatch chain matches `DynAnimal` as the concrete type, and the wrapper does vtable dispatch. Without this, you'd need a separate dispatch path for trait objects.
 
 ---
 
@@ -175,12 +176,12 @@ This is what makes `call(Animal.get_snacks, &dyn_animal)` work — the SD dispat
 This is the key abstraction. Consider:
 
 ```c
-call(Animal.get_snacks, &dog);
+$(Animal.get_snacks, &dog);
 ```
 
 - `Animal` is the selector object (type: `Animal___sel_t`)
 - `Animal.get_snacks` uses C's `.` operator on a struct → result has type `___sel_Animal_get_snacks_t`
-- `call()` receives this type via `typeof(sel)` and matches it against registered SD entries
+- `$()` receives this type via `typeof(sel)` and matches it against registered SD entries
 
 The selector object itself is **never used at runtime**. It exists purely to carry type information through the preprocessor and compiler. The `.` operator is just normal C syntax — no special macro magic is needed for the dotted notation.
 
@@ -247,11 +248,11 @@ If `Dog` hasn't implemented `Animal`, this symbol is undefined → **linker erro
 
 ## Static dispatch (SD)
 
-For concrete types passed directly to `call()`, the dispatch is **fully static** — resolved at compile time with zero runtime overhead.
+For concrete types passed directly to `$()`, the dispatch is **fully static** — resolved at compile time with zero runtime overhead.
 
 ```c
 Dog dog = { .snacks = 5 };
-call(Animal.get_snacks, &dog);
+$(Animal.get_snacks, &dog);
 // Compiles to: Dog_Animal_get_snacks(&dog)  (direct call, no vtable)
 ```
 
@@ -259,10 +260,10 @@ The mechanism is standard C11 `_Generic` with the "extendible `_Generic`" patter
 
 ---
 
-## The `call()` dispatch chain
+## The trait dispatch chain
 
 ```c
-call(sel, obj, ...)
+$(sel, obj, ...)
 // expands to (C11):
 _Generic(
   (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0,
@@ -298,10 +299,10 @@ The compiler sees the entire `_Generic` at compile time, picks the matching bran
 
 ### C99/GNU99 mode: `__builtin_choose_expr` fallback
 
-`_Generic` is a C11 keyword, so pre-C11 modes (e.g. `-std=gnu99`) have no direct equivalent. When `trait.h` detects `__STDC_VERSION__ < 201112L` (and a GCC/Clang compiler, which is already required for `__typeof__` and the other GNU extensions), it sets `___TRAIT_CE` and switches `call()`/`dyn()` to **nested `__builtin_choose_expr`** dispatch:
+`_Generic` is a C11 keyword, so pre-C11 modes (e.g. `-std=gnu99`) have no direct equivalent. When `trait.h` detects `__STDC_VERSION__ < 201112L` (and a GCC/Clang compiler, which is already required for `__typeof__` and the other GNU extensions), it sets `___TRAIT_CE` and switches `$()`/`dyn()` to **nested `__builtin_choose_expr`** dispatch:
 
 ```c
-call(sel, obj, ...)
+$(sel, obj, ...)
 // expands to (C99/GNU99):
 (
   __builtin_choose_expr(
@@ -340,17 +341,17 @@ Both `___TRAIT_CE` and `___TRAIT_C23` are normally derived from `__STDC_VERSION_
 
 ## Dynamic dispatch (DynSD)
 
-For DynTrait objects, the same `call()` macro works:
+For DynTrait objects, the same `$()` macro works:
 
 ```c
 DynAnimal da = dyn(Animal, &dog);
-call(Animal.get_snacks, &da);
+$(Animal.get_snacks, &da);
 // Compiles to: da.vt->get_snacks(da.self)  (vtable indirection)
 ```
 
 This works because the DynSD loop registered `DynAnimal` in the same SD dispatch chain. When the chain encounters `typeof(da) == DynAnimal`, it matches the DynSD wrapper, which does vtable dispatch internally.
 
-The user doesn't need to know or care whether they're calling through a concrete type or a DynTrait — `call()` handles both uniformly.
+The user doesn't need to know or care whether they're calling through a concrete type or a DynTrait — `$()` handles both uniformly.
 
 ---
 
@@ -396,11 +397,11 @@ Whether `Override_<Type>_<Trait>_<Method>` is defined cannot be checked with `#i
 
 ### Static traits
 
-For static traits (no `#define Dynamic`), the same override mechanism applies, but the default wrapper constructs a minimal `DynTrait{.self = ptr}` without a vtable pointer.
+For static traits (no `dynamic(Self)` signature directive), the same override mechanism applies, but the default wrapper constructs a minimal `DynTrait{.self = ptr}` without a vtable pointer.
 
 ---
 
-## Why a single `call()` macro
+## Why a single trait dispatcher
 
 ### The alternative that doesn't work
 
@@ -410,21 +411,23 @@ You might think: "why not let users write `Animal.get_snacks(&dog)` as a standal
 
 You might also think: "why not generate overloaded function names like `call_Animal_get_snacks(&dog)`?" This would require the preprocessor to generate a different macro for each method, but **the preprocessor cannot create user-callable macros** — `#define` is textual substitution, not code generation. The user would have to write the exact macro name that was defined.
 
-### The `call()` design
+### The `$()` design
 
-`call(sel, obj)` solves both problems:
+`$(sel, obj)` solves both problems:
 
 1. **`sel` is a C expression** (`Animal.get_snacks`) that uses normal struct access — no macro trickery needed
-2. **`call()` is the single macro** that intercepts the result type via `typeof(sel)` and dispatches to the correct wrapper
+2. **`$()` is the single macro** that intercepts the result type via `typeof(sel)` and dispatches to the correct wrapper
 3. **The wrapper** is generated by the library during impl registration, named by the global octal counter, and selected at compile time via `_Generic`
 
-The user only needs to remember one macro: `call()`. The dotted notation (`Animal.get_snacks`) is just a convention enabled by the selector object's struct layout.
+The user only needs to remember one macro: `$()`. The dotted notation (`Animal.get_snacks`) is just a convention enabled by the selector object's struct layout.
+
+`$` is a compiler-supported identifier extension. Before the first include, defining `TraitCustomDispatch` suppresses the default alias; users can then map a standard identifier such as `tcall` to `trait_dispatch_call`.
 
 ---
 
 ## The octal counter trick
 
-The global counter is a 7-digit octal counter (`SD_C7`..`SD_C1`), giving `call()` up to 8⁷ = 2,097,152 SD dispatch slots. Each *method* of each impl consumes one slot, shared between the SD loop (concrete types) and DynSD loop (DynTrait types).
+The global counter is a 7-digit octal counter (`SD_C7`..`SD_C1`), giving `$()` up to 8⁷ = 2,097,152 SD dispatch slots. Each *method* of each impl consumes one slot, shared between the SD loop (concrete types) and DynSD loop (DynTrait types).
 
 This technique is adapted from Jackson Allan's [extendible `_Generic`](https://github.com/JacksonAllan/CC/blob/main/articles/Better_C_Generics_Part_1_The_Extendible_Generic.md), which in turn credits the [Boost preprocessor counter](https://www.boost.org/doc/libs/1_66_0/boost/preprocessor/slot/detail/counter.hpp). The core idea: since the preprocessor can't loop, you encode a counter as a chain of `#define` digits and enumerate every possible increment as an `#if`/`#elif` branch — a preprocessor odometer.
 
@@ -477,5 +480,5 @@ The trade-off is that the counter is **monotonically increasing and never reset*
 | **GNU extensions** | `##__VA_ARGS__` and `__typeof__` (both C11, both with standard C23 equivalents).  In C23 mode, `##__VA_ARGS__` → `__VA_OPT__`, `__typeof__` → `typeof`, `__attribute__((unused))` → `[[maybe_unused]]` automatically. |
 | **No ISO C99 (no GNU extensions)** | The C99 mode (`-std=gnu99`) still requires GCC/Clang GNU extensions: `__builtin_choose_expr`, `__builtin_types_compatible_p`, `__typeof__`, `##__VA_ARGS__`. Plain `-std=c99 -Wpedantic` rejects these. |
 | **choose_expr nesting depth in C99 mode** | Each registered SD/TT slot nests one `__builtin_choose_expr`. At the example scale (~80 slots) this compiles fine on GCC/Clang; extreme slot counts may hit compiler nesting limits before the 8⁷ counter ceiling. |
-| **Compile-time linear scan** | `call()` checks all SD slots sequentially. Many registrations slow compilation (but runtime is a direct call). In the future, this will be optimized. |
+| **Compile-time linear scan** | `$()` checks all SD slots sequentially. Many registrations slow compilation (but runtime is a direct call). In the future, this will be optimized. |
 | **Single translation unit** | SD/DynSD slots are file-scoped. Cross-TU dispatch requires the vtable (dynamic) path. |

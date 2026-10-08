@@ -14,52 +14,52 @@
 
 // ---- Stringify: 0-arg required (immutable) -----------------------------------
 #define StringifySignature(Self)                            \
+  dynamic(Self)                                          \
   required(immutable(Self), const char *, stringify)
-#define Dynamic
 #define Trait Stringify
 #include "../trait.h"
 
 // ---- Describable: 0-arg default (immutable) + 0-arg required -----------------
 #define DescribableSignature(Self)                           \
+  dynamic(Self)                                           \
   required(immutable(Self), const char *, name)           \
   defaults(immutable(Self), int,          name_len)
-#define Dynamic
 #define Trait Describable
 #include "../trait.h"
 
 #define For Default
 #define Impl Describable
   int constdef(name_len) {
-    return (int)strlen(call(Describable.name, self));
+    return (int)strlen($(Describable.name, self));
   }
 #include "../trait.h"
 
 // ---- Arithmetic: 1-arg methods, mixed mutability ----------------------------
 #define ArithmeticSignature(Self)                        \
+  dynamic(Self)                                       \
   required(Self,            void, add, int)               \
   required(Self,            void, mul, int)               \
   required(immutable(Self), int,  value)                  \
   defaults(immutable(Self), int,  doubled)                \
   defaults(Self,            void, reset)
-#define Dynamic
 #define Trait Arithmetic
 #include "../trait.h"
 
 #define For Default
 #define Impl Arithmetic
   int constdef(doubled) {
-    return call(Arithmetic.value, self) * 2;
+    return $(Arithmetic.value, self) * 2;
   }
   void def(reset) {
-    call(Arithmetic.mul, self, 0);
+    $(Arithmetic.mul, self, 0);
   }
 #include "../trait.h"
 
 // ---- Transform: 2-arg method ------------------------------------------------
 #define TransformSignature(Self)                             \
+  dynamic(Self)                                           \
   required(Self, int, apply, int, int)                    \
   defaults(immutable(Self), const char *, kind)
-#define Dynamic
 #define Trait Transform
 #include "../trait.h"
 
@@ -73,61 +73,60 @@
 
 // ---- Mapper: 2-arg method with pointer + int --------------------------------
 #define MapperSignature(Self)                                \
+  dynamic(Self)                                           \
   required(immutable(Self), int, map_val, int, int)
-#define Dynamic
 #define Trait Mapper
 #include "../trait.h"
 
 // ---- Cloneable: returns pointer type ----------------------------------------
 #define CloneableSignature(Self)                             \
+  dynamic(Self)                                           \
   required(immutable(Self), void *, clone)
-#define Dynamic
 #define Trait Cloneable
 #include "../trait.h"
 
 // ---- Resettable: 0-arg mutable required + default ----------------------------
 #define ResettableSignature(Self)                            \
+  dynamic(Self)                                           \
   required(Self, void, zero_out)                          \
   defaults(Self, void, zero_and_report)
-#define Dynamic
 #define Trait Resettable
 #include "../trait.h"
 
 #define For Default
 #define Impl Resettable
   void def(zero_and_report) {
-    call(Resettable.zero_out, self);
+    $(Resettable.zero_out, self);
     printf("  zeroed out\n");
   }
 #include "../trait.h"
 
 // ---- Measurable extends Describable: trait inheritance -----------------------
 #define MeasurableSignature(Self)                            \
+  dynamic(Self)                                           \
   extends(Describable, Self)                             \
   required(immutable(Self), int,    measure)              \
   defaults(immutable(Self), int,    is_big)
-#define Dynamic
 #define Trait Measurable
 #include "../trait.h"
 
 #define For Default
 #define Impl Measurable
   int constdef(is_big) {
-    return call(Measurable.measure, self) > 100;
+    return $(Measurable.measure, self) > 100;
   }
 #include "../trait.h"
 
 // ---- Parametric: Container with int and double ------------------------------
 #define ContainerSignature(Self, T)                          \
+  dynamic(Self)                                           \
   required(immutable(Self), T,    peek)                   \
   required(Self,            void, poke, T)
 
 #define Container_intSignature(Self)    ContainerSignature(Self, int)
 #define Container_doubleSignature(Self) ContainerSignature(Self, double)
-#define Dynamic
 #define Trait Container_int
 #include "../trait.h"
-#define Dynamic
 #define Trait Container_double
 #include "../trait.h"
 
@@ -451,11 +450,11 @@ int main(void) {
     DynStringify s4 = dyn(Stringify, &r);
     DynStringify s5 = dyn(Stringify, &sb);
 
-    CHECK(strcmp(call(Stringify.stringify, &s1), "IntWrapper") == 0);
-    CHECK(strcmp(call(Stringify.stringify, &s2), "DoubleWrapper") == 0);
-    CHECK(strcmp(call(Stringify.stringify, &s3), "origin") == 0);
-    CHECK(strcmp(call(Stringify.stringify, &s4), "box") == 0);
-    CHECK(strcmp(call(Stringify.stringify, &s5), "hello") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s1), "IntWrapper") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s2), "DoubleWrapper") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s3), "origin") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s4), "box") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s5), "hello") == 0);
   }
 
   // ==========================================================================
@@ -469,18 +468,18 @@ int main(void) {
     DynDescribable d5 = dyn(Describable, &sb);
 
     // name (required)
-    CHECK(strcmp(call(Describable.name, &d1), "IntWrapper") == 0);
-    CHECK(strcmp(call(Describable.name, &d2), "DoubleWrapper") == 0);
-    CHECK(strcmp(call(Describable.name, &d3), "origin") == 0);
-    CHECK(strcmp(call(Describable.name, &d4), "box") == 0);
-    CHECK(strcmp(call(Describable.name, &d5), "StrBuf") == 0);
+    CHECK(strcmp($(Describable.name, &d1), "IntWrapper") == 0);
+    CHECK(strcmp($(Describable.name, &d2), "DoubleWrapper") == 0);
+    CHECK(strcmp($(Describable.name, &d3), "origin") == 0);
+    CHECK(strcmp($(Describable.name, &d4), "box") == 0);
+    CHECK(strcmp($(Describable.name, &d5), "StrBuf") == 0);
 
     // name_len: default (strlen of name) vs def
-    CHECK(call(Describable.name_len, &d1) == 10);  // default: strlen("IntWrapper")
-    CHECK(call(Describable.name_len, &d2) == 13);  // def: always 13
-    CHECK(call(Describable.name_len, &d3) == 6);   // default: strlen("origin")
-    CHECK(call(Describable.name_len, &d4) == 3);   // default: strlen("box")
-    CHECK(call(Describable.name_len, &d5) == 6);   // def: always 6
+    CHECK($(Describable.name_len, &d1) == 10);  // default: strlen("IntWrapper")
+    CHECK($(Describable.name_len, &d2) == 13);  // def: always 13
+    CHECK($(Describable.name_len, &d3) == 6);   // default: strlen("origin")
+    CHECK($(Describable.name_len, &d4) == 3);   // default: strlen("box")
+    CHECK($(Describable.name_len, &d5) == 6);   // def: always 6
   }
 
   // ==========================================================================
@@ -491,23 +490,23 @@ int main(void) {
     IntWrapper iw2 = { .val = 5 };
     DynArithmetic a1 = dyn(Arithmetic, &iw2);
 
-    CHECK(call(Arithmetic.value, &a1) == 5);
-    call(Arithmetic.add, &a1, 3);
-    CHECK(call(Arithmetic.value, &a1) == 8);
-    call(Arithmetic.mul, &a1, 2);
-    CHECK(call(Arithmetic.value, &a1) == 16);
-    CHECK(call(Arithmetic.doubled, &a1) == 32);   // default: value * 2
-    call(Arithmetic.reset, &a1);                  // default: mul by 0
-    CHECK(call(Arithmetic.value, &a1) == 0);
+    CHECK($(Arithmetic.value, &a1) == 5);
+    $(Arithmetic.add, &a1, 3);
+    CHECK($(Arithmetic.value, &a1) == 8);
+    $(Arithmetic.mul, &a1, 2);
+    CHECK($(Arithmetic.value, &a1) == 16);
+    CHECK($(Arithmetic.doubled, &a1) == 32);   // default: value * 2
+    $(Arithmetic.reset, &a1);                  // default: mul by 0
+    CHECK($(Arithmetic.value, &a1) == 0);
 
     // Point: overrides reset
     Point pt2 = { .label = "p", .x = 3, .y = 4 };
     DynArithmetic a2 = dyn(Arithmetic, &pt2);
 
-    CHECK(call(Arithmetic.value, &a2) == 3);
-    call(Arithmetic.add, &a2, 7);
-    CHECK(call(Arithmetic.value, &a2) == 10);
-    call(Arithmetic.reset, &a2);                  // def: zeros x AND y
+    CHECK($(Arithmetic.value, &a2) == 3);
+    $(Arithmetic.add, &a2, 7);
+    CHECK($(Arithmetic.value, &a2) == 10);
+    $(Arithmetic.reset, &a2);                  // def: zeros x AND y
     CHECK(pt2.x == 0);
     CHECK(pt2.y == 0);
 
@@ -515,11 +514,11 @@ int main(void) {
     Quad q2 = { .a = 2, .b = 3, .c = 4, .d = 5 };
     DynArithmetic a3 = dyn(Arithmetic, &q2);
 
-    CHECK(call(Arithmetic.value, &a3) == 2);
-    CHECK(call(Arithmetic.doubled, &a3) == 28);   // def: (2+3+4+5)*2
-    call(Arithmetic.add, &a3, 8);
-    CHECK(call(Arithmetic.value, &a3) == 10);
-    CHECK(call(Arithmetic.doubled, &a3) == 44);   // (10+3+4+5)*2
+    CHECK($(Arithmetic.value, &a3) == 2);
+    CHECK($(Arithmetic.doubled, &a3) == 28);   // def: (2+3+4+5)*2
+    $(Arithmetic.add, &a3, 8);
+    CHECK($(Arithmetic.value, &a3) == 10);
+    CHECK($(Arithmetic.doubled, &a3) == 44);   // (10+3+4+5)*2
   }
 
   // ==========================================================================
@@ -530,21 +529,21 @@ int main(void) {
     Point pt3 = { .label = "t", .x = 0, .y = 0 };
     DynTransform t1 = dyn(Transform, &pt3);
 
-    int sum = call(Transform.apply, &t1, 5, 10);
+    int sum = $(Transform.apply, &t1, 5, 10);
     CHECK(sum == 15);                      // x=5, y=10, sum=15
     CHECK(pt3.x == 5);
     CHECK(pt3.y == 10);
-    CHECK(strcmp(call(Transform.kind, &t1), "point_translate") == 0);
+    CHECK(strcmp($(Transform.kind, &t1), "point_translate") == 0);
 
     // Quad: overrides kind
     Quad q3 = { .a = 0, .b = 0, .c = 1, .d = 1 };
     DynTransform t2 = dyn(Transform, &q3);
 
-    sum = call(Transform.apply, &t2, 10, 20);
+    sum = $(Transform.apply, &t2, 10, 20);
     CHECK(sum == 32);                      // a=10, b=20, c=1, d=1
     CHECK(q3.a == 10);
     CHECK(q3.b == 20);
-    CHECK(strcmp(call(Transform.kind, &t2), "quad_shift") == 0);
+    CHECK(strcmp($(Transform.kind, &t2), "quad_shift") == 0);
   }
 
   // ==========================================================================
@@ -554,27 +553,27 @@ int main(void) {
     // IntWrapper: self->val + a + b
     IntWrapper iw3 = { .val = 10 };
     DynMapper m1 = dyn(Mapper, &iw3);
-    CHECK(call(Mapper.map_val, &m1, 3, 7) == 20);   // 10+3+7
+    CHECK($(Mapper.map_val, &m1, 3, 7) == 20);   // 10+3+7
 
     // DoubleWrapper: (int)self->val * a * b
     DoubleWrapper dw2 = { .val = 3.0 };
     DynMapper m2 = dyn(Mapper, &dw2);
-    CHECK(call(Mapper.map_val, &m2, 4, 5) == 60);   // 3*4*5
+    CHECK($(Mapper.map_val, &m2, 4, 5) == 60);   // 3*4*5
 
     // Point: x*a + y*b
     Point pt5 = { .label = "m", .x = 2, .y = 3 };
     DynMapper m3 = dyn(Mapper, &pt5);
-    CHECK(call(Mapper.map_val, &m3, 10, 100) == 320); // 2*10+3*100
+    CHECK($(Mapper.map_val, &m3, 10, 100) == 320); // 2*10+3*100
 
     // Rect: (int)(width*a + height*b)
     Rect r2 = { .label = "mr", .width = 2.0, .height = 3.0 };
     DynMapper m4 = dyn(Mapper, &r2);
-    CHECK(call(Mapper.map_val, &m4, 5, 10) == 40);   // 2*5+3*10
+    CHECK($(Mapper.map_val, &m4, 5, 10) == 40);   // 2*5+3*10
 
     // Quad: a*x + b*y
     Quad q4 = { .a = 3, .b = 7, .c = 0, .d = 0 };
     DynMapper m5 = dyn(Mapper, &q4);
-    CHECK(call(Mapper.map_val, &m5, 2, 4) == 34);    // 3*2+7*4
+    CHECK($(Mapper.map_val, &m5, 2, 4) == 34);    // 3*2+7*4
   }
 
   // ==========================================================================
@@ -583,7 +582,7 @@ int main(void) {
   {
     StrBuf sb2 = { .buf = "clone_me", .len = 8 };
     DynCloneable cl = dyn(Cloneable, &sb2);
-    StrBuf *cloned = (StrBuf *)call(Cloneable.clone, &cl);
+    StrBuf *cloned = (StrBuf *)$(Cloneable.clone, &cl);
     CHECK(cloned != &sb2);
     CHECK(strcmp(cloned->buf, "clone_me") == 0);
     CHECK(cloned->len == 8);
@@ -597,13 +596,13 @@ int main(void) {
     IntWrapper iw4 = { .val = 99 };
     DynResettable r1 = dyn(Resettable, &iw4);
     printf("  IntWrapper zero_and_report: ");
-    call(Resettable.zero_and_report, &r1);
+    $(Resettable.zero_and_report, &r1);
     CHECK(iw4.val == 0);
 
     // Point: uses default zero_and_report
     Point pt6 = { .label = "r", .x = 5, .y = 5 };
     DynResettable r2 = dyn(Resettable, &pt6);
-    call(Resettable.zero_out, &r2);
+    $(Resettable.zero_out, &r2);
     CHECK(pt6.x == 0);
     CHECK(pt6.y == 0);
 
@@ -611,7 +610,7 @@ int main(void) {
     Quad q5 = { .a = 1, .b = 2, .c = 3, .d = 4 };
     DynResettable r3 = dyn(Resettable, &q5);
     printf("  Quad zero_and_report: ");
-    call(Resettable.zero_and_report, &r3);
+    $(Resettable.zero_and_report, &r3);
     CHECK(q5.a == 0);
     CHECK(q5.b == 0);
     CHECK(q5.c == 0);
@@ -625,29 +624,29 @@ int main(void) {
     // Point: default is_big (threshold 100)
     Point pt7 = { .label = "small_pt", .x = 3, .y = 4 };
     DynMeasurable m1 = dyn(Measurable, &pt7);
-    CHECK(call(Measurable.measure, &m1) == 25);   // 3*3 + 4*4
-    CHECK(call(Measurable.is_big, &m1) == 0);
+    CHECK($(Measurable.measure, &m1) == 25);   // 3*3 + 4*4
+    CHECK($(Measurable.is_big, &m1) == 0);
 
     // Describable methods via DynDescribable (separate trait object)
     DynDescribable dd_pt = dyn(Describable, &pt7);
-    CHECK(strcmp(call(Describable.name, &dd_pt), "small_pt") == 0);
-    CHECK(call(Describable.name_len, &dd_pt) == 8);  // default strlen("small_pt")
+    CHECK(strcmp($(Describable.name, &dd_pt), "small_pt") == 0);
+    CHECK($(Describable.name_len, &dd_pt) == 8);  // default strlen("small_pt")
 
     // Rect: overrides is_big (threshold 50)
     Rect r3 = { .label = "big_rect", .width = 10.0, .height = 6.0 };
     DynMeasurable m2 = dyn(Measurable, &r3);
-    CHECK(call(Measurable.measure, &m2) == 60);
-    CHECK(call(Measurable.is_big, &m2) == 1);
+    CHECK($(Measurable.measure, &m2) == 60);
+    CHECK($(Measurable.is_big, &m2) == 1);
 
     // Describable via DynDescribable
     DynDescribable dd_r3 = dyn(Describable, &r3);
-    CHECK(strcmp(call(Describable.name, &dd_r3), "big_rect") == 0);
+    CHECK(strcmp($(Describable.name, &dd_r3), "big_rect") == 0);
 
     // small rect
     Rect r4 = { .label = "tiny", .width = 2.0, .height = 3.0 };
     DynMeasurable m3 = dyn(Measurable, &r4);
-    CHECK(call(Measurable.measure, &m3) == 6);
-    CHECK(call(Measurable.is_big, &m3) == 0);
+    CHECK($(Measurable.measure, &m3) == 6);
+    CHECK($(Measurable.is_big, &m3) == 0);
   }
 
   // ==========================================================================
@@ -656,22 +655,22 @@ int main(void) {
   {
     IntWrapper iw5 = { .val = 42 };
     DynContainer_int ci = dyn(Container_int, &iw5);
-    CHECK(call(Container_int.peek, &ci) == 42);
-    call(Container_int.poke, &ci, 100);
-    CHECK(call(Container_int.peek, &ci) == 100);
+    CHECK($(Container_int.peek, &ci) == 42);
+    $(Container_int.poke, &ci, 100);
+    CHECK($(Container_int.peek, &ci) == 100);
     CHECK(iw5.val == 100);
 
     DoubleWrapper dw3 = { .val = 2.718 };
     DynContainer_double cd1 = dyn(Container_double, &dw3);
-    CHECK(call(Container_double.peek, &cd1) > 2.717 && call(Container_double.peek, &cd1) < 2.719);
-    call(Container_double.poke, &cd1, 1.414);
-    CHECK(call(Container_double.peek, &cd1) > 1.413 && call(Container_double.peek, &cd1) < 1.415);
+    CHECK($(Container_double.peek, &cd1) > 2.717 && $(Container_double.peek, &cd1) < 2.719);
+    $(Container_double.poke, &cd1, 1.414);
+    CHECK($(Container_double.peek, &cd1) > 1.413 && $(Container_double.peek, &cd1) < 1.415);
 
     // Rect also implements Container_double (peek/poke width)
     Rect r5 = { .label = "w", .width = 5.0, .height = 3.0 };
     DynContainer_double cd2 = dyn(Container_double, &r5);
-    CHECK(call(Container_double.peek, &cd2) > 4.999 && call(Container_double.peek, &cd2) < 5.001);
-    call(Container_double.poke, &cd2, 99.0);
+    CHECK($(Container_double.peek, &cd2) > 4.999 && $(Container_double.peek, &cd2) < 5.001);
+    $(Container_double.poke, &cd2, 99.0);
     CHECK(r5.width > 98.999 && r5.width < 99.001);
   }
 
@@ -698,10 +697,10 @@ int main(void) {
   // ==========================================================================
   {
     DynStringify s = new_trait(IntWrapper, Stringify, { .val = 0 });
-    CHECK(strcmp(call(Stringify.stringify, &s), "IntWrapper") == 0);
+    CHECK(strcmp($(Stringify.stringify, &s), "IntWrapper") == 0);
 
     DynContainer_int ci = new_trait(IntWrapper, Container_int, { .val = 77 });
-    CHECK(call(Container_int.peek, &ci) == 77);
+    CHECK($(Container_int.peek, &ci) == 77);
   }
 
   // ==========================================================================
@@ -754,21 +753,21 @@ int main(void) {
     DynContainer_int ci = dyn(Container_int, &iw7);
     DynMapper       mp = dyn(Mapper, &iw7);
 
-    CHECK(strcmp(call(Stringify.stringify, &s), "IntWrapper") == 0);
-    CHECK(strcmp(call(Describable.name, &d), "IntWrapper") == 0);
-    CHECK(call(Arithmetic.value, &a) == 42);
-    CHECK(call(Container_int.peek, &ci) == 42);
+    CHECK(strcmp($(Stringify.stringify, &s), "IntWrapper") == 0);
+    CHECK(strcmp($(Describable.name, &d), "IntWrapper") == 0);
+    CHECK($(Arithmetic.value, &a) == 42);
+    CHECK($(Container_int.peek, &ci) == 42);
 
-    call(Arithmetic.add, &a, 8);
-    CHECK(call(Arithmetic.value, &a) == 50);
-    CHECK(call(Container_int.peek, &ci) == 50);  // same underlying object
+    $(Arithmetic.add, &a, 8);
+    CHECK($(Arithmetic.value, &a) == 50);
+    CHECK($(Container_int.peek, &ci) == 50);  // same underlying object
 
-    call(Resettable.zero_out, &rs);
+    $(Resettable.zero_out, &rs);
     CHECK(iw7.val == 0);
-    CHECK(call(Arithmetic.value, &a) == 0);
-    CHECK(call(Container_int.peek, &ci) == 0);
+    CHECK($(Arithmetic.value, &a) == 0);
+    CHECK($(Container_int.peek, &ci) == 0);
 
-    CHECK(call(Mapper.map_val, &mp, 1, 2) == 3);  // 0+1+2
+    CHECK($(Mapper.map_val, &mp, 1, 2) == 3);  // 0+1+2
   }
 
   // ==========================================================================
@@ -790,7 +789,7 @@ int main(void) {
 
     const char *expected[] = { "IntWrapper", "DoubleWrapper", "multi", "multi_rect", "multi_str" };
     for (int i = 0; i < 5; i++) {
-      CHECK(strcmp(call(Stringify.stringify, &arr[i]), expected[i]) == 0);
+      CHECK(strcmp($(Stringify.stringify, &arr[i]), expected[i]) == 0);
     }
   }
 
@@ -802,18 +801,18 @@ int main(void) {
 
     // Mutate via Arithmetic trait
     DynArithmetic a = dyn(Arithmetic, &pt12);
-    call(Arithmetic.add, &a, 100);
+    $(Arithmetic.add, &a, 100);
     CHECK(pt12.x == 100);
 
     // Mutate via Transform trait
     DynTransform t = dyn(Transform, &pt12);
-    call(Transform.apply, &t, -50, 25);
+    $(Transform.apply, &t, -50, 25);
     CHECK(pt12.x == 50);
     CHECK(pt12.y == 25);
 
     // Reset via Resettable
     DynResettable r = dyn(Resettable, &pt12);
-    call(Resettable.zero_out, &r);
+    $(Resettable.zero_out, &r);
     CHECK(pt12.x == 0);
     CHECK(pt12.y == 0);
   }

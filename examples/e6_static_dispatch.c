@@ -4,10 +4,10 @@
 
 // ---- trait: Animal -----------------------------------------------------------
 #define AnimalSignature(Self)                    \
+  dynamic(Self)                              \
   required(Self, int,  get_snacks)            \
   defaults(immutable(Self), void, check)      \
   defaults(Self, void, feed, int)
-#define Dynamic
 #define Trait Animal
 #include "../trait.h"
 
@@ -52,25 +52,25 @@ int main(void) {
   printf("=== call: static dispatch (no vtable) ===\n");
 
   // call resolves at compile time to Cat_Animal_get_snacks / Dog_Animal_get_snacks
-  printf("Cat snacks: %d\n", call(Animal.get_snacks, &c));
-  printf("Dog snacks: %d\n", call(Animal.get_snacks, &d));
+  printf("Cat snacks: %d\n", $(Animal.get_snacks, &c));
+  printf("Dog snacks: %d\n", $(Animal.get_snacks, &d));
 
   // call resolves to Cat_Animal_feed / Dog_Animal_feed
-  call(Animal.feed, &c, 2);
-  call(Animal.feed, &d, 3);
-  printf("Cat snacks after feed: %d\n", call(Animal.get_snacks, &c));
-  printf("Dog snacks after feed: %d\n", call(Animal.get_snacks, &d));
+  $(Animal.feed, &c, 2);
+  $(Animal.feed, &d, 3);
+  printf("Cat snacks after feed: %d\n", $(Animal.get_snacks, &c));
+  printf("Dog snacks after feed: %d\n", $(Animal.get_snacks, &d));
 
   // call with default method (check is immutable/const)
-  call(Animal.check, &c);
-  call(Animal.check, &d);
+  $(Animal.check, &c);
+  $(Animal.check, &d);
 
   // Dynamic dispatch still works alongside static dispatch
   printf("\n=== call: dynamic dispatch (for comparison) ===\n");
   DynAnimal ac = dyn(Animal, &c);
   DynAnimal ad = dyn(Animal, &d);
-  printf("Cat snacks (vcall): %d\n", call(Animal.get_snacks, &ac));
-  printf("Dog snacks (vcall): %d\n", call(Animal.get_snacks, &ad));
+  printf("Cat snacks (vcall): %d\n", $(Animal.get_snacks, &ac));
+  printf("Dog snacks (vcall): %d\n", $(Animal.get_snacks, &ad));
 
   return 0;
 }

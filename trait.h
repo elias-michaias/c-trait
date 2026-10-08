@@ -255,12 +255,12 @@ ___TRAIT_SD_EMIT(___TRAIT_SD_SELECT(___TRAIT_SD_PASS, Impl))
 // DYNSD SELF-INCLUDE LOOP BODY
 //
 // This branch emits SD entries for DynTraitname (the trait object type), so
-// that call(Animal.method, &dyn_obj) dispatches through the vtable.
+// that $(Animal.method, &dyn_obj) dispatches through the vtable.
 // For/Impl are still defined.  The SD counter is shared with the SD loop.
 //
 // The DMLIST action (instead of MLIST) replays the direct base's signature,
 // registering base methods for the Dyn pair so that
-// call(Base.method, &dyn_derived) dispatches through the embedded base field.
+// $(Base.method, &dyn_derived) dispatches through the embedded base field.
 // ═══════════════════════════════════════════════════════════════════════════════
 #if !___TRAIT_SD_IS_STOP_DYN(___TRAIT_DYNSD_PASS, Impl)
 // Emit DynSD slot: DynImpl as concrete type, selector type, vtable wrapper
@@ -516,17 +516,17 @@ ___TRAIT_DYNSD_EMIT(___TRAIT_DYNSD_SELECT(___TRAIT_DYNSD_PASS, Impl))
 //   #define Impl Animal
 //   #define Forward
 //   #include "trait.h"          ← this path: FWDDECL + SD/DynSD loops
-//     int def(get_snacks) { call(Animal.get_snacks, self); }
+//     int def(get_snacks) { $(Animal.get_snacks, self); }
 //     void def(feed, int amount) { ... }
 //   #include "trait.h"          ← normal path: defaults/impl/counter/enforce
 //
 // Emits extern declarations for each impl function, then runs SD/DynSD loops
-// so that call() resolves to the correct wrapper at compile time.  The actual
+// so that $() resolves to the correct wrapper at compile time.  The actual
 // function bodies (def()) follow between the two includes.
 // ═════════════════════════════════════════════════════════════════════════════
 ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 
-// ── SD loop: emit type info + wrapper functions for call() ──────────────────
+// ── SD loop: emit type info + wrapper functions for $() ──────────────────
 #define ___TRAIT_SD_ACTIVE 1
 #define ___TRAIT_SD_PASS 0
 #include "trait.h"
@@ -543,8 +543,20 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, FWDDECL))
 //
 // When ___TRAIT_FWDIMPL_DONE is set (second #include after Forward),
 // defaults/impl/counter/enforce still run but SD/DynSD loops are skipped.
-// When ___TRAIT_IS_STATIC_CURRENT is set, defaults/impl/DynSD/enforce are skipped.
+// A DYN_QUERY pass derives this impl's mode from its trait signature, so mode
+// selection is independent of trait and impl block ordering.
 // ═════════════════════════════════════════════════════════════════════════════
+#undef dynamic
+#define dynamic(SelfSpec) | 1
+#if 0 ___TRAIT_PASTE(Impl, Signature)((Impl, DYN_QUERY))
+#undef ___TRAIT_IS_STATIC_CURRENT
+#else
+#undef ___TRAIT_IS_STATIC_CURRENT
+#define ___TRAIT_IS_STATIC_CURRENT 1
+#endif
+#undef dynamic
+#define dynamic(SelfSpec)
+
 // ── DFL/SDFL storage-class: must be defined before ___TRAIT_DFL()/___TRAIT_SDFL()
 //    in the same include pass so the wrapper-linkage matches FWDDECL.
 #undef ___TRAIT_DFL_STORAGE
@@ -770,15 +782,17 @@ ___TRAIT_PASTE(Impl, Signature)((Impl, ENFORCE))
 
 // ── Static trait detection ───────────────────────────────────────────────────
 // Traits are static by default (no vtable, no DynTrait, no dynamic dispatch).
-// #define Dynamic before #define Trait opts into full dynamic features:
-// vtable, DynTrait, DFL defaults, impl(), ENFORCE, DynSD.
-// The flag persists until the next trait definition clears it.
+// Place dynamic(Self) anywhere in <TraitName>Signature to opt into vtable,
+// DynTrait, DFL defaults, impl(), ENFORCE, and DynSD.
 #undef ___TRAIT_IS_STATIC_CURRENT
-#ifndef Dynamic
-#define ___TRAIT_IS_STATIC_CURRENT 1
+#undef dynamic
+#define dynamic(SelfSpec) | 1
+#if 0 ___TRAIT_PASTE(Trait, Signature)((Trait, DYN_QUERY))
 #else
-#undef Dynamic
+#define ___TRAIT_IS_STATIC_CURRENT 1
 #endif
+#undef dynamic
+#define dynamic(SelfSpec)
 
 #ifndef ___TRAIT_IS_STATIC_CURRENT
 typedef struct {
@@ -788,6 +802,13 @@ typedef struct {
   void *self;
   const glue(Trait, _vtable) *vt;
 } glue(Dyn, Trait);
+#endif
+// Default impl bodies use a trait-specific alias so their `self` type can be
+// selected from trait metadata without relying on mutable preprocessor state.
+#ifndef ___TRAIT_IS_STATIC_CURRENT
+typedef glue(Dyn, Trait) glue3(___trait_default_self_, Trait, _t);
+#else
+typedef void glue3(___trait_default_self_, Trait, _t);
 #endif
 ___TRAIT_TRAIT_PASTE(Trait)((Trait, STAG))
 typedef struct {
@@ -837,6 +858,8 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define glue7(a, b, c, d, e, f, g) glue(glue6(a, b, c, d, e, f), g)
 #define glue8(a, b, c, d, e, f, g, h) glue(glue7(a, b, c, d, e, f, g), h)
 #define glue9(a, b, c, d, e, f, g, h, i) glue(glue8(a, b, c, d, e, f, g, h), i)
+#define ___TRAIT_DEFAULT_SELF_TYPE_(TraitName) ___trait_default_self_##TraitName##_t
+#define ___TRAIT_DEFAULT_SELF_TYPE(TraitName) ___TRAIT_DEFAULT_SELF_TYPE_(TraitName)
 
 // Independent paste pair for Dyn prefix — avoids blue-paint conflict with glue.
 #define ___TRAIT_DYN_(a, b) a##b
@@ -1026,9 +1049,6 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_IS_DEFAULT(For)                                                 \
   ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_DEFAULT_TOKEN_, For))
 
-#define ___TRAIT_IS_STATIC_TOKEN_1 ___TRAIT_PROBE()
-#define ___TRAIT_IS_STATIC() ___TRAIT_CHECK(___TRAIT_CAT(___TRAIT_IS_STATIC_TOKEN_, ___TRAIT_IS_STATIC_CURRENT))
-
 // -----------------------------------------------------------------------------
 // Vtable / trait object helper names
 // -----------------------------------------------------------------------------
@@ -1052,6 +1072,14 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   trait_default(SelfSpec, Ret, Name, ##__VA_ARGS__)
 #define required(SelfSpec, Ret, Name, ...)                                      \
   trait_require(SelfSpec, Ret, Name, ##__VA_ARGS__)
+#define dynamic(SelfSpec)
+
+// Trait-mode query pass: regular methods disappear, while dynamic(Self) is
+// temporarily expanded to `| 1` around the signature in #if context.
+#define ___TRAIT_ACT_DYN_QUERY_REQUIRE_0(Type, Ret, Name, ...)
+#define ___TRAIT_ACT_DYN_QUERY_REQUIRE_1(Type, Ret, Name, ...)
+#define ___TRAIT_ACT_DYN_QUERY_DEFAULT_0(Type, Ret, Name, ...)
+#define ___TRAIT_ACT_DYN_QUERY_DEFAULT_1(Type, Ret, Name, ...)
 
 // -----------------------------------------------------------------------------
 // Actions: FN (vtable fields)
@@ -1117,7 +1145,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 //
 // The DynSD loop uses DMLIST instead of MLIST.  extends replays the direct
 // base's signature so base methods are registered as (sel, DynImpl) pairs,
-// enabling call(Base.method, &dyn_derived).  This is safe for Dyn pairs
+// enabling $(Base.method, &dyn_derived).  This is safe for Dyn pairs
 // because DynImpl != DynBase, so no pair type collides with the base's own
 // registrations.
 //
@@ -1128,7 +1156,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 //
 // Blue-paint note: a replayed base's OWN extends is deferred and absorbed by
 // the MSEL dummy argument, so replay is intentionally limited to one hop.
-// Transitive base methods (call(GrandBase.method, &dyn_derived)) therefore
+// Transitive base methods ($(GrandBase.method, &dyn_derived)) therefore
 // are not registered — a hard preprocessor limit, not a design choice.
 // -----------------------------------------------------------------------------
 #define ___TRAIT_ACT_DMLIST_REQUIRE_0(Type, Ret, Name, ...)                       \
@@ -1520,6 +1548,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op: base SDFL wrappers already exist */
 #define ___TRAIT_EXTENDS_BIND(Base, SelfSpec)                                      \
   .Base = ___TRAIT_VTNAME(For, Base),
+#define ___TRAIT_EXTENDS_DYN_QUERY(Base, SelfSpec) /* no-op during mode query */
 #define ___TRAIT_EXTENDS_FWDDECL(Base, SelfSpec) /* no-op: BIND uses the base vtable */
 #define ___TRAIT_EXTENDS_ENFORCE(Base, SelfSpec)                                 \
   ___TRAIT_UNUSED static void *const                                              \
@@ -1527,28 +1556,20 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
           (void *)&glue4(For, _, Base, _vtable);
 
 // -----------------------------------------------------------------------------
-// `def(...)` defines the implementation function body.
-// The self type is chosen automatically from trait metadata.
-// If `For == Default`, the body is for the trait's default implementation;
-// for static traits, self is `void *`; for dynamic traits, self is `DynImpl *`.
-// For concrete types (`For != Default`), self is always `For *`.
+// `def(...)` defines the implementation function body. Concrete impls use
+// For*; default bodies use the trait-specific self typedef emitted at trait
+// declaration time (void for static, DynTrait for dynamic).
 // -----------------------------------------------------------------------------
-#define ___TRAIT_IMPL_SELF_VAL_00 0
-#define ___TRAIT_IMPL_SELF_VAL_01 0
-#define ___TRAIT_IMPL_SELF_VAL_10 1
-#define ___TRAIT_IMPL_SELF_VAL_11 2
 #define ___TRAIT_IMPL_SELF_BASE_0 For
-#define ___TRAIT_IMPL_SELF_BASE_1 ___TRAIT_DYN(Impl)
-#define ___TRAIT_IMPL_SELF_BASE_2 void
+#define ___TRAIT_IMPL_SELF_BASE_1 ___TRAIT_DEFAULT_SELF_TYPE(Impl)
 #define ___TRAIT_IMPL_SELF_BASE_SEL(n) glue(___TRAIT_IMPL_SELF_BASE_, n)
-#define ___TRAIT_IMPL_SELF_BASE                                       \
-  ___TRAIT_IMPL_SELF_BASE_SEL(glue(___TRAIT_IMPL_SELF_VAL_,           \
-    glue(___TRAIT_IS_DEFAULT(For), ___TRAIT_IS_STATIC())))
+#define ___TRAIT_IMPL_SELF_BASE \
+  ___TRAIT_IMPL_SELF_BASE_SEL(___TRAIT_IS_DEFAULT(For))
 
 // -----------------------------------------------------------------------------
 // `def(...)` defines the implementation function body (mutable self).
 // `constdef(...)` defines the implementation function body (const self).
-// For `For == Default`, self is `void *` (static) or `DynImpl *` (dynamic).
+// For `For == Default`, self uses the static/dynamic type recorded on Impl.
 // For concrete types, self is `For *` / `const For *`.
 // The user chooses def/constdef based on the method's constness in the
 // trait declaration (`immutable(Self)` → constdef).
@@ -1667,10 +1688,10 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 // =============================================================================
 // SD (selector-based dispatch) infrastructure
 //
-// Enables: call(Animal.get_snacks, &cat)
+// Enables: $(Animal.get_snacks, &cat)
 //
 // Architecture: flat (type × method) counter where each slot stores both the
-// concrete type and the selector type.  call() walks this counter checking both
+// concrete type and the selector type.  $() walks this counter checking both
 // types simultaneously with &&.
 //
 // The SD counter is populated during impl registration via self-include loops:
@@ -1879,7 +1900,7 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 // =============================================================================
 // DynSD (dynamic dispatch via selector) infrastructure
 //
-// When call(Animal.get_snacks, &dyn_obj) is used with a DynTraitname pointer,
+// When $(Animal.get_snacks, &dyn_obj) is used with a DynTraitname pointer,
 // the SD chain matches DynTraitname as the concrete type and dispatches through
 // the vtable.  DYNSDREG wrapper functions are emitted during a second
 // self-include loop after the normal SD loop in impl registration.
@@ -2429,7 +2450,7 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
   glue(___TRAIT_TT_R5_, ___TRAIT_TT_C5)(___TRAIT_TT_C6)                          \
   glue(___TRAIT_TT_R6_, ___TRAIT_TT_C6)
 
-// ── call(sel, obj, ...) ─────────────────────────────────────────────────────
+// ── trait_dispatch_call(sel, obj, ...) ──────────────────────────────────────
 //
 // Unified dispatch via _Generic.  The controlling expression is a null
 // function-pointer whose type encodes both the selector and object types.
@@ -2441,7 +2462,7 @@ extern struct ERROR_type_not_impl_for_this_trait ERROR_type_not_impl_for_this_tr
 // clang-format off
 struct ERROR_trait_not_implemented_for_this_type;
 extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemented_for_this_type;
-#define call(sel, obj, ...)                                                       \
+#define trait_dispatch_call(sel, obj, ...)                                        \
   _Generic(                                                                       \
       (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0,                 \
       ___TRAIT_SD_SLOTS                                                           \
@@ -2652,8 +2673,8 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
               __VA_OPT__(,) __VA_ARGS__)
 
 // ── call ──────────────────────────────────────────────────────────────────────
-#undef  call
-#define call(sel, obj, ...)                                                       \
+#undef  trait_dispatch_call
+#define trait_dispatch_call(sel, obj, ...)                                        \
   _Generic(                                                                       \
       (void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj))))0,                 \
       ___TRAIT_SD_SLOTS                                                          \
@@ -2665,7 +2686,8 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 // =============================================================================
 // C99/GNU99 dispatch: __builtin_choose_expr-based (___TRAIT_CE)
 //
-// Pre-C11 (e.g. -std=gnu99) has no `_Generic`, so call() and dyn() dispatch via
+// Pre-C11 (e.g. -std=gnu99) has no `_Generic`, so trait_dispatch_call() and
+// dyn() dispatch via
 // nested __builtin_choose_expr + __builtin_types_compatible_p instead.  The
 // controlling type (the pair type `void (*)(SelectorType, ConcreteType)`) is
 // compared against each registered pair typedef; the matching wrapper is
@@ -2683,7 +2705,8 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
 // =============================================================================
 #if ___TRAIT_CE
 
-// Controlling type for call(sel, obj): matches ___trait_sd_pair_* typedefs.
+// Controlling type for trait_dispatch_call(sel, obj): matches
+// ___trait_sd_pair_* typedefs.
 #define ___TRAIT_CE_CTYPE(sel, obj) \
   void (*)(___TRAIT_TYPEOF(sel), ___TRAIT_TYPEOF(*(obj)))
 
@@ -2973,10 +2996,10 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
   ___TRAIT_CE_CLOSES(___TRAIT_TT_C1, ___TRAIT_TT_C2, ___TRAIT_TT_C3,            \
                      ___TRAIT_TT_C4, ___TRAIT_TT_C5, ___TRAIT_TT_C6)
 
-// ── call / dyn overrides ────────────────────────────────────────────────────
+// ── trait_dispatch_call / dyn overrides ─────────────────────────────────────
 // clang-format off
-#undef  call
-#define call(sel, obj, ...)                                                       \
+#undef  trait_dispatch_call
+#define trait_dispatch_call(sel, obj, ...)                                        \
   (___TRAIT_SD_CE_SLOTS(___TRAIT_CE_CTYPE(sel, obj))                              \
    ERROR_trait_not_implemented_for_this_type                                      \
    ___TRAIT_SD_CE_CLOSES)(obj, ##__VA_ARGS__)
@@ -2988,6 +3011,13 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
    ___TRAIT_TT_CE_CLOSES)(ptr)
 
 #endif // ___TRAIT_CE
+
+// Public trait caller. Define TraitCustomDispatch before this header's first
+// include and provide an alias such as `#define tcall trait_dispatch_call` to
+// choose a different spelling instead of the default `$`.
+#ifndef TraitCustomDispatch
+#define $ trait_dispatch_call
+#endif
 
 // ── IMPLS(Type, Trait) ──────────────────────────────────────────────────────
 // Compile-time check: produces sizeof(marker-type) (an integer constant

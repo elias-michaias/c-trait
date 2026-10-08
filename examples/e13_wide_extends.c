@@ -3,16 +3,16 @@
 #include <stdio.h>
 
 // A trait extending 7 traits directly. Each base method dispatches through the
-// embedded base vtable field via call():
+// embedded base vtable field via $():
 //   DynDevice dd = dyn(Device, &r);
-//   call(Sensor.read, &dd);   // dd.vt->Sensor.read(dd.self)
+//   $(Sensor.read, &dd);   // dd.vt->Sensor.read(dd.self)
 // One-hop replay (DMLIST) registers each direct base for the Dyn pair, so the
-// full 7-base merge works with the selector-based call() API.
+// full 7-base merge works with the selector-based $() API.
 
 // ---- trait: Sensor -----------------------------------------------------------
 #define SensorSignature(Self) \
+  dynamic(Self) \
   required(Self, int, read)
-#define Dynamic
 #define Trait Sensor
 #include "../trait.h"
 
@@ -23,8 +23,8 @@
 
 // ---- trait: Display ----------------------------------------------------------
 #define DisplaySignature(Self) \
+  dynamic(Self) \
   required(Self, void, render)
-#define Dynamic
 #define Trait Display
 #include "../trait.h"
 
@@ -35,8 +35,8 @@
 
 // ---- trait: Speaker ----------------------------------------------------------
 #define SpeakerSignature(Self) \
+  dynamic(Self) \
   required(Self, void, beep)
-#define Dynamic
 #define Trait Speaker
 #include "../trait.h"
 
@@ -47,8 +47,8 @@
 
 // ---- trait: Led --------------------------------------------------------------
 #define LedSignature(Self) \
+  dynamic(Self) \
   required(Self, void, blink)
-#define Dynamic
 #define Trait Led
 #include "../trait.h"
 
@@ -59,8 +59,8 @@
 
 // ---- trait: Button -----------------------------------------------------------
 #define ButtonSignature(Self) \
+  dynamic(Self) \
   required(Self, void, press)
-#define Dynamic
 #define Trait Button
 #include "../trait.h"
 
@@ -71,8 +71,8 @@
 
 // ---- trait: Timer (default method) --------------------------------------------
 #define TimerSignature(Self) \
+  dynamic(Self) \
   defaults(Self, void, tick)
-#define Dynamic
 #define Trait Timer
 #include "../trait.h"
 
@@ -87,8 +87,8 @@
 
 // ---- trait: Comm --------------------------------------------------------------
 #define CommSignature(Self) \
+  dynamic(Self) \
   required(Self, void, send)
-#define Dynamic
 #define Trait Comm
 #include "../trait.h"
 
@@ -99,6 +99,7 @@
 
 // ---- trait: Device (extends all 7) -------------------------------------------
 #define DeviceSignature(Self) \
+  dynamic(Self) \
   extends(Sensor, Self)   \
   extends(Display, Self)  \
   extends(Speaker, Self)  \
@@ -107,7 +108,6 @@
   extends(Timer, Self)    \
   extends(Comm, Self)     \
   required(Self, void, power_cycle)
-#define Dynamic
 #define Trait Device
 #include "../trait.h"
 
@@ -181,8 +181,8 @@ typedef struct {
 #define Impl Device
   void def(power_cycle) {
     printf("power cycle: ");
-    call(Sensor.read, self);   // cross-trait static dispatch on the concrete type
-    call(Speaker.beep, self);
+    $(Sensor.read, self);   // cross-trait static dispatch on the concrete type
+    $(Speaker.beep, self);
   }
 #include "../trait.h"
 
@@ -197,23 +197,23 @@ int main(void) {
     .reading = 42, .beeps = 0, .blinks = 0, .presses = 0, .ticks = 0, .sent = 0,
   };
 
-  printf("=== Device: 7 direct bases via call() ===\n");
+  printf("=== Device: 7 direct bases via $() ===\n");
   DynDevice dd = dyn(Device, &r);
 
-  TEST(call(Sensor.read, &dd) == 42, "Sensor.read via DynDevice");
-  call(Display.render, &dd);            // "rendering."
+  TEST($(Sensor.read, &dd) == 42, "Sensor.read via DynDevice");
+  $(Display.render, &dd);            // "rendering."
   TEST(1, "Display.render via DynDevice");
-  call(Speaker.beep, &dd);              // "beep!"
+  $(Speaker.beep, &dd);              // "beep!"
   TEST(r.beeps == 1, "Speaker.beep via DynDevice");
-  call(Led.blink, &dd);
+  $(Led.blink, &dd);
   TEST(r.blinks == 1, "Led.blink via DynDevice");
-  call(Button.press, &dd);
+  $(Button.press, &dd);
   TEST(r.presses == 1, "Button.press via DynDevice");
-  call(Timer.tick, &dd);                // "(default) tick." (not overridden)
+  $(Timer.tick, &dd);                // "(default) tick." (not overridden)
   TEST(1, "Timer.tick default via DynDevice");
-  call(Comm.send, &dd);
+  $(Comm.send, &dd);
   TEST(r.sent == 1, "Comm.send via DynDevice");
-  call(Device.power_cycle, &dd);        // "power cycle: " + cross-trait calls
+  $(Device.power_cycle, &dd);        // "power cycle: " + cross-trait calls
   TEST(r.beeps == 2, "Device.power_cycle own method via DynDevice");
 
   // Direct embedded-vtable access (equivalent, no selector dispatch)
@@ -224,7 +224,7 @@ int main(void) {
 
   // Standalone use of one base trait is unaffected by the wide merge
   DynSensor ds = dyn(Sensor, &r);
-  TEST(call(Sensor.read, &ds) == 42, "Sensor standalone via call()");
+  TEST($(Sensor.read, &ds) == 42, "Sensor standalone via $()");
 
   printf("\n=== Results: %d/%d tests passed ===\n", passed, tests);
   return tests == passed ? 0 : 1;

@@ -1,11 +1,11 @@
 // clang-format off
-// e9_forward_declare.c — forward-declare: call() inside def() + defaults
+// e9_forward_declare.c — forward-declare: $() inside def() + defaults
 //
 // Tests Forward with both dynamic and static traits, including default methods
 // (overridden and not overridden) to ensure no redeclaration errors.
 //
-// Order: all dynamic trait defs/impls first, then static, to avoid the
-// ___TRAIT_IS_STATIC_CURRENT flag leaking across trait definitions.
+// Dynamic and static traits share this translation unit; each impl mode is
+// recovered from the dynamic(Self) directive in its trait signature.
 #include "../trait.h"
 #include <stdio.h>
 #include <assert.h>
@@ -15,9 +15,9 @@
 //    Signature declares method names only — no bodies.
 //    Default bodies go in a For=Default block below.
 // ═════════════════════════════════════════════════════════════════════════════
-#define Dynamic
 #define Trait Animal
 #define AnimalSignature(Self)                    \
+  dynamic(Self)                              \
   required(Self, int,  get_snacks)            \
   required(Self, void, feed, int)             \
   defaults(Self, int, get_age)
@@ -44,9 +44,9 @@ typedef struct { int snacks; } Cat;
 #include "../trait.h"
   int def(get_snacks) { return self->snacks; }
   void def(feed, int amount) {
-    int before = call(Animal.get_snacks, self);
+    int before = $(Animal.get_snacks, self);
     self->snacks += amount;
-    int after = call(Animal.get_snacks, self);
+    int after = $(Animal.get_snacks, self);
     printf("  Dog: fed %d, snacks %d -> %d\n", amount, before, after);
   }
   #define Override_Dog_Animal_get_age 1
@@ -127,20 +127,20 @@ int main(void) {
     }                                                                          \
   } while (0)
 
-  printf("=== forward_declare: call() inside def() + defaults ===\n\n");
+  printf("=== forward_declare: $() inside def() + defaults ===\n\n");
 
   // ── Dog (dynamic, default overridden) ─────────────────────────────────
   printf("--- Dog (dynamic, default get_age OVERRIDDEN) ---\n");
   {
     Dog d = { .snacks = 5, .age = 7 };
-    call(Animal.feed, &d, 3);
+    $(Animal.feed, &d, 3);
     TEST(d.snacks == 8, "Dog.feed(3) -> snacks == 8");
-    int age = call(Animal.get_age, &d);
+    int age = $(Animal.get_age, &d);
     TEST(age == 7, "Dog.get_age() == 7 (overridden)");
     printf("  Dog.get_age() = %d\n", age);
 
     DynAnimal da = dyn(Animal, &d);
-    TEST(call(Animal.get_snacks, &da) == 8,
+    TEST($(Animal.get_snacks, &da) == 8,
          "Dog.get_snacks via DynAnimal == 8");
   }
 
@@ -148,9 +148,9 @@ int main(void) {
   printf("\n--- Cat (dynamic, default get_age NOT overridden) ---\n");
   {
     Cat c = { .snacks = 10 };
-    call(Animal.feed, &c, 5);
+    $(Animal.feed, &c, 5);
     TEST(c.snacks == 15, "Cat.feed(5) -> snacks == 15");
-    int age = call(Animal.get_age, &c);
+    int age = $(Animal.get_age, &c);
     TEST(age == 42, "Cat.get_age() == 42 (from DFL wrapper)");
     printf("  Cat.get_age() = %d (default)\n", age);
   }
@@ -159,8 +159,8 @@ int main(void) {
   printf("\n--- Widget (static, default is_visible NOT overridden) ---\n");
   {
     Widget w = { "button" };
-    call(Drawable.draw, &w);
-    int vis = call(Drawable.is_visible, &w);
+    $(Drawable.draw, &w);
+    int vis = $(Drawable.is_visible, &w);
     TEST(vis == 1, "Widget.is_visible() == 1 (from SDFL wrapper)");
     printf("  Widget.is_visible() = %d (default)\n", vis);
   }
@@ -170,8 +170,8 @@ int main(void) {
   {
     HiddenWidget hw1 = { "panel",   0 };
     HiddenWidget hw2 = { "secret", 1 };
-    int vis1 = call(Drawable.is_visible, &hw1);
-    int vis2 = call(Drawable.is_visible, &hw2);
+    int vis1 = $(Drawable.is_visible, &hw1);
+    int vis2 = $(Drawable.is_visible, &hw2);
     TEST(vis1 == 1, "HiddenWidget(visible).is_visible() == 1");
     TEST(vis2 == 0, "HiddenWidget(hidden).is_visible() == 0");
     printf("  HiddenWidget(visible).is_visible() = %d\n", vis1);

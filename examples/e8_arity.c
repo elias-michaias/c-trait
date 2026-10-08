@@ -13,17 +13,17 @@
 
 // ---- Arity0: 0 extra args (unary: self only) --------------------------------
 #define Arity0Signature(Self)                                \
+  dynamic(Self)                                           \
   required(Self, int, get_val)                            \
   required(immutable(Self), int, peek_val)                \
   defaults(Self, void, double_it)
-#define Dynamic
 #define Trait Arity0
 #include "../trait.h"
 
 #define For Default
 #define Impl Arity0
   void def(double_it) {
-    int v = call(Arity0.get_val, self);
+    int v = $(Arity0.get_val, self);
     // Use add with the same value to double it
     (void)v;
   }
@@ -31,26 +31,26 @@
 
 // ---- Arity1: 1 extra arg (binary: self + 1) --------------------------------
 #define Arity1Signature(Self)                                \
+  dynamic(Self)                                           \
   required(Self, void, set_val, int)                      \
   required(immutable(Self), int, add_pure, int)           \
   defaults(Self, void, increment, int)
-#define Dynamic
 #define Trait Arity1
 #include "../trait.h"
 
 #define For Default
 #define Impl Arity1
   void def(increment, int n) {
-    int _new = call(Arity1.add_pure, self, n);
-    call(Arity1.set_val, self, _new);
+    int _new = $(Arity1.add_pure, self, n);
+    $(Arity1.set_val, self, _new);
   }
 #include "../trait.h"
 
 // ---- Arity2: 2 extra args (ternary: self + 2) ------------------------------
 #define Arity2Signature(Self)                                \
+  dynamic(Self)                                           \
   required(Self, int, combine, int, int)                  \
   defaults(immutable(Self), int, combine_default, int, int)
-#define Dynamic
 #define Trait Arity2
 #include "../trait.h"
 
@@ -64,34 +64,34 @@
 
 // ---- Arity3: 3 extra args (quaternary: self + 3) ----------------------------
 #define Arity3Signature(Self)                                \
+  dynamic(Self)                                           \
   required(Self, int, mix3, int, int, int)                \
   required(immutable(Self), int, sum3, int, int, int)     \
   defaults(Self, void, accum3, int, int, int)
-#define Dynamic
 #define Trait Arity3
 #include "../trait.h"
 
 #define For Default
 #define Impl Arity3
   void def(accum3, int a, int b, int c) {
-    int total = call(Arity3.sum3, self, a, b, c);
+    int total = $(Arity3.sum3, self, a, b, c);
     (void)total;
   }
 #include "../trait.h"
 
 // ---- Arity4: 4 extra args (quinary: self + 4) ------------------------------
 #define Arity4Signature(Self)                                      \
+  dynamic(Self)                                                 \
   required(Self, int, mix4, int, int, int, int)                 \
   required(immutable(Self), int, sum4, int, int, int, int)      \
   defaults(immutable(Self), int, weighted4, int, int, int, int)
-#define Dynamic
 #define Trait Arity4
 #include "../trait.h"
 
 #define For Default
 #define Impl Arity4
   int constdef(weighted4, int a, int b, int c, int d) {
-    return call(Arity4.sum4, self, a, b, c, d);
+    return $(Arity4.sum4, self, a, b, c, d);
   }
 #include "../trait.h"
 
@@ -256,8 +256,8 @@ int main(void) {
     Accum a = { .val = 42 };
     DynArity0 t = dyn(Arity0, &a);
 
-    CHECK(call(Arity0.get_val, &t) == 42);
-    CHECK(call(Arity0.peek_val, &t) == 42);
+    CHECK($(Arity0.get_val, &t) == 42);
+    CHECK($(Arity0.peek_val, &t) == 42);
 
     // Direct call
     CHECK(Accum_Arity0_get_val(&a) == 42);
@@ -265,8 +265,8 @@ int main(void) {
 
     Pair p = { .x = 3, .y = 7 };
     DynArity0 t2 = dyn(Arity0, &p);
-    CHECK(call(Arity0.get_val, &t2) == 10);
-    CHECK(call(Arity0.peek_val, &t2) == 10);
+    CHECK($(Arity0.get_val, &t2) == 10);
+    CHECK($(Arity0.peek_val, &t2) == 10);
   }
 
   // ==========================================================================
@@ -277,22 +277,22 @@ int main(void) {
     Accum a = { .val = 10 };
     DynArity1 t = dyn(Arity1, &a);
 
-    CHECK(call(Arity1.add_pure, &t, 5) == 15);
+    CHECK($(Arity1.add_pure, &t, 5) == 15);
     CHECK(a.val == 10);  // add_pure is immutable, no mutation
 
-    call(Arity1.set_val, &t, 20);
+    $(Arity1.set_val, &t, 20);
     CHECK(a.val == 20);
 
     // default increment: set_val(add_pure(n))
-    call(Arity1.increment, &t, 7);
+    $(Arity1.increment, &t, 7);
     CHECK(a.val == 27);
 
     // Pair: def increment to just add to x
     Pair p = { .x = 10, .y = 5 };
     DynArity1 t2 = dyn(Arity1, &p);
 
-    CHECK(call(Arity1.add_pure, &t2, 3) == 18);  // 10+5+3
-    call(Arity1.increment, &t2, 4);              // def: x += 4
+    CHECK($(Arity1.add_pure, &t2, 3) == 18);  // 10+5+3
+    $(Arity1.increment, &t2, 4);              // def: x += 4
     CHECK(p.x == 14);
     CHECK(p.y == 5);  // y unchanged
 
@@ -309,23 +309,23 @@ int main(void) {
     Accum a = { .val = 0 };
     DynArity2 t = dyn(Arity2, &a);
 
-    int r = call(Arity2.combine, &t, 6, 7);
+    int r = $(Arity2.combine, &t, 6, 7);
     CHECK(r == 42);
     CHECK(a.val == 42);
 
     // default combine_default: a + b (ignores self)
-    CHECK(call(Arity2.combine_default, &t, 10, 20) == 30);
+    CHECK($(Arity2.combine_default, &t, 10, 20) == 30);
 
     // Pair: def combine_default
     Pair p = { .x = 3, .y = 4 };
     DynArity2 t2 = dyn(Arity2, &p);
 
-    call(Arity2.combine, &t2, 5, 6);
+    $(Arity2.combine, &t2, 5, 6);
     CHECK(p.x == 5);
     CHECK(p.y == 6);
 
     // def combine_default: x*a + y*b
-    CHECK(call(Arity2.combine_default, &t2, 10, 100) == 650);  // 5*10 + 6*100
+    CHECK($(Arity2.combine_default, &t2, 10, 100) == 650);  // 5*10 + 6*100
 
     // Direct calls
     CHECK(Pair_Arity2_combine_default(&p, 2, 3) == 28);  // 5*2 + 6*3
@@ -339,27 +339,27 @@ int main(void) {
     DynArity3 t = dyn(Arity3, &a);
 
     // sum3 (immutable): self->val + a + b + c
-    CHECK(call(Arity3.sum3, &t, 1, 2, 3) == 106);  // 100+1+2+3
+    CHECK($(Arity3.sum3, &t, 1, 2, 3) == 106);  // 100+1+2+3
     CHECK(a.val == 100);  // unchanged
 
     // mix3 (mutable): self->val = a+b+c
-    int r = call(Arity3.mix3, &t, 10, 20, 30);
+    int r = $(Arity3.mix3, &t, 10, 20, 30);
     CHECK(r == 60);
     CHECK(a.val == 60);
 
     // sum3 again with new value
-    CHECK(call(Arity3.sum3, &t, 1, 1, 1) == 63);  // 60+1+1+1
+    CHECK($(Arity3.sum3, &t, 1, 1, 1) == 63);  // 60+1+1+1
 
     // Pair
     Pair p = { .x = 0, .y = 0 };
     DynArity3 t2 = dyn(Arity3, &p);
 
-    int r2 = call(Arity3.mix3, &t2, 5, 10, 15);
+    int r2 = $(Arity3.mix3, &t2, 5, 10, 15);
     CHECK(r2 == 30);     // x=5+10=15, y=15, total=30
     CHECK(p.x == 15);
     CHECK(p.y == 15);
 
-    CHECK(call(Arity3.sum3, &t2, 1, 2, 3) == 36);  // 15+15+1+2+3
+    CHECK($(Arity3.sum3, &t2, 1, 2, 3) == 36);  // 15+15+1+2+3
 
     // Direct calls
     CHECK(Accum_Arity3_sum3(&a, 0, 0, 0) == 60);
@@ -375,30 +375,30 @@ int main(void) {
     DynArity4 t = dyn(Arity4, &a);
 
     // mix4 (mutable): self->val = a+b+c+d
-    int r = call(Arity4.mix4, &t, 1, 2, 3, 4);
+    int r = $(Arity4.mix4, &t, 1, 2, 3, 4);
     CHECK(r == 10);
     CHECK(a.val == 10);
 
     // sum4 (immutable): self->val + a+b+c+d
-    CHECK(call(Arity4.sum4, &t, 10, 20, 30, 40) == 110);  // 10+10+20+30+40
+    CHECK($(Arity4.sum4, &t, 10, 20, 30, 40) == 110);  // 10+10+20+30+40
     CHECK(a.val == 10);  // unchanged
 
     // default weighted4 (calls sum4): self->val + a+b+c+d
-    CHECK(call(Arity4.weighted4, &t, 1, 1, 1, 1) == 14);  // 10+1+1+1+1
+    CHECK($(Arity4.weighted4, &t, 1, 1, 1, 1) == 14);  // 10+1+1+1+1
 
     // Pair: def weighted4
     Pair p = { .x = 2, .y = 3 };
     DynArity4 t2 = dyn(Arity4, &p);
 
-    int r2 = call(Arity4.mix4, &t2, 10, 20, 30, 40);
+    int r2 = $(Arity4.mix4, &t2, 10, 20, 30, 40);
     CHECK(r2 == 100);    // x=10+20=30, y=30+40=70, total=100
     CHECK(p.x == 30);
     CHECK(p.y == 70);
 
-    CHECK(call(Arity4.sum4, &t2, 1, 2, 3, 4) == 110);  // 30+70+1+2+3+4
+    CHECK($(Arity4.sum4, &t2, 1, 2, 3, 4) == 110);  // 30+70+1+2+3+4
 
     // def weighted4: x*a + y*b + c + d
-    CHECK(call(Arity4.weighted4, &t2, 2, 3, 5, 7) == 282);  // 30*2+70*3+5+7
+    CHECK($(Arity4.weighted4, &t2, 2, 3, 5, 7) == 282);  // 30*2+70*3+5+7
 
     // Direct calls
     CHECK(Accum_Arity4_sum4(&a, 0, 0, 0, 0) == 10);
@@ -417,20 +417,20 @@ int main(void) {
     DynArity3 t3 = dyn(Arity3, &a);
     DynArity4 t4 = dyn(Arity4, &a);
 
-    CHECK(call(Arity0.get_val, &t0) == 5);
-    call(Arity1.set_val, &t1, 10);
-    CHECK(call(Arity0.get_val, &t0) == 10);  // same underlying object
+    CHECK($(Arity0.get_val, &t0) == 5);
+    $(Arity1.set_val, &t1, 10);
+    CHECK($(Arity0.get_val, &t0) == 10);  // same underlying object
 
-    call(Arity2.combine, &t2, 3, 4);
+    $(Arity2.combine, &t2, 3, 4);
     CHECK(a.val == 12);  // 3*4
 
-    call(Arity3.mix3, &t3, 1, 2, 3);
+    $(Arity3.mix3, &t3, 1, 2, 3);
     CHECK(a.val == 6);   // 1+2+3
 
-    call(Arity4.mix4, &t4, 10, 20, 30, 40);
+    $(Arity4.mix4, &t4, 10, 20, 30, 40);
     CHECK(a.val == 100); // 10+20+30+40
 
-    CHECK(call(Arity0.peek_val, &t0) == 100);
+    CHECK($(Arity0.peek_val, &t0) == 100);
   }
 
   // ==========================================================================

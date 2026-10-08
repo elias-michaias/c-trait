@@ -23,7 +23,7 @@
 
 <img src="./screenshot.png" alt="c-trait code" align="center" />
 
-Define traits with required and default methods, implement them for your types, override defaults, and extend traits with supertraits. Works with both **static dispatch** (zero-cost, compile-time) and **dynamic dispatch** (vtable-based), unified through a single `call()` macro.
+Define traits with required and default methods, implement them for your types, override defaults, and extend traits with supertraits. Works with both **static dispatch** (zero-cost, compile-time) and **dynamic dispatch** (vtable-based), unified through a single `$()` macro.
 
 ## Install
 
@@ -40,8 +40,9 @@ Copies `trait.h` to `~/.local/include/trait.h`.
 #include "trait.h"
 
 #define Trait Greet
-#define Dynamic
-#define GreetSignature(Self) required(Self, void, greet)
+#define GreetSignature(Self) \
+  dynamic(Self) \
+  required(Self, void, greet)
 #include "trait.h"
 
 typedef struct { const char *name; } Person;
@@ -56,22 +57,23 @@ typedef struct { const char *name; } Person;
 int main(void) {
   Person p = { .name = "World" };
   DynGreet d = dyn(Greet, &p);
-  call(Greet.greet, &p);  // Hello, World! (statically dispatched)
-  call(Greet.greet, &d);  // Hello, World! (dynamically dispatched)
+  $(Greet.greet, &p);  // Hello, World! (statically dispatched)
+  $(Greet.greet, &d);  // Hello, World! (dynamically dispatched)
 }
 ```
 
-Add `#define Dynamic` before the trait declaration for vtable-based runtime polymorphism:
+Add `dynamic(Self)` anywhere inside `<TraitName>Signature` to enable vtable-based runtime polymorphism. The marker belongs to the trait signature, so every impl gets the same mode, regardless of ordering.
 
 ```c
 #define Trait Greet
-#define Dynamic
-#define GreetSignature(Self) require(Self, void, greet)
+#define GreetSignature(Self) \
+  required(Self, void, greet) \
+  dynamic(Self)
 #include "trait.h"
 
 Person p = { .name = "World" };
 DynGreet g = dyn(Greet, &p);
-call(Greet.greet, &g);  // goes through vtable
+$(Greet.greet, &g);  // goes through vtable
 ```
 
 ## Features
@@ -79,40 +81,54 @@ call(Greet.greet, &g);  // goes through vtable
 | Feature | Description |
 |---------|-------------|
 | **Static dispatch** | Default — zero runtime overhead, resolved at compile time via `_Generic` |
-| **Dynamic dispatch** | Opt-in vtable support with `#define Dynamic` |
-| **Unified `call()` macro** | Same syntax for both static and dynamic dispatch |
+| **Dynamic dispatch** | Opt-in vtable support with `dynamic(Self)` in the trait signature |
+| **Unified `$()` macro** | Same syntax for both static and dynamic dispatch |
 | **Default methods** | Provide fallback implementations; override per-type with `Override_` |
 | **Trait inheritance** | `extends()` declares supertraits; enforced at link time |
 | **Parametric traits** | Generic traits with type parameters (`Container_int`, `Container_str`) |
 | **Associated types** | Specialize traits per-implementation via preprocessor defines |
 | **Const methods** | `immutable()` / `constdef()` for read-only interfaces |
-| **Forward declarations** | `call()` inside `def()` bodies with the `Forward` flag |
+| **Forward declarations** | `$()` inside `def()` bodies with the `Forward` flag |
 | **Header-only** | Single 2K-line header. No build system required. |
-| **Portable** | GNU99 or GNU11 (GCC/Clang) or C23 (any conforming compiler).  Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
+| **Portable** | GNU99 or GNU11 (GCC/Clang), or C23 with a custom dispatcher on strictly conforming compilers. Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
+
+### Custom dispatch spelling
+
+By default, `$()` aliases the internal `trait_dispatch_call` macro. `$` is accepted by GCC and Clang as an identifier extension. For a strict compiler or a different caller name, configure it before the first include:
+
+```c
+#define TraitCustomDispatch
+#define tcall trait_dispatch_call
+#include "trait.h"
+
+// Use tcall(Trait.method, &obj)
+```
+
+`TraitCustomDispatch` prevents the default `$` alias from being defined; the internal dispatcher remains available for your alias.
 
 ## Concepts
 
 ### Static vs. dynamic traits
 
-Traits are **static by default** — no vtable, no overhead. Add `#define Dynamic` to generate an opt-in `DynTrait` struct that acts as a safe, type-erased, non-owning fat pointer. Construct one with the `dyn(...)` macro.
+Traits are **static by default** — no vtable, no overhead. Add `dynamic(Self)` to the trait signature to generate an opt-in `DynTrait` struct that acts as a safe, type-erased, non-owning fat pointer. Construct one with the `dyn(...)` macro.
 
-| | Static (default) | Dynamic (`#define Dynamic`) |
+| | Static (default) | Dynamic (`dynamic(Self)`) |
 |---|---|---|
 | Vtable | No | Yes |
 | `dyn` / `from_trait` | Not available | Available |
 | Default methods | Receives `void*` | Receives `DynTrait` |
 
-### Unified `call()` dispatch
+### Unified `$()` dispatch
 
 ```c
 Dog dog = { .snacks = 5 };
 
 // Static — resolved at compile time
-call(Animal.get_snacks, &dog);
+$(Animal.get_snacks, &dog);
 
 // Dynamic — through vtable
 DynAnimal da = dyn(Animal, &dog);
-call(Animal.get_snacks, &da);
+$(Animal.get_snacks, &da);
 
 // Same syntax, compiler picks the right path
 ```
@@ -129,9 +145,9 @@ call(Animal.get_snacks, &da);
 
 **GNU99.** `_Generic` didn't exist in C99, so dispatch uses the GNU builtins `__builtin_choose_expr` and `__builtin_types_compatible_p`, which together reproduce exactly what `_Generic` does — compare a controlling type against a list and pick the matching branch at compile time. Plain ISO `-std=c99` rejects the extensions this mode needs, so build with `-std=gnu99`.
 
-**GNU11.** C11 added the `_Generic` keyword, so `call()`/`dyn()` switch to it. But this is still a GNU dialect build — **not ISO C11**. C11 standardized `_Generic` yet left `typeof` and `__VA_OPT__` out, so `trait.h` keeps depending on the GNU extensions `__typeof__`, `, ##__VA_ARGS__`, and `__attribute__` — and on the GNU relaxation that lets a variadic macro be invoked with zero extra arguments, which ISO C11 forbids. Build with `-std=gnu11`; a strict `-std=c11` build fails.
+**GNU11.** C11 added the `_Generic` keyword, so `$()`/`dyn()` switch to it. But this is still a GNU dialect build — **not ISO C11**. C11 standardized `_Generic` yet left `typeof` and `__VA_OPT__` out, so `trait.h` keeps depending on the GNU extensions `__typeof__`, `, ##__VA_ARGS__`, and `__attribute__` — and on the GNU relaxation that lets a variadic macro be invoked with zero extra arguments, which ISO C11 forbids. Build with `-std=gnu11`; a strict `-std=c11` build fails.
 
-**C23.** C23 standardizes everything `trait.h` still did via extensions: `typeof` (replacing `__typeof__`), `__VA_OPT__` (replacing `, ##__VA_ARGS__`), `[[maybe_unused]]` (replacing `__attribute__((__unused__))`), and zero-argument variadic invocations. When `__STDC_VERSION__` indicates C23, `trait.h` switches to these standard forms, producing code a conforming ISO C23 compiler can build.
+**C23.** C23 standardizes `typeof` (replacing `__typeof__`), `__VA_OPT__` (replacing `, ##__VA_ARGS__`), `[[maybe_unused]]` (replacing `__attribute__((__unused__))`), and zero-argument variadic invocations. The default `$()` spelling still uses a compiler-supported `$` identifier extension; define `TraitCustomDispatch` and an ordinary alias such as `tcall` to build with a strictly conforming C23 compiler.
 
 The choice is automatic — `trait.h` detects the standard from `__STDC_VERSION__` — and all three modes are covered by `./test.sh` (gcc + clang, `-Wpedantic` where supported).
 
@@ -154,10 +170,10 @@ See [`examples/`](examples/) for complete, runnable demos:
 | [`e3_const_methods.c`](examples/e3_const_methods.c) | Immutable (const) methods via `immutable(Self)` |
 | [`e4_const_extension.c`](examples/e4_const_extension.c) | Extending const traits |
 | [`e5_parametric.c`](examples/e5_parametric.c) | Generic/parametric traits with type parameters |
-| [`e6_static_dispatch.c`](examples/e6_static_dispatch.c) | `call()` with static dispatch vs. dynamic |
+| [`e6_static_dispatch.c`](examples/e6_static_dispatch.c) | `$()` with static dispatch vs. dynamic |
 | [`e7_exhaustive.c`](examples/e7_exhaustive.c) | Comprehensive test: multiple traits, types, `extends`, `Override_`, `from_trait`, `new_trait` |
 | [`e8_arity.c`](examples/e8_arity.c) | Method arity from 0 to 4 extra arguments |
-| [`e9_forward_declare.c`](examples/e9_forward_declare.c) | `Forward` flag: `call()` inside `def()` bodies |
+| [`e9_forward_declare.c`](examples/e9_forward_declare.c) | `Forward` flag: `$()` inside `def()` bodies |
 | [`e10_static_traits.c`](examples/e10_static_traits.c) | Static traits, associated types, no vtable |
 | [`e11_static_defaults.c`](examples/e11_static_defaults.c) | Static traits with `defaults()` and `Override_` |
 
