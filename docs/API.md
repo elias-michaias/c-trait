@@ -33,7 +33,7 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 |-------|---------|
 | `required(Self, Ret, Name, Args...)` | Method the implementor must provide |
 | `defaults(Self, Ret, Name, Args...)` | Method with a default implementation |
-| `immutable(Self)` | Marks the method as const (implement with `constdef()`) |
+| `immutable(Self)` | Marks the method as const (const self parameter) |
 | `extends(Base, Self)` | Declares a supertrait constraint |
 
 ### Const traits
@@ -52,13 +52,12 @@ The signature macro name must be `<TraitName>Signature`. It receives `Self` as i
 #define For TypeName
 #define Impl TraitName
   RetType def(method_name, Args...) { /* body */ }
-  RetType constdef(method_name, Args...) { /* body (const self) */ }
 #include "trait.h"
 ```
 
-- `def()` / `constdef()` — generates the function with correct naming (`Type_Trait_method`). Use `def()` for mutable methods, `constdef()` for `immutable(Self)` methods.
+- `def()` — generates the function with correct naming (`Type_Trait_method`) and a self parameter whose constness is derived from the method's declaration. A method declared `immutable(Self)` gets `const Type *self`; a mutable method gets `Type *self`. The same `def()` is used in both cases, so there is nothing to remember.
 - Add `dynamic(Self)` anywhere in `<TraitName>Signature` to make that trait dynamic. The mode is derived from the signature for each impl, so dynamic and static impls can be freely interleaved.
-- To **override a default method**, use `def()`/`constdef()` as usual and define `#define Override_<Type>_<Trait>_<Method> 1` before the `#include "trait.h"` that processes this impl block, so that `defaults()` skips generating the DFL wrapper for that method (otherwise you get a duplicate definition).
+- To **override a default method**, use `def()` as usual and define `#define Override_<Type>_<Trait>_<Method> 1` before the `#include "trait.h"` that processes this impl block, so that `defaults()` skips generating the DFL wrapper for that method (otherwise you get a duplicate definition).
 - `#include "trait.h"` — finalizes the block: emits registration, auto-calls `impl()` for dynamic traits, undefines `For`/`Impl`.
 
 ## Calling methods
@@ -115,7 +114,7 @@ In default bodies, `self` is a `Dyn<Trait> *` (the trait object), so you can cal
 
 ### Overriding a default
 
-To override a default method for a specific type, use `def()`/`constdef()` in the impl block and define `Override_<Type>_<Trait>_<Method>` to `1` *before* the `#include "trait.h"` that processes the block:
+To override a default method for a specific type, use `def()` in the impl block and define `Override_<Type>_<Trait>_<Method>` to `1` *before* the `#include "trait.h"` that processes the block:
 
 ```c
 #define For Dog

@@ -18,7 +18,7 @@
 // When `For == Default`, these are the default method bodies.
 #define For Default
 #define Impl Animal
-  void constdef(check) {
+  void def(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }

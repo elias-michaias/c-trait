@@ -12,7 +12,7 @@
 
 #define For Default
 #define Impl Reader
-  void constdef(describe) {
+  void def(describe) {
     printf("(default) value = %d\n", $(Reader.read, self));
   }
 #include "../trait.h"
@@ -46,14 +46,14 @@ static int _IntBox_read_count;
 
 #define For IntBox
 #define Impl Reader
-  int constdef(read) { ++_IntBox_read_count; return *self->ptr; }
+  int def(read) { ++_IntBox_read_count; return *self->ptr; }
 #include "../trait.h"
 
 // ---- impl: LoggedReader for IntBox -------------------------------------------
 // Only count — LoggedReader's own method. No inherited methods.
 #define For IntBox
 #define Impl LoggedReader
-  int constdef(count) { (void)self; return _IntBox_read_count; }
+  int def(count) { (void)self; return _IntBox_read_count; }
 #include "../trait.h"
 
 

@@ -5,6 +5,7 @@
 // ---- trait: Reader -----------------------------------------------------------
 // `immutable(Self)` marks a method as const (takes `const void *`).
 // `required` = must be implemented; `default` = has a fallback.
+// `def` derives the self parameter's constness from this declaration.
 #define ReaderSignature(Self)               \
   dynamic(Self)                         \
   required(immutable(Self), int,  read)  \
@@ -14,7 +15,7 @@
 
 #define For Default
 #define Impl Reader
-  void constdef(describe) {
+  void def(describe) {
     printf("(default) value = %d\n", $(Reader.read, self));
   }
 #include "../trait.h"
@@ -27,7 +28,7 @@ typedef struct { int *ptr; } IntBox;
 // ---- impl: Reader for IntBox -------------------------------------------------
 #define For IntBox
 #define Impl Reader
-  int constdef(read) { return *self->ptr; }
+  int def(read) { return *self->ptr; }
 #include "../trait.h"
 
 

@@ -368,7 +368,7 @@ When you write:
 #include "trait.h"
 ```
 
-`def()` (or `constdef()` for `immutable` methods) generates a **strong function** with the same name `def()` would have produced — no `_ovr` suffix, no weak attribute:
+`def()` generates a **strong function** with the same name `def()` would have produced — no `_ovr` suffix, no weak attribute. Its `self` parameter is `const`-qualified automatically when the method was declared `immutable(Self)`:
 ```c
 void Dog_Animal_feed(Dog *self, int n) {
   self->snacks += n;
@@ -389,7 +389,7 @@ static inline void Dog_Animal_feed(void *self, int n) {
 }
 ```
 
-If the user wrote `def()`/`constdef()` and set `Override_<Type>_<Trait>_<Method>` to `1`, the DFL wrapper is suppressed and the strong `def()` function (same name) is used directly. If the user wrote `def()`/`constdef()` without the Override flag, the strong implementation completely replaces this wrapper. If neither, the default body runs.
+If the user wrote `def()` and set `Override_<Type>_<Trait>_<Method>` to `1`, the DFL wrapper is suppressed and the strong `def()` function (same name) is used directly. If the user wrote `def()` without the Override flag, the strong implementation completely replaces this wrapper. If neither, the default body runs.
 
 ### Override detection — the PROBE trick
 

@@ -811,6 +811,7 @@ typedef glue(Dyn, Trait) glue3(___trait_default_self_, Trait, _t);
 typedef void glue3(___trait_default_self_, Trait, _t);
 #endif
 ___TRAIT_TRAIT_PASTE(Trait)((Trait, STAG))
+___TRAIT_TRAIT_PASTE(Trait)((Trait, CTAG))
 typedef struct {
   ___TRAIT_TRAIT_PASTE(Trait)((Trait, SSEL))
 } glue(Trait, ___sel_t);
@@ -871,7 +872,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 // -----------------------------------------------------------------------------
 // Override detection (PROBE trick — 100% standard C)
 //
-// When a user overrides a default method with def()/constdef(), they also
+// When a user overrides a default method with def(), they also
 // define:
 //   #define Override_<Type>_<Trait>_<Method> 1
 // before the #include "trait.h" that processes the impl block.
@@ -1043,6 +1044,20 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   ___TRAIT_GET_ACTION(___TRAIT_SELF_UNWRAP(SelfSpec))
 
 // -----------------------------------------------------------------------------
+// Self-constness tags
+//
+// Every method declared in a trait signature gets a tag typedef whose *type*
+// encodes whether the method was declared mutable (Self) or immutable
+// (immutable(Self)).  The two base types are distinct, so def() can recover
+//
+// the method's constness at the impl site by inspecting the tag type.  def()
+// always reproduces the self parameter type required by the trait declaration.
+// -----------------------------------------------------------------------------
+typedef struct { char _mutable; } ___trait_mut_t;
+typedef struct { char _immutable; } ___trait_const_t;
+#define ___TRAIT_CTAG(Impl, Name) glue5(___trait_ctag_, Impl, _, Name, _t)
+
+// -----------------------------------------------------------------------------
 // Trait name detection for the Default sentinel in impl blocks
 // -----------------------------------------------------------------------------
 #define ___TRAIT_IS_DEFAULT_TOKEN_Default ___TRAIT_PROBE()
@@ -1104,6 +1119,22 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
 #define ___TRAIT_ACT_STAG_DEFAULT_1(Type, Ret, Name, ...)                        \
   typedef struct { char _; } glue5(___sel_, Type, _, Name, _t);
+
+// -----------------------------------------------------------------------------
+// Actions: CTAG (per-method self-constness tag typedef)
+//
+// Emits exactly one tag typedef per method.  The type records whether the
+// method was declared mutable or immutable; def() consults it to derive the
+// self parameter type, so impls never have to spell out const-ness.
+// -----------------------------------------------------------------------------
+#define ___TRAIT_ACT_CTAG_REQUIRE_0(Type, Ret, Name, ...)                        \
+  typedef ___trait_mut_t glue5(___trait_ctag_, Type, _, Name, _t);
+#define ___TRAIT_ACT_CTAG_REQUIRE_1(Type, Ret, Name, ...)                        \
+  typedef ___trait_const_t glue5(___trait_ctag_, Type, _, Name, _t);
+#define ___TRAIT_ACT_CTAG_DEFAULT_0(Type, Ret, Name, ...)                        \
+  typedef ___trait_mut_t glue5(___trait_ctag_, Type, _, Name, _t);
+#define ___TRAIT_ACT_CTAG_DEFAULT_1(Type, Ret, Name, ...)                        \
+  typedef ___trait_const_t glue5(___trait_ctag_, Type, _, Name, _t);
 
 // -----------------------------------------------------------------------------
 // Actions: SSEL (selector struct field for each method)
@@ -1488,7 +1519,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
 #define ___TRAIT_ACT_SDFL_DEFAULT_1(Type, Ret, Name, ...)                        \
   ___TRAIT_IF_OVR(For, Type, Name, ,                                                   \
     glue5(___TRAIT_SDFL_, 0, _, 1, ___TRAIT_NARG(__VA_ARGS__)),                    \
-    Type, Ret, Name, ##__VA_ARGS__))
+    Type, Ret, Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 // The `trait(...)` declaration expands the signature to emit:
@@ -1507,6 +1538,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   } Dyn##NameSignature;                                                            \
   ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, FWD))                     \
   ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, STAG))                    \
+  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, CTAG))                    \
   typedef struct {                                                                 \
     ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, SSEL))                  \
   } NameSignature##___sel_t;                                                       \
@@ -1543,6 +1575,7 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   Base##_vtable Base;
 #define ___TRAIT_EXTENDS_FWD(Base, SelfSpec) /* no-op: no per-method FWD actions */
 #define ___TRAIT_EXTENDS_STAG(Base, SelfSpec) /* no-op: selector tags already exist */
+#define ___TRAIT_EXTENDS_CTAG(Base, SelfSpec) /* no-op: base constness tags already exist */
 #define ___TRAIT_EXTENDS_SSEL(Base, SelfSpec) /* no-op: selector fields already exist */
 #define ___TRAIT_EXTENDS_DFL(Base, SelfSpec) /* no-op: base DFL wrappers already exist */
 #define ___TRAIT_EXTENDS_SDFL(Base, SelfSpec) /* no-op: base SDFL wrappers already exist */
@@ -1567,26 +1600,38 @@ ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR glue(Trait, ___sel_t)
   ___TRAIT_IMPL_SELF_BASE_SEL(___TRAIT_IS_DEFAULT(For))
 
 // -----------------------------------------------------------------------------
-// `def(...)` defines the implementation function body (mutable self).
-// `constdef(...)` defines the implementation function body (const self).
+// `def(...)` defines the implementation function body.  Its self parameter
+// type is derived from the method's constness as declared in the trait
+// signature, so a single `def` works for both `Self` and `immutable(Self)`.
 // For `For == Default`, self uses the static/dynamic type recorded on Impl.
-// For concrete types, self is `For *` / `const For *`.
-// The user chooses def/constdef based on the method's constness in the
-// trait declaration (`immutable(Self)` → constdef).
+// For concrete types, self is `For *` or `const For *`.
 //
-// To override a default method, use def/constdef (same as for required
-// methods) and also define:
+// To override a default method, use def (same as for required methods) and
+// also define:
 //   #define Override_<Type>_<Trait>_<Method> 1
 // before the #include "trait.h" that processes the impl block, so that
 // ___TRAIT_DFL() knows to skip the DFL wrapper for that method.
 // -----------------------------------------------------------------------------
+
+// Select `Base *` (mutable) or `const Base *` (immutable) from a tag type.
+#if ___TRAIT_CE
+#define ___TRAIT_SELF_SEL_(Tag, Base)                                            \
+  __builtin_choose_expr(                                                         \
+      __builtin_types_compatible_p(Tag, ___trait_mut_t), (Base *)0,              \
+      (const Base *)0)
+#else
+#define ___TRAIT_SELF_SEL_(Tag, Base)                                            \
+  _Generic((Tag){0}, ___trait_mut_t                                              \
+           : (Base *)0, ___trait_const_t                                        \
+           : (const Base *)0)
+#endif
+#define ___TRAIT_SELF_SEL(Impl, Name, Base)                                      \
+  ___TRAIT_TYPEOF(___TRAIT_SELF_SEL_(___TRAIT_CTAG(Impl, Name), Base))
+
 #define def(Name, ...)                                                         \
   glue5(For, _, Impl, _,                                                       \
-        Name)(___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
-
-#define constdef(Name, ...)                                                    \
-  glue5(For, _, Impl, _,                                                       \
-        Name)(const ___TRAIT_IMPL_SELF_BASE * self, ##__VA_ARGS__)
+        Name)(___TRAIT_SELF_SEL(Impl, Name, ___TRAIT_IMPL_SELF_BASE) self,     \
+              ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 // `___TRAIT_DFL()` emits wrappers for default methods when implementing a trait.
@@ -2659,17 +2704,11 @@ extern struct ERROR_trait_not_implemented_for_this_type ERROR_trait_not_implemen
   glue5(___TRAIT_DYNSDREG_, 0, _, ConstFlag,                                         \
         ___TRAIT_NARG(__VA_ARGS__))(Ret, NameSignature.Name __VA_OPT__(,) __VA_ARGS__)
 
-// ── def / constdef ────────────────────────────────────────────────────────────
+// ── def ───────────────────────────────────────────────────────────────────────
 #undef  def
 #define def(Name, ...)                                                         \
   glue5(For, _, Impl, _,                                                       \
-        Name)(___TRAIT_IMPL_SELF_BASE * self                                   \
-              __VA_OPT__(,) __VA_ARGS__)
-
-#undef  constdef
-#define constdef(Name, ...)                                                    \
-  glue5(For, _, Impl, _,                                                       \
-        Name)(const ___TRAIT_IMPL_SELF_BASE * self                             \
+        Name)(___TRAIT_SELF_SEL(Impl, Name, ___TRAIT_IMPL_SELF_BASE) self      \
               __VA_OPT__(,) __VA_ARGS__)
 
 // ── call ──────────────────────────────────────────────────────────────────────

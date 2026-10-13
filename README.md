@@ -96,7 +96,7 @@ $(Greet.greet, &g);  // goes through vtable
 | **Trait inheritance** | `extends()` declares supertraits; enforced at link time |
 | **Parametric traits** | Generic traits with type parameters (`Container_int`, `Container_str`) |
 | **Associated types** | Specialize traits per-implementation via preprocessor defines |
-| **Const methods** | `immutable()` / `constdef()` for read-only interfaces |
+| **Const methods** | `immutable()` for read-only interfaces; `def()` derives `const` self |
 | **Forward declarations** | `$()` inside `def()` bodies with the `Forward` flag |
 | **Header-only** | Single 2K-line header. No build system required. |
 | **Portable** | GNU99 or GNU11 (GCC/Clang), or C23 with a custom dispatcher on strictly conforming compilers. Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
@@ -185,6 +185,11 @@ See [`examples/`](examples/) for complete, runnable demos:
 | [`e9_forward_declare.c`](examples/e9_forward_declare.c) | `Forward` flag: `$()` inside `def()` bodies |
 | [`e10_static_traits.c`](examples/e10_static_traits.c) | Static traits, associated types, no vtable |
 | [`e11_static_defaults.c`](examples/e11_static_defaults.c) | Static traits with `defaults()` and `Override_` |
+| [`e12_type_macro.c`](examples/e12_type_macro.c) | `For` from a single-token type macro |
+| [`e13_wide_extends.c`](examples/e13_wide_extends.c) | A trait extending seven base traits |
+| [`e14_interleaved_impls.c`](examples/e14_interleaved_impls.c) | Interleaved dynamic and static impls |
+| [`e15_custom_dispatch.c`](examples/e15_custom_dispatch.c) | Custom dispatch spelling (`tcall`) |
+| [`e16_const_derived.c`](examples/e16_const_derived.c) | `def()` derives `const` self from `immutable(Self)` |
 
 Build and run any example:
 

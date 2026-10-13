@@ -14,7 +14,7 @@
 
 #define For Default
 #define Impl Animal
-  void constdef(check) {
+  void def(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
@@ -91,7 +91,7 @@ typedef struct { BaseAnimal animal; const char *breed; } Dog;
 
 #define For Default
 #define Impl Describable
-  int constdef(priority) {
+  int def(priority) {
     (void)self;
     return 0;
   }
@@ -155,7 +155,7 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: Greetable for Person ----------------------------------------------
 #define For Person
 #define Impl Greetable
-  void constdef(greet) {
+  void def(greet) {
     printf("Hi, I'm %s.\n", self->name);
   }
 #include "../trait.h"
@@ -163,7 +163,7 @@ typedef struct { const char *name; int age; } Person;
 // ---- impl: Describable for Person --------------------------------------------
 #define For Person
 #define Impl Describable
-  void constdef(describe) {
+  void def(describe) {
     printf("%s, age %d.\n", self->name, self->age);
   }
 #include "../trait.h"
@@ -172,7 +172,7 @@ typedef struct { const char *name; int age; } Person;
 // Only introduce — cross-trait calls via SD dispatch on concrete type.
 #define For Person
 #define Impl Introducible
-  void constdef(introduce, const char *to) {
+  void def(introduce, const char *to) {
     printf("%s introduces self to %s: ", self->name, to);
     $(Greetable.greet, self);
     printf("About me: ");

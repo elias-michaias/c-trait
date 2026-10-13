@@ -14,7 +14,7 @@
 // ---- default implementations for Animal ------------------------------------
 #define For Default
 #define Impl Animal
-  void constdef(check) {
+  void def(check) {
     (void)self;
     printf("(default) generic animal.\n");
   }
