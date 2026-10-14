@@ -2,7 +2,7 @@
 // e7_exhaustive.c — Exhaustive tests for c-trait
 // Covers: multiple traits, multiple types, varying arg counts/types,
 // required/default/def, immutable, extends, parametric traits,
-// vcall/dyn/from_trait/new_trait, assertions.
+// dyn/from_trait/new_trait, assertions.
 #include "../trait.h"
 #include <assert.h>
 #include <stdio.h>

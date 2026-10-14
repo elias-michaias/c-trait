@@ -68,7 +68,6 @@ int main(void) {
   printf("snacks: %d\n\n", $(Animal.get_snacks, &a));
 
   DynPet p = dyn(Pet, &rex);
-  // vcall macro = don't need to specify trait
   $(Pet.play, &p);
 
   DynShow s = dyn(Show, &rex);

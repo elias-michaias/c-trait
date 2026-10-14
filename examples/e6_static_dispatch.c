@@ -69,8 +69,8 @@ int main(void) {
   printf("\n=== call: dynamic dispatch (for comparison) ===\n");
   DynAnimal ac = dyn(Animal, &c);
   DynAnimal ad = dyn(Animal, &d);
-  printf("Cat snacks (vcall): %d\n", $(Animal.get_snacks, &ac));
-  printf("Dog snacks (vcall): %d\n", $(Animal.get_snacks, &ad));
+  printf("Cat snacks (dyn): %d\n", $(Animal.get_snacks, &ac));
+  printf("Dog snacks (dyn): %d\n", $(Animal.get_snacks, &ad));
 
   return 0;
 }

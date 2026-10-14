@@ -76,7 +76,7 @@ int main(void) {
   $(Animal.feed, &da, 5);
   printf("get_snacks: %d\n\n", $(Animal.get_snacks, &da));
 
-  printf("=== Show trait (required method, vcall) ===\n");
+  printf("=== Show trait (required method) ===\n");
   {
     DynShow s = dyn(Show, &d);
     $(Show.show, &s);
