@@ -1522,30 +1522,6 @@ typedef struct { char _immutable; } ___trait_const_t;
     Type, Ret, Name, ##__VA_ARGS__)
 
 // -----------------------------------------------------------------------------
-// The `trait(...)` declaration expands the signature to emit:
-//   FN:   vtable fields
-//   FWD:  forwarding wrappers
-//   STAG: selector tags
-//   SSEL: selector struct fields
-// -----------------------------------------------------------------------------
-#define trait(NameSignature)                                                       \
-  typedef struct {                                                                 \
-    ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, FN))                     \
-  } NameSignature##_vtable;                                                        \
-  typedef struct {                                                                 \
-    void *self;                                                                    \
-    const NameSignature##_vtable *vt;                                              \
-  } Dyn##NameSignature;                                                            \
-  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, FWD))                     \
-  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, STAG))                    \
-  ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, CTAG))                    \
-  typedef struct {                                                                 \
-    ___TRAIT_PASTE(NameSignature, Signature)((NameSignature, SSEL))                  \
-  } NameSignature##___sel_t;                                                       \
-  ___TRAIT_UNUSED static ___TRAIT_CONSTEXPR NameSignature##___sel_t                             \
-      NameSignature = {0}
-
-// -----------------------------------------------------------------------------
 // `extends(Base, Self)` merges the base trait's vtable into the derived
 // trait's vtable by composition.  FN embeds a `Base##_vtable Base;` field and
 // BIND copies the base trait's vtable object into it.  Because the base
