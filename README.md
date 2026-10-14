@@ -98,7 +98,7 @@ $(Greet.greet, &g);  // goes through vtable
 | **Associated types** | Specialize traits per-implementation via preprocessor defines |
 | **Const methods** | `immutable()` for read-only interfaces; `def()` derives `const` self |
 | **Forward declarations** | `$()` inside `def()` bodies with the `Forward` flag |
-| **Header-only** | Single 2K-line header. No build system required. |
+| **Header-only** | Single 3K-line header. No build system required. |
 | **Portable** | GNU99 or GNU11 (GCC/Clang), or C23 with a custom dispatcher on strictly conforming compilers. Pre-C11 uses `__builtin_choose_expr` dispatch instead of `_Generic`. |
 
 ### Custom dispatch spelling
